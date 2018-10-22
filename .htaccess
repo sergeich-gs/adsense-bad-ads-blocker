@@ -1,0 +1,12 @@
+DirectoryIndex index.php
+AddDefaultCharset utf-8
+Options  -Indexes  +FollowSymlinks +Includes
+
+<IfModule mod_php5.c>
+php_value memory_limit 350M
+php_value max_execution_time 600
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine Off
+</IfModule>
