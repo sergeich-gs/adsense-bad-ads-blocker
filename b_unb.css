@@ -1,0 +1,5 @@
+
+.b_left_colulmn .ad_container a.block,
+.b_center_colulmn .ad_container a.block { display: none; }
+.b_right_colulmn .ad_container a.unblock { display: none; }
+

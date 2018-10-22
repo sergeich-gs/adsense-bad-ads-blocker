@@ -1,2 +1,2 @@
-# adsense-bad-ads-blocker2
+# adsense-bad-ads-blocker
 Ads blocker for Google AdSense
