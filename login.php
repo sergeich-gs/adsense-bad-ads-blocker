@@ -127,14 +127,18 @@ if (stripos($result_auth, 'name="logincaptcha"') !== false) {      /** Captch pr
                 else
                     $input_temp = $input;
 
-                $input_temp_arr = explode('=', $input_temp, 2);
-                $inputs[$input_temp_arr[0]] = $input_temp_arr[1];
-
+                $inputs[] = $input_temp;
             }
+            $inputs = implode('&', $inputs);
 
-            $inputs = http_build_query($inputs);
+            $myheaders_captcha = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 
+            'accept-language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4', 
+            'content-type: application/x-www-form-urlencoded', 
+            'Cache-Control: max-age=0',
+            'origin: https://accounts.google.com', 
+            'upgrade-insecure-requests: 1');
 
-            $result_auth = curl_post($url, $inputs, $ref_url, $GLOBALS['myheaders']);
+            $result_auth = curl_post($url, $inputs, $ref_url, $myheaders_captcha);
 
             for($i = 1; $i <= 10; $i++) {
                 if (isset($set['log']))

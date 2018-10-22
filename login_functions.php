@@ -230,27 +230,23 @@ function captcha_form_save($captcha_form) {
 
     foreach ($captcha_form->getElementsByTagName('input') as $input) {
         if ($input->getAttribute('name')) {
-            if ($input->getAttribute('type') == 'checkbox')
-                $input->setAttribute('value', 'on');
 
-            //if ($input->getAttribute('name') == 'Passwd')
-            //    $input->setAttribute('value', $pass);
-            $forsave .= $input->getAttribute('name') . '=' . $input->getAttribute('value') . $nl;
+            $forsave .= $input->getAttribute('name') . '=' . urlencode($input->getAttribute('value')) . $nl;
         }
     }
 
     $img_data = curl_get($GLOBALS['captcha_img_url'], '', '');
-    $audio_data = curl_get($GLOBALS['captcha_img_url'] . '&kind=audio', '', '');
+    //$audio_data = curl_get($GLOBALS['captcha_img_url'] . '&kind=audio', '', '');
 
     file_put_contents($GLOBALS['temp_folder'] . 'captcha_img.jpg', $img_data);       // content-type: image/jpeg
-    file_put_contents($GLOBALS['temp_folder'] . 'captcha_audio.wav', $audio_data);     //  content-type: audio/wav
+    //file_put_contents($GLOBALS['temp_folder'] . 'captcha_audio.wav', $audio_data);     //  content-type: audio/wav
     $img_base64 = base64_encode($img_data);
-    $audio_base64 = base64_encode($audio_data);
+    //$audio_base64 = base64_encode($audio_data);
 
     file_put_contents($GLOBALS['temp_folder'] . 'captchaform', $forsave); ?>
 <form method="post" action="login.php?captcha=1">
 <label>
-<img src="data:image/jpeg;base64,<?=$img_base64?>" /><audio controls src="data:audio/wav;base64,<?=$audio_base64?>" ></audio><br />
+<img src="data:image/jpeg;base64,<?=$img_base64?>" /><!--<audio controls src="data:audio/wav;base64,<?=$audio_base64?>" ></audio>--><br />
 <input type="text" name="logincaptcha" autocomplete="off" placeholder="Enter the letters above" autofocus title="Type the characters you see or numbers you hear. Letters are not case-sensitive" required><br />
 </label>
 <br />

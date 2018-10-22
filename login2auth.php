@@ -61,7 +61,7 @@ if ($_POST['Pin'])
             echo 'Something went wrong.';
 
     }
-//â€”
+//—
  ?>
 </body>
 </html>
