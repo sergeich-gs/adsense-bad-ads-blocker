@@ -354,7 +354,7 @@ function find_disguised_latin($ad)
         if (preg_match('/([а-яёА-ЯЁ]{1,})\w*([а-яёА-ЯЁ]{1,})/u', $word))
             if (mb_strlen($word, 'UTF-8') > 3)
                 if (!preg_match('/(\d{1,})\w*(\d{1,})/u', $word))
-                    if (preg_match('/[aceonpxuyABCEHKMOPTXYαβγδεζηθικλμνξοπρσςτυφχψω]/u', $word))
+                    if (preg_match('/[aceonpxuyABCEHKMOPTXYαβγδεζηθικλμνξοπρσςτυφχψωқҗҳңҡҝҵҷҹӂӄӆӈӊӌӎӝӟӡӣӥӭӵӷӹӻӽӿѝӷӻґѓғṙṛṝṟᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήḣḥḧḩḫĥħḿṁṃṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱẗàáâãäåāăąȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳᾴάαᾶᾷᾀᾁᾂᾃᾄᾅᾆᾇὰάḁӑӓɑѐёèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻòóôõöøōŏőɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄὅọỏốồổỗộớờởỡợӧοσόὸόýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұṅṇṉṋǹćĉċčçƈͼϲҫҁҭkⱪķĸǩḱḳḵқҝҟҡќӄκƙҗҗӝӂxẋẍҳӽӿ]/u', $word))
                         if (!preg_match('/[a-z]{4,}/u', $word)) {
                             if (preg_match('/^[c]{1}/iu', $word))
                                 if (!preg_match('/[aceonpxuyABCEHKMOPTXY]/u', mb_substr($word, 1, null, 'UTF-8')))
@@ -374,10 +374,50 @@ function find_disguised_latin($ad)
 
 function lat_replace($text)
 {
-    $lat = array('u`', 'a', 'c', 'e', 'o', 'n', 'p', 'x', 'u', 'y', 'b', 'h', 'k', 'm', 't', 'μ', 'à', 'á', 'α', 'â', 'ã', 'ä', 'å', 'ā', 'ă', 'ą', 'σ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ć', 'ĉ', 'ċ', 'č', 'ē', 'ĕ', 'ė', 'ę', 'ě', 'è', 'é', 'ê', 'ά', 'ᾁ', 'ᾉ', 'ⱪ', 'ό');
-    $cyr = array('й',  'а', 'с', 'е', 'о', 'п', 'р', 'х', 'и', 'у', 'в', 'н', 'к', 'м', 'т', 'м', 'а', 'а', 'а', 'а', 'а', 'а', 'а', 'а', 'а', 'а', 'о', 'о', 'о', 'о', 'о', 'о', 'с', 'с', 'с', 'с', 'е', 'е', 'е', 'е', 'е', 'е', 'е', 'е', 'а', 'а', 'а', 'к', 'о');
-
-    $text = str_replace($lat, $cyr, $text);
+    
+    if(!isset($GLOBALS['lat_replace'])) {
+        
+        $replaces_unicodes['в']='bʙ';
+        $replaces_unicodes['м']='mμӎ';
+        $replaces_unicodes['ч']='ҷҹӌӵ';
+        $replaces_unicodes['ы']='ӹ';
+        $replaces_unicodes['л']='ӆ';
+        $replaces_unicodes['э']='ӭ';
+        $replaces_unicodes['г']='ӷӻґѓғṙṛṝṟ';
+        $replaces_unicodes['о']='oòóôõöøōŏőσɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄόὅọỏốồổỗộớờởỡợӧοόὸ';
+        $replaces_unicodes['а']='aàáâαãäåāąăȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳάᾁᾴᾉάᾶᾷᾀᾂᾃᾄᾅᾆᾇὰḁӑӓɑ';
+        $replaces_unicodes['е']='eèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗѐё';
+        $replaces_unicodes['у']='yýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұɣ';
+        $replaces_unicodes['к']='kⱪķĸǩḱḳḵқҝҟҡќӄκƙ';
+        $replaces_unicodes['н']='hḣḥḧḩḫĥħӈӊңηᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήƞṅṇṉṋǹήɲҥʜ';
+        $replaces_unicodes['д']='ĝğġģ';
+        $replaces_unicodes['с']='cćĉċčçƈͼϲҫҁḉ';
+        $replaces_unicodes['и']='uùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻӥ';
+        $replaces_unicodes['х']='xẋẍҳӽӿ';
+        $replaces_unicodes['п']='nπ';
+        $replaces_unicodes['й']='ѝӣҋ';
+        $replaces_unicodes['р']='pρṕṗῤῥҏƥþ';
+        $replaces_unicodes['ж']='җҗӝӂ';
+        $replaces_unicodes['т']='tḿṁṃṫṭṯṱẗτҭţťŧʈ';
+        
+        $lat = array('u`');
+        $cyr = array('й');
+        
+        foreach($replaces_unicodes as $cyr_simbol => $array_unicodes) {
+        
+            $array_unicodes = preg_split('//u', $array_unicodes, null, PREG_SPLIT_NO_EMPTY);
+            $array_unicodes = array_unique($array_unicodes);
+        
+            foreach($array_unicodes as $simbol_unicode) {
+                 $lat[] = $simbol_unicode;
+                 $cyr[] = $cyr_simbol;
+            }
+        }
+        $GLOBALS['lat_replace']['lat'] = $lat;
+        $GLOBALS['lat_replace']['cyr'] = $cyr;
+    }
+    
+    $text = str_replace($GLOBALS['lat_replace']['lat'], $GLOBALS['lat_replace']['cyr'], $text);
 
     preg_match_all('/3{1}[а-яё]{1}/iu', $text, $matches);
     $matches = $matches[0];
