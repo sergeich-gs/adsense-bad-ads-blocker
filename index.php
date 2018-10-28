@@ -9,7 +9,7 @@ if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.4 19.10.2018'; ?>
+$ver = '4.4.1 29.10.2018'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -516,7 +516,7 @@ alpari.com
 </div>
 
 
-
+<div class="ver">v<?= $ver ?></div>
 <br class="clear" />
 
 <?= $html_sep ?>
@@ -607,7 +607,7 @@ alpari.com
 
 <?= $html_sep ?>
 <? /* footer/*sep*/ ?>
-<div class="ver">v<?= $ver ?></div>
+
 </body>
 </html>
 
