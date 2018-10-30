@@ -252,7 +252,7 @@ function captcha_form_save($captcha_form) {
 <br />
 <label>
 Password again, please:<br />
-<input class="password" type="password" name="password" placeholder="Will not be saved" required />
+<input class="password" type="password" name="password" placeholder="Will not be saved" value="<?=$_POST['password']?>" required />
 </label>
 <br />
 <input style="margin-top: 4px;" type="submit" value="Next" >
