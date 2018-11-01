@@ -9,7 +9,7 @@ if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.4.1 29.10.2018'; ?>
+$ver = '4.5 01.11.2018'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -143,8 +143,11 @@ $set['redirects_media'] ?>/></label>
 
 	<br />
 
-	<label title="Block ads with disguised latin symbols in cyrillic ads">Check disguised: Text:<input title="Only for Text ads" name="disguised_text" type="checkbox" value="checked" <?= @$set['disguised_text'] ?>/></label><label title="Only for Rich Media ads"> &nbsp; &nbsp; Media:<input name="disguised_media" type="checkbox" value="checked" <?= @
-$set['disguised_media'] ?>/></label>
+	<label title="Block ads with disguised latin symbols in cyrillic ads">Check disguised: Text:<input title="Only for Text ads" name="disguised_text" type="checkbox" value="checked" <?= @$set['disguised_text'] ?>/></label><label title="Only for Rich Media ads"> &nbsp; &nbsp; Media:<input name="disguised_media" type="checkbox" value="checked" <?= @$set['disguised_media'] ?>/></label>
+
+	<br />
+
+	<label title="Block ads with greater than 20% spaces in ad">Check too many spaces:<input title="" name="too_many_spaces" type="checkbox" value="checked" <?= @$set['too_many_spaces'] ?>/></label>
 
 	<br />
 

@@ -452,6 +452,34 @@ function lat_replace($text)
 **/
 
 
+function spaces_count($adunit)
+{
+    $ad_text = $adunit['header1'] . ' ' . $adunit['header2'] . ' ' . $adunit['body'];
+
+    if(mb_stripos($adunit['displayUrl'], ' ', 0, 'UTF-8') !== false) {
+        $ad_text .= ' ' . $adunit['displayUrl'];
+    }
+
+    $ad_text = str_replace('   ', ' ', $ad_text);
+    $ad_text = str_replace('  ', ' ', $ad_text);
+    $ad_text = trim($ad_text);
+
+    $symbols_count = mb_strlen($ad_text, 'UTF-8');
+    $spaces_count = mb_substr_count($ad_text, ' ', 'UTF-8');
+
+    if($spaces_count/$symbols_count > 0.2)
+        if($spaces_count > 6)
+            return $spaces_count;
+
+    return false;
+}
+
+
+/**
+ **
+**/
+
+
 function redi_curl_get($url, $referer, $myheaders, $getheader, $getbody)
 {
     return curl_all($url, $referer, $myheaders, false, false, $getheader, $getbody, false, $GLOBALS['m_useragent']);

@@ -272,7 +272,7 @@ foreach ($search_words as $search_word)
                 if ($search_word) {
                     $found['word'] = 1;
                     $adunit['stopword'] = 'S->' . $search_word;
-                    $adunit['filter'] = 'words';
+                    $adunit['filter'] = 'word';
                     goto list_ad;
                 }
 
@@ -302,10 +302,21 @@ foreach ($search_words as $search_word)
                     }
                 }
 
+                $found['too_many_spaces'] = 0;
+                if (isset($set['too_many_spaces'])) {
+                    $spaces_count = spaces_count($adunit);
+                    if ($spaces_count) {
+                        $found['too_many_spaces'] = 1;
+                        $adunit['stopword'] = 'Spaces: ' . $spaces_count;
+                        $adunit['filter'] = 'disguised';
+                        goto list_ad;
+                    }
+                }
+
                 $found['disguised'] = 0;
                 if (isset($set['disguised'])) {
                     $stopword = find_disguised_latin($adunit);
-                    if ($stopword) { //if we can find any another domain redirect
+                    if ($stopword) {
                         $found['disguised'] = 1;
                         $adunit['stopword'] = $stopword;
                         $adunit['filter'] = 'disguised';
@@ -354,7 +365,7 @@ foreach ($search_words as $search_word)
                 }
 
 
-                list_ad : if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
+                list_ad : if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised'] || $found['too_many_spaces']) {
                     block_ad($ad_id[$index], $digikey_for_req, 0);
                     if (isset($set['ad_account']))
                         block_ad_account($ad_id[$index], 0, $adunit['header1'] . ' ' . $adunit['header2'], $adunit['adv_id'], $adunit['adv_name']);
