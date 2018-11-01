@@ -471,6 +471,10 @@ function spaces_count($adunit)
         if($spaces_count > 6)
             return $spaces_count;
 
+    if(preg_match('/ \D \D \D /iu', $ad_text )) {
+        echo $spaces_count;
+    }
+
     return false;
 }
 
