@@ -472,7 +472,7 @@ function spaces_count($adunit)
             return $spaces_count;
 
     if(preg_match('/ \D \D \D /iu', $ad_text )) {
-        echo $spaces_count;
+        return $spaces_count;
     }
 
     return false;
