@@ -374,9 +374,9 @@ function find_disguised_latin($ad)
 
 function lat_replace($text)
 {
-    
+
     if(!isset($GLOBALS['lat_replace'])) {
-        
+
         $replaces_unicodes['в']='bʙ';
         $replaces_unicodes['м']='mμӎ';
         $replaces_unicodes['ч']='ҷҹӌӵ';
@@ -399,15 +399,15 @@ function lat_replace($text)
         $replaces_unicodes['р']='pρṕṗῤῥҏƥþ';
         $replaces_unicodes['ж']='җҗӝӂ';
         $replaces_unicodes['т']='tḿṁṃṫṭṯṱẗτҭţťŧʈ';
-        
+
         $lat = array('u`');
         $cyr = array('й');
-        
+
         foreach($replaces_unicodes as $cyr_simbol => $array_unicodes) {
-        
+
             $array_unicodes = preg_split('//u', $array_unicodes, null, PREG_SPLIT_NO_EMPTY);
             $array_unicodes = array_unique($array_unicodes);
-        
+
             foreach($array_unicodes as $simbol_unicode) {
                  $lat[] = $simbol_unicode;
                  $cyr[] = $cyr_simbol;
@@ -416,7 +416,7 @@ function lat_replace($text)
         $GLOBALS['lat_replace']['lat'] = $lat;
         $GLOBALS['lat_replace']['cyr'] = $cyr;
     }
-    
+
     $text = str_replace($GLOBALS['lat_replace']['lat'], $GLOBALS['lat_replace']['cyr'], $text);
 
     preg_match_all('/3{1}[а-яё]{1}/iu', $text, $matches);
@@ -454,27 +454,36 @@ function lat_replace($text)
 
 function spaces_count($adunit)
 {
-    $ad_text = $adunit['header1'] . ' ' . $adunit['header2'] . ' ' . $adunit['body'];
+    if($adunit['type'] == 'H51' || $adunit['type'] == 'H52') return false;
 
-    if(mb_stripos($adunit['displayUrl'], ' ', 0, 'UTF-8') !== false) {
-        $ad_text .= ' ' . $adunit['displayUrl'];
-    }
+    $adunit = str_replace('   ', ' ', $adunit);
+    $adunit = str_replace('  ', ' ', $adunit);
 
-    $ad_text = str_replace('   ', ' ', $ad_text);
-    $ad_text = str_replace('  ', ' ', $ad_text);
-    $ad_text = trim($ad_text);
+    if(mb_strlen($adunit['header1'], 'UTF-8') > 4) $ad_texts[] = $adunit['header1'];
+    if(mb_strlen($adunit['header2'], 'UTF-8') > 4) $ad_texts[] = $adunit['header2'];
+    if(mb_strlen($adunit['body'], 'UTF-8') > 4) $ad_texts[] = $adunit['body'];
+    if(mb_strlen($adunit['displayUrl'], 'UTF-8') > 3)
+        if(mb_stripos($adunit['displayUrl'], ' ', 0, 'UTF-8') !== false) {
+            $ad_texts[] = $adunit['displayUrl'];
+        }
 
-    $symbols_count = mb_strlen($ad_text, 'UTF-8');
-    $spaces_count = mb_substr_count($ad_text, ' ', 'UTF-8');
+    foreach ($ad_texts as $ad_text) {
 
-    if($spaces_count/$symbols_count > 0.2)
-        if($spaces_count > 6)
+        $symbols_count = mb_strlen($ad_text, 'UTF-8');
+        $spaces_count = mb_substr_count($ad_text, ' ', 'UTF-8');
+
+        if(preg_match('/[а-яё]/iu', $ad_text))
+            $coeff = 0.24;
+        else
+            $coeff = 0.28;
+
+        if($spaces_count/$symbols_count > $coeff)
+            if($spaces_count > 3)
+                return $spaces_count;
+
+        if(preg_match('/ [\D3] [\D3] [\D3] /iu', $ad_text ))
             return $spaces_count;
-
-    if(preg_match('/ \D \D \D /iu', $ad_text )) {
-        return $spaces_count;
     }
-
     return false;
 }
 
@@ -608,10 +617,16 @@ function get_ad($url, $ad_type)
             $ad = html5_2_ad($ad_html);
             if (!$ad)
                 $ad = html5_1_ad($ad_html);
+            else
+                $ad['type'] = 'H52';
+
             if (!$ad)
                 $ad = text_ad($ad_html); //Some HTML5 ads have same format as text ad
-            if (!isset($ad['type']))
+            else
                 $ad['type'] = 'H51';
+
+            if (!isset($ad['type']))
+                $ad['type'] = 't';
 
         } elseif ($ad_type == 'Image') {
 
@@ -1331,7 +1346,7 @@ function block_ad_account($ad_id, $unblock = 0, $header = '', $adv_id = '', $adv
             $accs_ads_filename = $adv_id;
         file_put_contents($GLOBALS['temp_folder'] . 'accs_ads/' . $accs_ads_filename, $header . "\n", FILE_APPEND);
         if(!file_exists($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $accs_ads_filename))
-            file_put_contents($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $accs_ads_filename, $adv_long_id);        
+            file_put_contents($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $accs_ads_filename, $adv_long_id);
     }
 
     unset($inner_params, $params);
@@ -1552,7 +1567,7 @@ function ReportPolicyViolation($adv_id, $count)      // Report bad ads function
     //173265508
     for($i = 1; $i <= $count; $i++)
         $result = creative_review_new('ReportPolicyViolation', $params);
-    
+
     unset($params);
     return $result;
 }
@@ -1804,7 +1819,7 @@ function unblock_old_accounts($age)
             $acc_name = $adv_obj->{3};
         $adv_long_ids[$acc_name]=$adv_long_id;
     }
-    
+
     $acc_files = scandir($GLOBALS['temp_folder'] . 'autoblocked_accs');
     unset($acc_files[0], $acc_files[1]);      //removes «.» and «..»
 
