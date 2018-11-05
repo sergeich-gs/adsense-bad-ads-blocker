@@ -9,7 +9,7 @@ if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.5 01.11.2018'; ?>
+$ver = '4.5.1 05.11.2018'; ?>
 <!DOCTYPE html>
 <html>
 <head>
