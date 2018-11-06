@@ -469,6 +469,9 @@ function spaces_count($adunit)
 
     foreach ($ad_texts as $ad_text) {
 
+        if(!preg_match('/[а-яёa-z]/iu', $ad_text))
+            continue;
+            
         $symbols_count = mb_strlen($ad_text, 'UTF-8');
         $spaces_count = mb_substr_count($ad_text, ' ', 'UTF-8');
 
@@ -481,7 +484,7 @@ function spaces_count($adunit)
             if($spaces_count > 3)
                 return $spaces_count;
 
-        if(preg_match('/ [\D3] [\D3] [\D3] /iu', $ad_text ))
+        if(preg_match('/ (\D|3) (\D|3) (\D|3) /iu', $ad_text ))
             return $spaces_count;
     }
     return false;
