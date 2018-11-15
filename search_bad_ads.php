@@ -370,7 +370,7 @@ foreach ($search_words as $search_word)
                         block_ad_account($ad_id[$index], 0, $adunit['header1'] . ' ' . $adunit['header2'], $adunit['adv_id'], $adunit['adv_name']);
                     if (isset($set['ad_domain'])) {
                         $ad_domain = parse_url($adunit['url'], PHP_URL_HOST);
-                        if ($ad_domain != 'play.google.com')
+                        if ($ad_domain != 'play.google.com' && $ad_domain != 'itunes.apple.com')
                             add_blocked_url($ad_domain);
                     } elseif (isset($set['ad_url']))
                         add_blocked_url($adunit['url']);
