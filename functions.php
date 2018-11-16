@@ -476,9 +476,9 @@ function spaces_count($adunit)
         $spaces_count = mb_substr_count($ad_text, ' ', 'UTF-8');
 
         if(preg_match('/[а-яё]/iu', $ad_text))
-            $coeff = 0.24;
+            $coeff = 0.26;
         else
-            $coeff = 0.28;
+            $coeff = 0.29;
 
         if($spaces_count/$symbols_count > $coeff)
             if($spaces_count > 3)
