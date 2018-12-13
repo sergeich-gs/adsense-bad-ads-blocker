@@ -144,8 +144,6 @@ function is_data_safely($input_data)
         return false;
     if (strpos($input_data, "eval") !== false)
         return false;
-    if (strpos($input_data, "chr") !== false)
-        return false;
     if (strpos($input_data, "./") !== false)
         return false;
     return true;
@@ -476,9 +474,9 @@ function spaces_count($adunit)
         $spaces_count = mb_substr_count($ad_text, ' ', 'UTF-8');
 
         if(preg_match('/[а-яё]/iu', $ad_text))
-            $coeff = 0.26;
+            $coeff = 0.31;
         else
-            $coeff = 0.29;
+            $coeff = 0.34;
 
         if($spaces_count/$symbols_count > $coeff)
             if($spaces_count > 3)
