@@ -11,7 +11,7 @@ if (isset($_GET['ad_id'])) {
     $id_len = mb_strlen($_GET['ad_id'], 'UTF-8');
 
     if ($id_len == 104 || $id_len == 108) {
-        $result = ReportPolicyViolation($_GET['ad_id']);
+        $result = ReportPolicyViolation($_GET['ad_id'], 2);
         if (@is_object($result->error))
             die('<p>' . $result->error->code . ' ' . $result->error->message . '</p>');
         else
