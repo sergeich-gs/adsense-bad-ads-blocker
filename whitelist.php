@@ -12,7 +12,7 @@ header("Content-type: text/html; charset=utf-8");
 <head>
 <title>Whitelist</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <meta name="referrer" content="same-origin" />
 <meta name="robots" content="noindex, nofollow" />
 <link rel="stylesheet" type="text/css" href="style.css?v=<?= $ver ?>"/>

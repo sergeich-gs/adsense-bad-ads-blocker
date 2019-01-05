@@ -1,4 +1,6 @@
-<?php function is_data_safely($input_data) {
+<?php 
+
+function is_data_safely($input_data) {
     $ret = true;
     if (strpos($input_data, "<?") !== false)
         $ret = false;

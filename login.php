@@ -84,6 +84,13 @@ if (trim($result_auth) == '') {
     die('Error: empty auth answer. It could be DNS fail...');
 }
 
+if (stripos($result_auth, 'or has JavaScript turned off') !== false) {
+    die('<p>This account requres enabled JavaScript. It seems there is no way to log you in.<br />Use spare way with export cookies and put it in «cookie.txt» file. Put your publisher id (pub-2315...) to «pub-id.txt» file.</p>');
+}
+
+
+
+
 $result_auth = redirect_check($result_auth);
 for($i = 1; $i <= 10; $i++) {
     if (isset($set['log']))

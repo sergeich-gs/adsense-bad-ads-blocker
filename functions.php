@@ -1344,7 +1344,8 @@ function block_ad_account($ad_id, $unblock = 0, $header = '', $adv_id = '', $adv
         if ($adv_name)
             $accs_ads_filename = md5($adv_name);
         else
-            $accs_ads_filename = $adv_id;
+            $accs_ads_filename = $adv_id . '_' . $GLOBALS['set_gl']['arc'];
+            
         file_put_contents($GLOBALS['temp_folder'] . 'accs_ads/' . $accs_ads_filename, $header . "\n", FILE_APPEND);
         if(!file_exists($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $accs_ads_filename))
             file_put_contents($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $accs_ads_filename, $adv_long_id);

@@ -1,27 +1,28 @@
-<?php include 'functions.php';
+<?php //—
+include 'functions.php';
 
-$bad = 0;
-foreach ($_GET as $value) {
+foreach ($_GET as $value) 
     if (!is_data_safely($value))
-        $bad = 1;
+        die();
+
+
+$done='';
+if (isset($_GET['folder'])) {
+    $folder = $_GET['folder'];
+    if (isset($_GET['ad_file'])) {
+        if (preg_match('/^\d{10,11}\.\d{1,3}.\d{1,2}$/', $_GET['ad_file']))
+            $ad_file = $_GET['ad_file'];
+    } else
+        $ad_file = '';
+        
+    $done = remove_ad_files($folder, $ad_file);
 }
 
-if (!$bad) {
-    if (isset($_GET['folder'])) {
-        $folder = $_GET['folder'];
-        if (isset($_GET['ad_file'])) {
-            if (preg_match('/^\d{10,11}\.\d{1,3}.\d{1,2}$/', $_GET['ad_file']))
-                $ad_file = $_GET['ad_file'];
-        } else
-            $ad_file = '';
-        $done = remove_ad_files($folder, $ad_file);
-    }
-    if ($done)
-        $out = "Deleted!";
-    else
-        $out = "Something went wrong, or no ads.";
-}
-//—
+if ($done)
+    $out = "Deleted!";
+else
+    $out = "Something went wrong, or no ads.";
+
  ?>
 <!DOCTYPE html>
 <html>

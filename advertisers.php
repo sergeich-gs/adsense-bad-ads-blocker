@@ -11,9 +11,9 @@ foreach ($_GET as $value)
         die();
 
 if (isset($_GET['arc'])) {
-    if ($_GET['arc'] == 'new')
+    if ($_GET['arc'] == 'arc5')
         $GLOBALS['set_gl']['arc'] = $set['arc'] = 'arc5';
-    if ($_GET['arc'] == 'old')
+    if ($_GET['arc'] == 'old_arc')
         $GLOBALS['set_gl']['arc'] = $set['arc'] = 'old_arc';
 }
 
@@ -48,9 +48,9 @@ $autoblocked_accs = scandir($GLOBALS['temp_folder'] . 'accs_ads/');
 unset($autoblocked_accs[0], $autoblocked_accs[1]); //removes «.» and «..»
 
 foreach ($autoblocked_accs as $acc_file_name) {
-    
+
     $blocked_time = filectime($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $acc_file_name);
-    $blocked_time = date("j.m.Y G:i:s", $blocked_time);
+    $blocked_time = date("d.m.Y G:i:s", $blocked_time);
     $blocked_accs['time'][$acc_file_name] = $blocked_time;
     $adv_title = file_get_contents($GLOBALS['temp_folder'] . 'accs_ads/' . $acc_file_name);
     $blocked_accs['ads_texts'][$acc_file_name] = $adv_title;
@@ -91,44 +91,52 @@ if (@$_POST['confirmation'] == 'agree') {
         @$adv_name = trim($adv_obj->{2} . ' ' . $adv_obj->{3});
         if (@$adv_obj->{2})
             $accs_ads_filename = md5($adv_obj->{2});
-        else
-            $accs_ads_filename = $adv_obj->{3};
+        else {
+            $accs_ads_filename = $adv_obj->{3} . '_' . $GLOBALS['set_gl']['arc'];    
+            $accs_ads_filename_old = $adv_obj->{3};   //temp
+        }
+        
+
 
         $adv_title = $blocked_accs['ads_texts'][$accs_ads_filename];
+            if(!$adv_title) $adv_title = $blocked_accs['ads_texts'][$accs_ads_filename_old];    //temp
         $list = explode("\n", $adv_title, 2);
         $adv_title = ' title="' . $adv_title . '"';
         $ads_first_line = ' ' . mb_substr($list[0], 0, 38, 'UTF-8');
-        
-        $blocked_time = ' <span title="First time blocked">' . $blocked_accs['time'][$accs_ads_filename] . '</span>';
+
+        $blocked_time = $blocked_accs['time'][$accs_ads_filename];
+            if(!$blocked_time) $blocked_time = $blocked_accs['time'][$accs_ads_filename_old];    //temp
+        $blocked_time = ' <span title="First time blocked">' . $blocked_time . '</span>';
 
         unset($blocked_accs['time'][$accs_ads_filename]);
 
-        $out .= "<span$adv_title>$adv_name</span> <a href=\"blocker.php?type=adwords_acc&act=unblock&ad_id=" . rawurlencode($adv_id) . 
+        $out .= "<span$adv_title>$adv_name</span> <a href=\"blocker.php?type=adwords_acc&act=unblock&ad_id=" . rawurlencode($adv_id) .
         "\" target=\"working_frame\" class=\"unblock unblock_acc\" title=\"Unblock AdWords account\" ><img src=\"img/unblock.png\" />Unblock</a> <a href=\"blocker.php?type=adwords_acc&act=block&ad_id=" .
         rawurlencode($adv_id) . "\" target=\"working_frame\" class=\"unblock unblock_acc\" title=\"Block AdWords account\" ><img src=\"img/block.png\" />Block</a>$ads_first_line $blocked_time<br>\n";
-        
+
         $i++;
 
     }
-
+    $to_output = '';
     if(count($blocked_accs['time'])>0) {
         foreach ($blocked_accs['time'] as $file_name => $time) {
-            unlink($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $file_name);            
-            unlink($GLOBALS['temp_folder'] . 'accs_ads/' . $file_name); 
-            echo 'old file ' . $file_name . " was deleted. <br />\n";                       
+            if( ((stripos($file_name, $GLOBALS['set_gl']['arc']) !== false) && (stripos($file_name, 'adv-') !== false)) || 
+            (stripos($file_name, 'adv-') === false) ) {
+                
+                unlink($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $file_name);
+                unlink($GLOBALS['temp_folder'] . 'accs_ads/' . $file_name);
+                $to_output .= 'old file <i>' . $file_name . "</i> was deleted. <br />\n";
+            }                
         }
-    echo "<br>\n";
     }
 }
 
 
 
-
-
 if ($GLOBALS['set_gl']['arc'] == 'arc5')
-    $check_another_arc = '<a href="advertisers.php?arc=old">Check Accounts from old ARC</a>';
+    $check_another_arc = '<a href="advertisers.php?arc=old_arc">Check Accounts from old ARC</a>';
 else
-    $check_another_arc = '<a href="advertisers.php?arc=new">Check Accounts from new ARC</a>';
+    $check_another_arc = '<a href="advertisers.php?arc=arc5">Check Accounts from new ARC</a>';
 
 
 /*
@@ -137,7 +145,7 @@ if(@$_POST['confirmation']=='agree') {		// Acc folder cleaning
 $acc_files=scandir($GLOBALS['temp_folder'].'autoblocked_accs');
 
 foreach($acc_files as $acc_file) {
-if($acc_file!='.'&&$acc_file!='..') 
+if($acc_file!='.'&&$acc_file!='..')
 unlink($GLOBALS['temp_folder'].'autoblocked_accs/'.$acc_file);
 }
 }
@@ -179,13 +187,13 @@ a.block, a.unblock {
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
-a.block:active, a.unblock:active { 
+a.block:active, a.unblock:active {
 	background-image: -webkit-gradient(linear,left top,left bottom,from(#f6f6f6),to(#f1f1f1));
     background-image: -webkit-linear-gradient(top,#f6f6f6,#f1f1f1);
     background-color: #f6f6f6;
 }
 
-a.block:hover, a.unblock:hover { 
+a.block:hover, a.unblock:hover {
     background-image: -webkit-gradient(linear,left top,left bottom,from(#f8f8f8),to(#f1f1f1));
     background-image: -webkit-linear-gradient(top,#f8f8f8,#f1f1f1);
     background-color: #f8f8f8;
@@ -203,7 +211,7 @@ input[type="submit"], button { max-width: 200px; margin: 3px; }
 <?php if (!isset($_POST['confirmation'])) { ?>
 
 	<form method="post" target="working_frame" >
-	
+
 	<label>
 		Do you want to unblock all accounts?<br>
 		You should type «agree» to confirm.<br>
@@ -215,7 +223,9 @@ input[type="submit"], button { max-width: 200px; margin: 3px; }
 	<input class="submit" type="submit" value="Start unblocking process" />
 
 	</form>
-<h3>Total <?= $i ?> Account blocked</h3>
+<h3>Total <?= $i ?> Account<?php if($i > 1) echo "s"; ?> blocked</h3>
+
+<p><?= $to_output ?></p>
 
 <?php } ?>
 

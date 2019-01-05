@@ -9,7 +9,7 @@ if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.5.2 13.12.2018'; ?>
+$ver = '4.5.3 03.01.2019'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -147,7 +147,7 @@ $set['redirects_media'] ?>/></label>
 
 	<br />
 
-	<label title="Block ads with greater than 20% spaces in ad">Check too many spaces:<input title="" name="too_many_spaces" type="checkbox" value="checked" <?= @$set['too_many_spaces'] ?>/></label>
+	<label title="Block ads with too many spaces in ad, e. g. «D O O M E D»">Check too many spaces:<input title="" name="too_many_spaces" type="checkbox" value="checked" <?= @$set['too_many_spaces'] ?>/></label>
 
 	<br />
 

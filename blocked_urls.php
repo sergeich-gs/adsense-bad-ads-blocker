@@ -58,7 +58,7 @@ if (@$_POST['confirmation'] == 'agree') {
 
     foreach ($files_with_timestamp as $file_with_timestamp) {
         $blocked_time = file_get_contents($GLOBALS['temp_folder'] . 'autoblocked_urls/' . $file_with_timestamp);
-        $blocked_time = date("j.m.Y G:i:s", $blocked_time);
+        $blocked_time = date("d.m.Y G:i:s", $blocked_time);
         $blocked_urls[$file_with_timestamp] = $blocked_time;
     }
 
@@ -176,7 +176,7 @@ input[type="submit"], button { max-width: 200px; margin: 3px; }
 
 	</form>
 
-<h3>Total <?= $i ?> URLs blocked</h3>
+<h3>Total <?= $i ?> URL<?php if($i > 1) echo "s"; ?> blocked</h3>
 
 <?php } ?>
 
