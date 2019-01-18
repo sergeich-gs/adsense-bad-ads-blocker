@@ -85,7 +85,7 @@ if (trim($result_auth) == '') {
 }
 
 if (stripos($result_auth, 'or has JavaScript turned off') !== false) {
-    die('<p>This account requres enabled JavaScript. It seems there is no way to log you in.<br />Use spare way with export cookies and put it in «cookie.txt» file. Put your publisher id (pub-2315...) to «pub-id.txt» file.</p>');
+    die('<p>This account requres enabled JavaScript. It seems there is no way to log you in.<br />Use spare way with export cookies and put it in «cookie.txt» file. Put your publisher id (pub-2315...) to «pub_id.txt» file.</p>');
 }
 
 
