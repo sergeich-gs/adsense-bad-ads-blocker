@@ -8,7 +8,7 @@ $GLOBALS['temp_folder'] = __DIR__ . '/tempdata/';
 @$GLOBALS['useragent'] = file_get_contents($GLOBALS['temp_folder'] . 'useragent.txt');
 $GLOBALS['cookie_file'] = $GLOBALS['temp_folder'] . 'cookie.txt';
 $GLOBALS['xsrftoken_file'] = $GLOBALS['temp_folder'] . 'xsrftoken.txt';
-@$GLOBALS['pub_id'] = file_get_contents($GLOBALS['temp_folder'] . 'pub_id.txt');
+@$GLOBALS['pub_id'] = trim(file_get_contents($GLOBALS['temp_folder'] . 'pub_id.txt'));
 $GLOBALS['m_useragent'] = 'Mozilla/5.0 (Linux; Android 4.4.4; ru-ru; SAMSUNG GT-I9300I Build/KTU84P) AppleWebKit/537.36 (KHTML, like Gecko) Version/1.5 Chrome/28.0.1500.94 Mobile Safari/537.36';
 $GLOBALS['creative_review_req_string'] = 'https://www.google.com/adsense/gp/creativeReview?ov=3&pid=' . $GLOBALS['pub_id'] . '&authuser=0&tpid=' . $GLOBALS['pub_id'] . '&hl=en';
 $GLOBALS['blocking_controls_req_string'] = 'https://www.google.com/adsense/gp/blockingControls?ov=3&pid=' . $GLOBALS['pub_id'] . '&authuser=0&tpid=' . $GLOBALS['pub_id'];
