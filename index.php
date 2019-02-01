@@ -9,7 +9,7 @@ if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.5.3 03.01.2019'; ?>
+$ver = '4.5.4 01.02.2019'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -319,8 +319,12 @@ $set['redirects_media'] ?>/></label>
 <? /* auth/*sep*/ ?>
 	<h3 onclick="expand_close('auth_form');" >Google Auth</h3>
 
+
 	<form method="post" action="login.php" id="auth_form" class="auth_form" target="working_frame" style="height: 0px;" onsubmit="wait('working_frame');">
 <?php if (isset($set['login'])) { ?>
+
+<?php     if (!is_still_log_in()) { ?>
+
 	<label>
 		Password:<br />
 		<input class="password" type="password" name="password" placeholder="Will not be saved" required />
@@ -330,6 +334,8 @@ $set['redirects_media'] ?>/></label>
 	<input class="submit" type="submit" value="Login to Google"  />
 <?php     } else { ?>
 	<input class="submit" type="submit" value="Login to Google (in new tab)" formtarget="_blank" />
+<?php     } ?>
+
 <?php     } ?>
 
 <?php     if (is_still_log_in()) { ?>
