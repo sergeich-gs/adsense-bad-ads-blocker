@@ -61,7 +61,7 @@ if ($set['arc'] == 'arc5')
 $first_result = curl_get($GLOBALS['arc_tab_req_string'], '', '');
 
 if (isset($set['log']))
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/s1.' . time(), $first_result);
+    create_log($first_result, 's1.');
 
 unset($first_result);
 
@@ -90,36 +90,25 @@ if (isset($set['searchwords_check'])) {
 } else
     $search_words[] = '';
 
-/*
-if(isset($set['badadlist_check']))
-if(file_exists($GLOBALS['settings_folder'].'bad_ads_text.txt')){
-$badadlistwords=file($GLOBALS['settings_folder'].'bad_ads_text.txt', FILE_IGNORE_NEW_LINES);
-}
-*/
 
 if (isset($set['stopwords_check'])) {
     if (isset($set['text']) || isset($set['image']))
         $stopwords_text = file($GLOBALS['settings_folder'] . 'stopwords_text.txt', FILE_IGNORE_NEW_LINES);
     if (isset($set['rich_media']))
         $stopwords_media = file($GLOBALS['settings_folder'] . 'stopwords_media.txt', FILE_IGNORE_NEW_LINES);
-    /*
-    if(isset($badadlistwords))
-    if(is_array($badadlistwords))
-    foreach($badadlistwords as $badadlistword)
-    $stopwords_text[]=$badadlistword;
-
-    */
 }
-
-/*
-if( isset($set['stopwords_check']) && isset($set['badadlist_check']) )
-$stopwords_text=array_unique($stopwords_text);
-*/
 
 if ($set['arc'] == 'arc5') {
     @unlink($GLOBALS['temp_folder'] . 'some_long_token.txt');
     @unlink($GLOBALS['temp_folder'] . 'some_digi_token.txt');
 }
+
+if(!isset($start_pos))
+    if(isset($set['start_pos']))
+        $start_pos = $set['start_pos'];
+
+
+
 
 $checked = 0; //Count of checked ads
 $blocked = 0; //Count of blocked ads
