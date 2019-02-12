@@ -1,6 +1,6 @@
 DirectoryIndex index.php
 AddDefaultCharset utf-8
-Options  -Indexes  +FollowSymlinks +Includes
+Options -Indexes +Includes
 
 <IfModule mod_php5.c>
 php_value memory_limit 350M
