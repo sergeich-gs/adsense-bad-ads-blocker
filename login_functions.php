@@ -47,6 +47,8 @@ function password_send($input_html, $pass) {
         if ($input->getAttribute('name')) {
             if ($input->getAttribute('name') == 'Passwd')
                 $input->setAttribute('value', $pass);
+            if ($input->getAttribute('name') == 'bgresponse')
+                continue;
             $postfields .= $input->getAttribute('name') . '=' . $input->getAttribute('value') . '&';
         }
     }
@@ -321,7 +323,7 @@ function change_method($change_form) {
     $auth_method_change_page = redirect_check($result_change); //auth method change page
 
     if (isset($set['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/answer_re_ch.' . time(), $auth_method_change_page);
+        create_log($auth_method_change_page, 'answer_re_ch.');
 
     $doc = new DOMDocument();
     @$doc->loadHTML($auth_method_change_page);
