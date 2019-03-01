@@ -355,11 +355,17 @@ foreach ($search_words as $search_word)
 
                 list_ad : if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
                     block_ad($ad_id[$index], $digikey_for_req, 0);
-                    if (isset($set['ad_account']))
-                        block_ad_account($ad_id[$index], 0, $adunit['header1'] . ' ' . $adunit['header2'], $adunit['adv_id'], $adunit['adv_name']);
+                    if (isset($set['ad_account'])){
+                        
+                        $blocking_text = trim($adunit['header1'] . ' ' . $adunit['header2']);
+                        if(!$blocking_text)
+                            $blocking_text = $adunit['body'];
+                        block_ad_account($ad_id[$index], 0, $blocking_text, $adunit['adv_id'], $adunit['adv_name']);
+                    }
+
                     if (isset($set['ad_domain'])) {
                         $ad_domain = parse_url($adunit['url'], PHP_URL_HOST);
-                        if ($ad_domain != 'play.google.com' && $ad_domain != 'itunes.apple.com')
+                        if ($ad_domain != 'play.google.com' && $ad_domain != 'itunes.apple.com' && $ad_domain != 'vk.com')
                             add_blocked_url($ad_domain);
                     } elseif (isset($set['ad_url']))
                         add_blocked_url($adunit['url']);
