@@ -76,7 +76,7 @@ if (isset($set['log'])) {
     ini_set('error_reporting', E_ALL);
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/settings.' . time(), json_encode($set));
+    create_log(json_encode($set), 'settings.');
 } else {
     ini_set('error_reporting', 0);
     ini_set('display_errors', 0);
@@ -469,7 +469,7 @@ function spaces_count($adunit)
 
         if(!preg_match('/[а-яёa-z]/iu', $ad_text))
             continue;
-            
+
         $symbols_count = mb_strlen($ad_text, 'UTF-8');
         $spaces_count = mb_substr_count($ad_text, ' ', 'UTF-8');
 
@@ -591,19 +591,31 @@ function get_ad($url, $ad_type)
         } elseif ($ad_type == 'Multi-format') {
 
             $ad = multiformat_ad($ad_html);
+
+            if (!$ad)
+                if (mb_stripos($ad_html, 'data-rh-set-type="0"', 70000, 'UTF-8') !== false) {
+
+                    $ad = multimedia_ad0($ad_html);         // Multi-format, text ad
+                    $ad['type'] = 'Mft';
+    
+                } elseif (mb_stripos($ad_html, 'data-rh-set-type="62"', 70000, 'UTF-8') !== false) {
+    
+                    $ad = multimedia_ad62($ad_html);             // Multi-format, small size ad
+                    $ad['type'] = 'Mf62';
+    
+                }
+                
             if (!$ad)
                 $ad = multiformat_ad_old35($ad_html);
-            if ($ad) {
-                $ad['header2'] = multiformat_ad_62_long_header($ad_html);
-                $ad['fulltext'] .= ' ' . $ad['header2'];
-            }
-            $ad['type'] = 'Mf';
+                
+            if (!isset($ad['type']))
+                $ad['type'] = 'Mf';
 
         } elseif ($ad_type == 'Rich Media') {
 
             if (mb_stripos($ad_html, 'data-rh-set-type="26"', 70000, 'UTF-8') !== false || mb_stripos($ad_html, 'data-rh-set-type="25"', 70000, 'UTF-8') !== false) { // File size about 156 Kb
 
-                $ad = multimedia_ad25_26($ad_html);
+                $ad = multimedia_ad25_26($ad_html);     // Rich Media
                 $ad['type'] = 'M2';
 
             } elseif (mb_stripos($ad_html, 'data-rh-set-type="15"', 70000, 'UTF-8') !== false) { // File size about 156 Kb
@@ -639,11 +651,18 @@ function get_ad($url, $ad_type)
 
             $ad = multiformat_ad($ad_html);
             $ad['type'] = 'Mf';
+            $ad_type = 'Mf_adData_JSON';
 
+        } elseif (mb_stripos($ad_html, 'data-rh-set-type="62"', 70000, 'UTF-8') !== false) {
+    
+            $ad = multimedia_ad62($ad_html);             // Multi-format, small size ad
+            $ad['type'] = 'Mf62';
+            $ad_type = 'Mf62';
+    
         } else {
 
             if (isset($GLOBALS['set_gl']['log']))
-                file_put_contents($GLOBALS['temp_folder'] . 'logs/ad.un.' . $ad_type . '.' . getmicrotime(), $ad_html);
+                create_log($ad_html, 'ad.un.' . $ad_type . '.');        // Unknown ad
             return false;
         }
 
@@ -651,13 +670,12 @@ function get_ad($url, $ad_type)
 
         if (!$ad['fulltext']) {
             if (isset($GLOBALS['set_gl']['log']))
-                file_put_contents($GLOBALS['temp_folder'] . 'logs/ad.unkn.' . $ad_type . '.' . getmicrotime(), $ad_html);
+                create_log($ad_html, 'ad.unkn.' . $ad_type . '.');      // Ad without any text
             return false;
         }
 
         if (isset($GLOBALS['set_gl']['log']))
-            file_put_contents($GLOBALS['temp_folder'] . 'logs/ad.' . $ad_type . '.' . getmicrotime(), $ad_html);
-
+            create_log($ad_html, 'ad.' . $ad_type . '.');
         foreach ($ad as $index => $value) {
             $value = trim($value);
             $ad[$index] = str_replace('  ', ' ', $value);
@@ -757,6 +775,8 @@ function load_single_html_ad($url)
 
 function multimedia_ad15($html)
 {
+    $ad62 = multimedia_ad62($html, true);
+
     $list = explode('</head>', $html);
     $ad_html = array_pop($list);
     unset($list, $html);
@@ -766,20 +786,26 @@ function multimedia_ad15($html)
     @$dom->loadHTML($ad_html);
     unset($ad_html);
 
-    $ad['body'] = '';
+    $ad['body'] = $ad['header1'] = $ad['header2'] = '';
+
     foreach ($dom->getElementsByTagName('div') as $div_node) {
         if (stripos($div_node->getAttribute('class'), 'ads_') !== false)
             $ad['body'] .= $div_node->textContent . ' ';
     }
 
-    $ad['header1'] = '';
-    $ad['header2'] = '';
     foreach ($dom->getElementsByTagName('a') as $a_node) {
         if (stripos($a_node->getAttribute('class'), 'rhtitle') !== false) {
             $ad['header1'] .= $a_node->textContent . ' ';
             $ad['header2'] .= $a_node->getAttribute('title') . ' ';
         }
     }
+
+    if(isset($ad62['body']))
+        $ad['body'] .= $ad62['body'];
+
+    if(isset($ad62['displayUrl']))
+        $ad['displayUrl'] = $ad62['displayUrl'];
+
 
     $fulltext = implode(' ', $ad);
     $ad['fulltext'] = $fulltext;
@@ -838,6 +864,107 @@ function multimedia_ad25_26($html)
     if (!isset($GLOBALS['set_gl']['utf8_off']))
         foreach ($ad as $index => $value)
             $ad[$index] = utf8_decode($value);
+
+    return $ad;
+}
+
+
+/**
+ **
+**/
+
+
+function multimedia_ad0($html)
+{
+    $ad62 = multimedia_ad62($html, true);
+
+    $list = explode('</head>', $html);
+    $ad_html = array_pop($list);
+    unset($list, $html);
+
+
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    @$dom->loadHTML($ad_html);
+    unset($ad_html);
+
+    $ad['header1'] = '';
+    $ad['header2'] = '';
+    foreach ($dom->getElementsByTagName('a') as $a_node) {
+        if (stripos($a_node->getAttribute('class'), 'rhtitle') !== false) {
+            $ad['header1'] .= $a_node->textContent . ' ';
+            $ad['header2'] .= $a_node->getAttribute('title') . ' ';
+        }
+    }
+
+    $ad['body'] = '';
+    foreach ($dom->getElementsByTagName('div') as $div_node) {
+        if (stripos($div_node->getAttribute('class'), 'rh-body') !== false)
+            $ad['body'] .= $div_node->textContent . ' ';
+    }
+
+    if(isset($ad62['body']))
+        $ad['body'] .= $ad62['body'];
+
+    if(isset($ad62['displayUrl']))
+        $ad['displayUrl'] = $ad62['displayUrl'];
+
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
+
+    if (!isset($GLOBALS['set_gl']['utf8_off']))
+        foreach ($ad as $index => $value)
+            $ad[$index] = utf8_decode($value);
+
+    return $ad;
+}
+
+
+/**
+ **
+**/
+
+
+function multimedia_ad62($html, $do_not_decode = false)
+{
+    $list = explode('data-rh-set-type="62">', $html);
+    $ad_html = array_pop($list);
+
+    $list = explode('</body>', $ad_html);
+    $ad_html = array_shift($list);
+    unset($list, $html);
+
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    @$dom->loadHTML($ad_html);
+    unset($ad_html);
+
+
+    $ad['body'] = '';
+    foreach ($dom->getElementsByTagName('div') as $div_node) {
+        if (stripos($div_node->getAttribute('class'), 'long-title') !== false)
+            $ad['body'] .= $div_node->textContent . ' ';
+    }
+
+    if(!$ad['body'])
+        unset($ad['body']);
+
+    $ad['displayUrl'] = '';
+    foreach ($dom->getElementsByTagName('div') as $div_node) {
+        if (stripos($div_node->getAttribute('class'), '_clickable') !== false)
+            $ad['displayUrl'] .= $div_node->textContent . ' ';
+    }
+
+    if(!$ad['displayUrl'])
+        unset($ad['displayUrl']);
+
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
+
+    if(!$do_not_decode)
+        if (!isset($GLOBALS['set_gl']['utf8_off']))
+            foreach ($ad as $index => $value)
+                $ad[$index] = utf8_decode($value);
 
     return $ad;
 }
@@ -1020,7 +1147,7 @@ function html5_2_ad($html)
  **
 **/
 
-
+/*
 function multiformat_ad_62_long_header($html)
 {
     $list = explode('data-rh-set-type="62">', $html);
@@ -1045,10 +1172,12 @@ function multiformat_ad_62_long_header($html)
 
     return $long_header;
 }
+*/
 
 /**
  **
 **/
+
 
 function multiformat_ad($html)
 {
@@ -1345,7 +1474,7 @@ function block_ad_account($ad_id, $unblock = 0, $header = '', $adv_id = '', $adv
             $accs_ads_filename = md5($adv_name);
         else
             $accs_ads_filename = $adv_id . '_' . $GLOBALS['set_gl']['arc'];
-            
+
         file_put_contents($GLOBALS['temp_folder'] . 'accs_ads/' . $accs_ads_filename, $header . "\n", FILE_APPEND);
         if(!file_exists($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $accs_ads_filename))
             file_put_contents($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $accs_ads_filename, $adv_long_id);
@@ -1470,9 +1599,13 @@ function list_ad($ad, $ad_index, $found)
     if (@$ad['body'])
         $whitelist_body = '<a href="whitelist_ad.php?new_ad=' . rawurlencode($ad['body']) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_body" title="Whitelist ad body" ><img src="img/whl.png" /></a> ';
 
+    $blocking_text = trim($adunit['header1'] . ' ' . $adunit['header2']);
+    if(!$blocking_text)
+        $blocking_text = $adunit['body'];
+
     $block_ad = '<a onclick="insert_result_frame(this);' . $for_block_button . '" href="blocker.php?type=ad&act=block&ad_id=' . $ad_id . '&digikey=' . $digikey . '" target="result_frame" class="block block_ad" title="Block this ad" ><img src="img/block.png" />Ad</a>';
     $unblock_ad = '<a onclick="insert_result_frame(this);' . $for_unblock_button . '" href="blocker.php?type=ad&act=unblock&ad_id=' . $ad_id . '&digikey=' . $digikey . '" target="result_frame" class="unblock unblock_ad" title="Unblock this ad" ><img src="img/unblock.png" />Ad</a> ';
-    $block_account = '<a onclick="insert_result_frame(this);" href="blocker.php?type=acc&act=block&ad_id=' . $ad_id . '&adv_id=' . rawurlencode($ad['adv_id']) . '&adv_name=' . rawurlencode($ad['adv_name']) . '&header=' . rawurlencode(trim($ad['header1']) . ' ' . trim($ad['header2'])) .
+    $block_account = '<a onclick="insert_result_frame(this);" href="blocker.php?type=acc&act=block&ad_id=' . $ad_id . '&adv_id=' . rawurlencode($ad['adv_id']) . '&adv_name=' . rawurlencode($ad['adv_name']) . '&header=' . rawurlencode($blocking_text) .
         '" target="result_frame" class="block block_acc" title="Block AdWords account" ><img src="img/block.png" />Acc</a>';
     $unblock_account = '<a onclick="insert_result_frame(this);" href="blocker.php?type=acc&act=unblock&ad_id=' . $ad_id . '" target="result_frame" class="unblock unblock_acc" title="Unblock AdWords account" ><img src="img/unblock.png" />Acc</a> ';
 
@@ -1602,10 +1735,10 @@ function creative_review_new($method, $params)
 
     $result = curl_post($url, $params, $GLOBALS['new_arc_tab_req_string'], $myheaders);
 
-    if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/CR_new_req.' . $method . '.' . time(), $url . "\n" . $params . "\n" . $GLOBALS['arc_tab_req_string'] . "\n");
-    if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/CR_new.' . $method . '.' . time(), $result);
+    if (isset($GLOBALS['set_gl']['log'])){
+        create_log($url . "\n" . $params . "\n" . $GLOBALS['arc_tab_req_string'] . "\n", 'CR_new_req.' . $method . '.');
+        create_log($result, 'CR_new.' . $method . '.');
+    }
 
     if (mb_strpos($result, 'Error 400 (Not Found)', 0, 'UTF-8') !== false) {
         return '-32000 XSRF token validation';
@@ -1643,10 +1776,10 @@ function creative_review($method, $params)
 
     $result = curl_post($GLOBALS['creative_review_req_string'], $creativeReview_post_request, $GLOBALS['arc_tab_req_string'], $GLOBALS['myheaders']);
 
-    if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/CR_req.' . $method . '.' . time(), $GLOBALS['creative_review_req_string'] . "\n" . $creativeReview_post_request . "\n" . $GLOBALS['arc_tab_req_string']);
-    if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/CR.' . $method . '.' . time(), $result);
+    if (isset($GLOBALS['set_gl']['log'])) {
+        create_log($GLOBALS['creative_review_req_string'] . "\n" . $creativeReview_post_request . "\n" . $GLOBALS['arc_tab_req_string'], 'CR_req.' . $method . '.');
+        create_log($result, 'CR.' . $method . '.');
+    }
 
     $result = json_decode($result); // decode result string
 
@@ -1675,10 +1808,10 @@ function blocking_controls($method, $params)
 
     $result = curl_post($GLOBALS['blocking_controls_req_string'], $creativeReview_post_request, $GLOBALS['arc_tab_req_string'], $GLOBALS['myheaders']);
 
-    if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/BC_req.' . $method . '.' . time(), $GLOBALS['blocking_controls_req_string'] . "\n" . $creativeReview_post_request);
-    if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/BC.' . $method . '.' . time(), $result);
+    if (isset($GLOBALS['set_gl']['log'])) {
+        create_log($GLOBALS['blocking_controls_req_string'] . "\n" . $creativeReview_post_request, 'BC_req.' . $method . '.');
+        create_log($result, 'BC.' . $method . '.');
+    }
 
     $result = json_decode($result); // decode result string
 
@@ -1705,7 +1838,7 @@ function get_xsrf_token()
     }
 
     if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/s2_gwt.' . time(), $result);
+        create_log($result, 's2_gwt.');
 
     $gwtarray = metagwt2array($result); // Converting data to array
 
@@ -1729,7 +1862,7 @@ function get_xsrf_token_new()
     $result = curl_post($url, '', $GLOBALS['new_arc_tab_req_string'], $GLOBALS['myheaders_new']); // Requesting access tokens in JS file
 
     if (isset($GLOBALS['set_gl']['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/s3_loader_new.' . time(), $result);
+        create_log($result, 's3_loader_new.');
 
     $list = explode("'token': '", $result, 2);
     $token_with = $list[1];
@@ -1894,8 +2027,10 @@ function get_paid_stats($html)
 
 function create_log($result, $filename)
 {
+    if (!isset($GLOBALS['result_tmp']))
+        $GLOBALS['result_tmp'] = '';
     if ($result != $GLOBALS['result_tmp']) {
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/' . $filename . time(), $result);
+        file_put_contents($GLOBALS['temp_folder'] . 'logs/' . $filename . getmicrotime(), $result);
         $GLOBALS['result_tmp'] = $result;
     }
     return true;
