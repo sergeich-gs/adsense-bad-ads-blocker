@@ -5,7 +5,7 @@ if (is_data_safely($_GET['new_ad']))
 $meta_continue = $waiting = '';
 if (isset($_GET['ad_id'])) {
     if (is_data_safely($_GET['ad_id'])) {
-        $meta_continue = '<meta http-equiv="refresh" content="0.8; url=blocker.php?next=acc&type=ad&act=unblock&ad_id=' . $_GET['ad_id'] . '">';
+        $meta_continue = '<meta http-equiv="refresh" content="0.8; url=blocker.php?next=acc&type=ad&act=unblock&ad_id=' . rawurlencode($_GET['ad_id']) . '">';
         $waiting = '... <img src="img/waiting.gif" height="20"/>';
     }
 }
