@@ -10,7 +10,7 @@ if (isset($_GET['ad_id'])) {
     $renewed = false;
     again : if (isset($_GET['next'])) {
         if (is_data_safely($_GET['next']))
-            $meta_continue = '<meta http-equiv="refresh" content="0.5; url=blocker.php?type=' . $_GET['next'] . '&act=unblock&ad_id=' . $_GET['ad_id'] . '">';
+            $meta_continue = '<meta http-equiv="refresh" content="0.5; url=blocker.php?type=' . rawurlencode($_GET['next']) . '&act=unblock&ad_id=' . rawurlencode($_GET['ad_id']) . '">';
     } else
         $meta_continue = '';
 
