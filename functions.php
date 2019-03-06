@@ -1645,6 +1645,7 @@ function list_ad($ad, $ad_index, $found)
 
 function is_ad_whitelisted($ad_fulltext)
 {
+    $ad_fulltext = mb_strtolower($ad_fulltext, 'UTF-8');
     foreach ($GLOBALS['whitelist'] as $whitestring) {
         if ($whitestring)
             if (mb_stripos($ad_fulltext, $whitestring, 0, 'UTF-8') !== false) { //if we can find any word
