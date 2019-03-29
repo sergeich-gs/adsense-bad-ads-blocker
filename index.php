@@ -1,4 +1,4 @@
-<?php 
+<?php
 header("Content-type: text/html; charset=utf-8");
 include 'functions.php';
 if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
@@ -6,10 +6,45 @@ if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
 @$stopwords_text = file_get_contents($GLOBALS['settings_folder'] . 'stopwords_text.txt');
 @$stopwords_media = file_get_contents($GLOBALS['settings_folder'] . 'stopwords_media.txt');
 
+
+if(isset($_GET['cron_settings'])) {
+    if (is_data_safely($_GET['cron_settings'])) {
+
+        $suffix = (int) $_GET['cron_settings'];
+
+        $for_cron_settings  = '<input type="hidden" name="cron_settings" value="' . $suffix . '" />';
+        $cron_warning  = "<h4 style=\"color: red;\">This settings only for cron set №$suffix <a href=\"./\" title=\"Go to main settings\">main</a></h4>";
+
+        $suffix = 'cron' . $suffix;
+
+        if (file_exists($GLOBALS['settings_folder'] . "settings.$suffix.ini")) {
+            $set = file_get_contents($GLOBALS['settings_folder'] . "settings.$suffix.ini");
+            $set = json_decode($set, 1);
+        }
+        
+        if(isset($set['set_name'])) {
+            $set['set_name'] = base64_decode($set['set_name']);
+            $set['set_name'] = htmlspecialchars($set['set_name']);
+        }  
+    }
+} else 
+    $for_cron_settings = $cron_warning = '';
+
+/** Make cron buttons */
+
+$cron_buttons = 'Cron settings: ';
+for($i = 1; $i <= 10; $i++) {
+
+    $cron_buttons .= '<a href="?cron_settings=' . $i . '">' . $i . '</a> ';
+
+    if(!file_exists($GLOBALS['settings_folder'] . "settings.cron$i.ini"))
+    break;
+}
+
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.6 01.03.2019'; ?>
+$ver = '4.7 29.03.2019'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +74,7 @@ if (!isset($set['display_ad_url'])) { ?>
 
 
 <?= $html_sep ?>
-<? /* 1/*sep*/ ?>
+<?php /* 1/*sep*/ ?>
 
 <div class="second settings">
 
@@ -48,18 +83,30 @@ if (!isset($set['display_ad_url'])) { ?>
 
 
 <?= $html_sep ?>
-<? /* settings/*sep*/ ?>
+<?php /* settings/*sep*/ ?>
 
 <div class="left_colulmn colulmns">
 	<form method="post" action="settings_update.php" >
 
+    <?= $for_cron_settings ?>
+
 	<h3>Main Settings (User Manual <a href="http://www.howgadget.com/adsense/kak-zablokirovat-musornye-obyavleniya-v-adsense.html" target="_blank" rel="noreferrer" >here</a>)</h3>
 
+    <?= $cron_warning ?>
+
+<?php if(!$cron_warning) { ?>
 	<label>
 		Number of cycles:
 		<input class="" type="number" name="num_of_cycles" value="<?= @$set['num_of_cycles'] ?>" /> (Only for web, not for cron)
 	</label>
 	<br />
+<?php } else {?>
+	<label>
+		Set name:
+		<input type="text" name="set_name" maxlength="148" value="<?= @$set['set_name'] ?>" /> (Only for you)
+	</label>
+	<br />
+<?php }?>
 	<label>
 		Number of pages:
 		<input class="" type="number" name="num_of_pages" value="<?= @$set['num_of_pages'] ?>" />
@@ -96,7 +143,7 @@ if (!isset($set['display_ad_url'])) { ?>
 
 	<label title="Real-time bidding">
 		RTB:<input type="checkbox" value="checked" <?= @$set['rtb'] ?> name="rtb" />
-		
+
 	</label>
 <?php } ?>
 	<br /><br />
@@ -174,7 +221,7 @@ $set['redirects_media'] ?>/></label>
 	<br />
 
 
-	<h3 onclick="expand_close('debug', 550);" >Debug, login and other...</h3>
+	<h3 onclick="expand_close('debug', 570);" >Debug, login and other...</h3>
 
 	<div id="debug" style="height: 0px;" >
 
@@ -209,7 +256,7 @@ $set['redirects_media'] ?>/></label>
 	<br />
 
 <?php $arc_checked[$set['arc']] = 'checked'; ?>
-	Use ARC: 
+	Use ARC:
 	<label title="Get ads from new Ads Review Center" >New:<input name="arc" type="radio" value="arc5" <?= @$arc_checked['arc5'] ?>/></label>
 	<label title="Get ads from old Ads Review Center" >Old:<input name="arc" type="radio" value="old_arc" <?= @$arc_checked['old_arc'] ?>/></label>
 	<label title="Get ads from AdX Review Center" for="arc_adx">AdX:</label><input name="arc" type="radio" value="adx" <?= @$arc_checked['adx'] ?> id="arc_adx"/>
@@ -237,17 +284,19 @@ $set['redirects_media'] ?>/></label>
 */ ?>
 	<h3><a href="separate.php" >Setting Separate Version</a></h3>
 
+    <?= $cron_buttons ?>
+
 	</div>
 
 <?= $html_sep ?>
-<? /* settings_run_interval/*sep*/ ?>
+<?php /* settings_run_interval/*sep*/ ?>
 
 	<label title="0 or empty disables autorun">
 	Run every <input type="number" class="run_interval" name="run_interval" id="run_interval" value="<?= @$set['run_interval'] ?>" /> minutes.
 	</label>
 
 <?= $html_sep ?>
-<? /* settings_after_run_interval/*sep*/ ?>
+<?php /* settings_after_run_interval/*sep*/ ?>
 
 	<br /><br />
 
@@ -304,20 +353,20 @@ $set['redirects_media'] ?>/></label>
 	<input class="submit" type="submit" value="Update lists" />
 
 	</form>
-	
+
 	<script>
 	document.getElementById("stopwords_text").scrollTop=document.getElementById("stopwords_text").scrollHeight;
 	document.getElementById("stopwords_media").scrollTop=document.getElementById("stopwords_media").scrollHeight;
 	</script>
-	
+
 </div>
 
 <?= $html_sep ?>
-<? /* right_colulmn_top/*sep*/ ?>
+<?php /* right_colulmn_top/*sep*/ ?>
 
 <div class="right_colulmn colulmns">
 <?= $html_sep ?>
-<? /* auth/*sep*/ ?>
+<?php /* auth/*sep*/ ?>
 	<h3 onclick="expand_close('auth_form');" >Google Auth</h3>
 
 
@@ -350,12 +399,12 @@ $set['redirects_media'] ?>/></label>
 	</form>
 
 <?= $html_sep ?>
-<? /* 4/*sep*/ ?>
+<?php /* 4/*sep*/ ?>
 
 	<br /><br /><br />
 
 <?= $html_sep ?>
-<? /* working_frame_with_buttons/*sep*/ ?>
+<?php /* working_frame_with_buttons/*sep*/ ?>
 	<div class="timer"><span id="timer"></span></div>
 <?php if (is_still_log_in()) { ?>
 
@@ -368,7 +417,7 @@ $set['redirects_media'] ?>/></label>
 	<?php     if (@$set['num_of_cycles']) { ?>
 	<div class="cycles" >
 		<a href="cycles.php" onclick="start_searching('cycles.php', 'working_frame');" target="working_frame"  ><button><?= @$set['num_of_cycles'] ?>  search cycles</button></a>
-		<? /*<a href="cycles.php?searcher=blocked.php" onclick="start_searching('cycles.php?searcher=blocked.php', 'working_frame');" target="working_frame"  ><button><?= @$set['num_of_cycles'] ?>  blocked cycles</button></a> */ ?>
+		<?php /*<a href="cycles.php?searcher=blocked.php" onclick="start_searching('cycles.php?searcher=blocked.php', 'working_frame');" target="working_frame"  ><button><?= @$set['num_of_cycles'] ?>  blocked cycles</button></a> */ ?>
 	</div>
 	<?php     } ?>
 
@@ -418,7 +467,7 @@ alpari.com
 <?php } ?>
 
 <?= $html_sep ?>
-<? /* access_pass/*sep*/ ?>
+<?php /* access_pass/*sep*/ ?>
 
 	<h3 onclick="expand_close('auth_form2');" >Access Here Password</h3>
 
@@ -435,7 +484,7 @@ alpari.com
 	</form>
 
 <?= $html_sep ?>
-<? /* donate/*sep*/ ?>
+<?php /* donate/*sep*/ ?>
 
 	<h3 onclick="expand_close('donate', 390);" >Donate</h3>
 
@@ -446,7 +495,7 @@ alpari.com
 	Так же в благодарность буду рад принять ссылки с Ваших ресурсов (на любую страницу).
 	</div>
 <?= $html_sep ?>
-<? /* right_column_bottom/*sep*/ ?>
+<?php /* right_column_bottom/*sep*/ ?>
 
 <a href="earnings.php" target="working_frame" onclick="start_searching('earnings.php', 'working_frame');" title="Today, yesterday, last 7, 28 days and this month earnings">Earnings</a> <br /><br />
 <a title="With headers of blocked ads by the account" href="advertisers.php" target="_blank" >Advertisers account list</a> <br />
@@ -469,9 +518,9 @@ alpari.com
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/arc/ca-<?= $GLOBALS['pub_id'] ?>" target="_blank" rel="noreferrer" >New ARC</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/opt/experiments" target="_blank" rel="noreferrer" >Experiments</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/myads/adbalance" target="_blank" rel="noreferrer" >Ad Balance</a> <br />
-			 
+
 	</div>
-	
+
 <?php } else { ?>
 
 	<h3 onclick="expand_close('adsenselinks', 150);" >AdX Links</h3>
@@ -486,7 +535,7 @@ alpari.com
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>&tab=adServingTab" target="_blank" rel="noreferrer" >Ad Serving</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/opt/experiments" target="_blank" rel="noreferrer" >Experiments</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/myads/adbalance" target="_blank" rel="noreferrer" >Ad Balance</a> <br />
-			 
+
 	</div>
 
 <?php } ?>
@@ -530,7 +579,7 @@ alpari.com
 <br class="clear" />
 
 <?= $html_sep ?>
-<? /* reports/*sep*/ ?>
+<?php /* reports/*sep*/ ?>
 
 <div class="second reports">
 
@@ -616,7 +665,7 @@ alpari.com
 </div>
 
 <?= $html_sep ?>
-<? /* footer/*sep*/ ?>
+<?php /* footer/*sep*/ ?>
 
 </body>
 </html>

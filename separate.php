@@ -6,7 +6,7 @@ $index_parts_unsorted = explode('<?= $html_sep ?>', $index_php);
 foreach ($index_parts_unsorted as $i => $index_part) {
     if ($i) {
         $list = explode('/*sep*/ ?>', $index_part, 2);
-        $index = trim(str_ireplace('<? /*', '', $list[0]));
+        $index = trim(str_ireplace('<?php /*', '', $list[0]));
         $index_parts[$index] = $list[1];
     } else
         $index_parts['header'] = $index_part;

@@ -597,17 +597,17 @@ function get_ad($url, $ad_type)
 
                     $ad = multimedia_ad0($ad_html);         // Multi-format, text ad
                     $ad['type'] = 'Mft';
-    
+
                 } elseif (mb_stripos($ad_html, 'data-rh-set-type="62"', 70000, 'UTF-8') !== false) {
-    
+
                     $ad = multimedia_ad62($ad_html);             // Multi-format, small size ad
                     $ad['type'] = 'Mf62';
-    
+
                 }
-                
+
             if (!$ad)
                 $ad = multiformat_ad_old35($ad_html);
-                
+
             if (!isset($ad['type']))
                 $ad['type'] = 'Mf';
 
@@ -654,11 +654,11 @@ function get_ad($url, $ad_type)
             $ad_type = 'Mf_adData_JSON';
 
         } elseif (mb_stripos($ad_html, 'data-rh-set-type="62"', 70000, 'UTF-8') !== false) {
-    
+
             $ad = multimedia_ad62($ad_html);             // Multi-format, small size ad
             $ad['type'] = 'Mf62';
             $ad_type = 'Mf62';
-    
+
         } else {
 
             if (isset($GLOBALS['set_gl']['log']))
@@ -683,20 +683,20 @@ function get_ad($url, $ad_type)
 
         unset($dom);
 
-        $croped = false;
-        if (@mb_strlen($ad['body'], 'UTF-8') >= 120) {
-            $ad['body'] = mb_substr($ad['body'], 0, 120, 'UTF-8');
-            $croped = true;
+        $cropped = false;
+        if (@mb_strlen($ad['body'], 'UTF-8') >= 160) {
+            $ad['body'] = mb_substr($ad['body'], 0, 160, 'UTF-8');
+            $cropped = true;
         }
         if (@mb_strlen($ad['header1'], 'UTF-8') >= 40) {
             $ad['header1'] = mb_substr($ad['header1'], 0, 40, 'UTF-8');
-            $croped = true;
+            $cropped = true;
         }
         if (@mb_strlen($ad['header2'], 'UTF-8') >= 95) {
             $ad['header2'] = mb_substr($ad['header2'], 0, 95, 'UTF-8');
-            $croped = true;
+            $cropped = true;
         }
-        if ($croped)
+        if ($cropped)
             @$ad['fulltext'] = trim(mb_strtolower($ad['header1'] . ' ' . $ad['header2'] . ' ' . $ad['body'] . ' ' . $ad['displayUrl'], 'UTF-8'));
 
         return $ad;
@@ -961,10 +961,14 @@ function multimedia_ad62($html, $do_not_decode = false)
     $fulltext = implode(' ', $ad);
     $ad['fulltext'] = $fulltext;
 
-    if(!$do_not_decode)
+    if(!$do_not_decode) {
         if (!isset($GLOBALS['set_gl']['utf8_off']))
             foreach ($ad as $index => $value)
                 $ad[$index] = utf8_decode($value);
+    } else {
+        $ad['header2'] = $ad['body'];
+        //$ad['body'] = '';
+    }
 
     return $ad;
 }

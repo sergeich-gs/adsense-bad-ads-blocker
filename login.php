@@ -43,7 +43,7 @@ $url = 'https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.goog
 $first_result = curl_get($url, 'https://google.com/adsense/', $GLOBALS['myheaders']);
 
 if (isset($set['log']))
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/answer1.' . time(), $first_result);
+    create_log($first_result, 'answer1.');
 
 if (trim($first_result) == '') {
     die('Error: empty first answer. It could be DNS fail...');
@@ -57,7 +57,7 @@ sleep(rand(2, 3));
 $login_result = password_form($first_result, $set['login'], $url);
 
 if (isset($set['log']))
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/answer2res_log' . time(), $login_result);
+    create_log($login_result, 'answer2res.');
 
 if (trim($login_result) == '') {
     die('Error: empty login answer. It could be DNS fail...');
@@ -76,7 +76,7 @@ if (stripos($login_result, 'errormsg_0_Email') !== false) {
 $result_auth = password_send($login_result, $_POST['password']);
 
 if (isset($set['log'])) {
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/answer3_res_auth' . time(), $result_auth);
+    create_log($result_auth, 'answer3_res_auth.');
     $result_tmp = $result_auth;
 }
 
@@ -191,7 +191,7 @@ else {
     $forms = get_forms($result_auth);
 
     if (isset($set['log']))
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/answer4res_auth' . time(), $result_auth);
+        create_log($result_auth, 'answer4res_auth.');
 
     after_first_page : if ($protect_counter >= 3)
         exit('too many jumps');

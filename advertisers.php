@@ -20,7 +20,8 @@ if (isset($_GET['arc'])) {
 $first_result = curl_get($GLOBALS['arc_tab_req_string'], '', '');
 
 if (isset($set['log']))
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/s1' . time(), $first_result);
+    create_log($first_result, 's1_adv.');
+
 
 unset($first_result);
 
@@ -76,8 +77,8 @@ if (@$_POST['confirmation'] == 'agree') {
             //unlink($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $adv_obj->{3});
             //unlink($GLOBALS['temp_folder'] . 'accs_ads/' . $accs_ads_filename);
         }
-        if ($i >= 100)
-            break;
+        if ($i >= 100) break;
+            
 
         $i++;
     }

@@ -10,7 +10,8 @@ if (!is_still_log_in()) {
 $first_result = curl_get($GLOBALS['arc_tab_req_string'], '', '');
 
 if (isset($set['log']))
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/d1' . time(), $first_result);
+    create_log($first_result, 's1_b.url.');
+
 
 unset($first_result);
 

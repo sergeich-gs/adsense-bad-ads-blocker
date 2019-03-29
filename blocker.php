@@ -86,6 +86,8 @@ if (isset($_GET['ad_id'])) {
     @$result = $result->{$result_keyword}->{1};
     @$result = $result[0]->{2};
 
+
+
     if ($result)
         $result = 'blocked';
     else
