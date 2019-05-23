@@ -6,6 +6,9 @@ foreach ($_POST as $value)
     if (!is_data_safely($value))
         die();
 
+if(isset($_POST['username']))
+    unset($_POST['username']);
+
 if(isset($_POST['cron_settings'])) {
 
     $suffix = (int) $_POST['cron_settings'];
