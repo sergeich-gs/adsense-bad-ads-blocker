@@ -25,11 +25,13 @@ if(isset($_GET['cron_settings'])) {
         if(isset($set['set_name'])) {
             $set['set_name'] = base64_decode($set['set_name']);
             $set['set_name'] = htmlspecialchars($set['set_name']);
-        }  
+        }
+        $height_expand = '340';
     }
-} else 
+} else {
     $for_cron_settings = $cron_warning = '';
-
+    $height_expand = '570';
+}
 /** Make cron buttons */
 
 $cron_buttons = 'Cron settings: ';
@@ -44,7 +46,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.7 29.03.2019'; ?>
+$ver = '4.8 12.05.2019'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -201,19 +203,36 @@ $set['redirects_media'] ?>/></label>
 	<label title="Search for stop word in target URL too">Check target URL: <input name="check_target_url" type="checkbox" value="checked" <?= @$set['check_target_url'] ?>/></label>
 
 	<br />
+ 
+	<label title="Some advertisers has a name. If adv. has name it will be checked">Check adv. name: <input name="check_adv_name" type="checkbox" value="checked" <?= @$set['check_adv_name'] ?>/></label>
+
+	<br />
 
 <?php if($set['arc'] == 'old_arc') { ?>
 	<label><span class="red_arrow" >Check only predicted blocks: </span><input name="predicted" type="checkbox" value="checked" <?= @$set['predicted'] ?>/></label>
 
 	<br />
 <?php } ?>
+	<label title="Do not block ads if its advertiser has a name" >Do not block advs with name: </label>
+    <label>Text: <input name="do_not_with_adv_name_txt" type="checkbox" value="checked" <?= @$set['do_not_with_adv_name_txt'] ?>/></label>
+    <label>Media: <input name="do_not_with_adv_name_media" type="checkbox" value="checked" <?= @$set['do_not_with_adv_name_media'] ?>/></label>
+
+	<br />
+ 
 	<label>Mark reviewed as reviewed: <input name="mark_reviewed" type="checkbox" value="checked" <?= @$set['mark_reviewed'] ?>/></label>
 
 	<br />
 
 	<label>Get ad stats: <input name="get_stats" type="checkbox" value="checked" <?= @$set['get_stats'] ?>/></label>
 
-	<p title="Equal button «REPORT AD» you can see after ad blocking. Works only with new ARC!" >Report ad blocked by:<br />
+    <?php 
+    if($set['arc'] != 'arc5')
+        $hidden_reports = 'style="display: none;" ';
+       else
+        $hidden_reports = '';
+    ?>
+    
+	<p <?=$hidden_reports?> title="Equal button «REPORT AD» you can see after ad blocking. Works only with new ARC!" >Report ad blocked by:<br />
 	<label title="Blocked for any word of any list">Words: <input name="report_words" type="checkbox" value="checked" <?= @$set['report_words'] ?>/></label>
 	<label title="Blocked for disguised symbols">Disguised: <input name="report_disg" type="checkbox" value="checked" <?= @$set['report_disg'] ?>/></label>
 	<label title="Blocked for any kind of redirect">Redirect: <input name="report_redir" type="checkbox" value="checked" <?= @$set['report_redir'] ?>/></label>
@@ -221,9 +240,9 @@ $set['redirects_media'] ?>/></label>
 	<br />
 
 
-	<h3 onclick="expand_close('debug', 570);" >Debug, login and other...</h3>
+	<h3 onclick="expand_close('debug', <?=$height_expand?>);" >Debug, login and other...</h3>
 
-	<div id="debug" style="height: 0px;" >
+	<div id="debug" style="height: <?php if($cron_warning) echo $height_expand; else echo '0'; ?>px;" >
 
 	<button class="json_string" formtarget="working_frame" formaction="json_string.php" tabindex="-1" >Show json-string</button>
 
@@ -239,14 +258,21 @@ $set['redirects_media'] ?>/></label>
 
 	<br />
 
+<?php if(!$cron_warning) { ?>
 	<label title="Block and unblock buttons under ads listed below" >Show block/unblock buttons: <input name="b_unb_buttons" type="checkbox" value="checked" <?= @$set['b_unb_buttons'] ?>/></label>
 
 	<br />
+<?php } ?>
 
 	<label>Don't save clear ads: <input name="no_save_clear" type="checkbox" value="checked" <?= @$set['no_save_clear'] ?>/></label>
 
 	<br />
+    
+	<label><span class="red_arrow" >Don't save any ads: </span><input name="no_save_any" type="checkbox" value="checked" <?= @$set['no_save_any'] ?>/></label>
 
+	<br />
+
+<?php if(!$cron_warning) { ?>
 	<label title="If your server sends «x-frame-options: DENY» and you can not disable it" >Frames do not work: <input name="frames_off" type="checkbox" value="checked" <?= @$set['frames_off'] ?>/></label>
 
 	<br />
@@ -254,6 +280,7 @@ $set['redirects_media'] ?>/></label>
 	<label title="Display full ad URL after ad text" >Display ad URL: <input name="display_ad_url" type="checkbox" value="checked" <?= @$set['display_ad_url'] ?>/></label>
 
 	<br />
+<?php } ?>
 
 <?php $arc_checked[$set['arc']] = 'checked'; ?>
 	Use ARC:
@@ -275,14 +302,20 @@ $set['redirects_media'] ?>/></label>
 
 	<br /><br />
 
+<?php if(!$cron_warning) { ?>
 	<label>
 		Login (e-mail):<br />
 		<input class="login" name="login" type="text"  value="<?= @$set['login'] ?>" placeholder="Will be saved" />
 	</label>
+<?php } ?>
+    
 <?php /*
 	<p title="Or just add the string to crontab file to run each 10 minutes. If ypu don't see a full path to file use full path instead.">*  *  *  *  * <?php echo exec('whoami'); ?> /usr/bin/php <?= dirname(__file__); ?>/search_bad_ads.php</p>
 */ ?>
+
+<?php if(!$cron_warning) { ?>
 	<h3><a href="separate.php" >Setting Separate Version</a></h3>
+<?php } ?>
 
     <?= $cron_buttons ?>
 
@@ -291,9 +324,11 @@ $set['redirects_media'] ?>/></label>
 <?= $html_sep ?>
 <?php /* settings_run_interval/*sep*/ ?>
 
+<?php if(!$cron_warning) { ?>
 	<label title="0 or empty disables autorun">
 	Run every <input type="number" class="run_interval" name="run_interval" id="run_interval" value="<?= @$set['run_interval'] ?>" /> minutes.
 	</label>
+<?php } ?>
 
 <?= $html_sep ?>
 <?php /* settings_after_run_interval/*sep*/ ?>

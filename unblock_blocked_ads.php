@@ -154,14 +154,14 @@ foreach ($search_words as $search_word)
                 else
                     @$params->{2}->{1} = 0; // Start position
             @$params->{2}->{2} = (int)$set['num_of_ads_per_page']; // Ads qty
-            @$params->{2}->{3} = 0; // 0 - Shown ads; 1 - already blocked ads
+            @$params->{2}->{3} = 1; // 0 - Shown ads; 1 - already blocked ads
             @$params->{2}->{4}->{1}->{1} = $some_long_token;
-            if ($search_word)
-                @$params->{2}->{5}->{1} = $search_word; //Search word (ARC word input)
-            if (!isset($set['reviewed']))
-                @$params->{2}->{5}->{2} = 1; //Reviewed ads
-            if (isset($set['predicted']))
-                @$params->{2}->{5}->{3} = 1; //Predicted block
+//            if ($search_word)
+//                @$params->{2}->{5}->{1} = $search_word; //Search word (ARC word input)
+//            if (!isset($set['reviewed']))
+//                @$params->{2}->{5}->{2} = 1; //Reviewed ads
+//            if (isset($set['predicted']))
+//                @$params->{2}->{5}->{3} = 1; //Predicted block
             if (isset($set['last_of_days']))
                 if ($set['last_of_days'])
                     @$params->{2}->{5}->{6} = $set['last_of_days']; //Show ads for last some days.
@@ -196,14 +196,14 @@ foreach ($search_words as $search_word)
             if (isset($set['reviewed']))
                 @$params->{2}->{3} = 10;
             else
-                @$params->{2}->{3} = 11; // 10 - Reviewed ads; 11 - not rewieved ads; 1 - stats checked and blocked ads. Usless info.
+                @$params->{2}->{3} = 1; // 10 - Reviewed ads; 11 - not rewieved ads; 1 - stats checked and blocked ads. Usless info.
             if (isset($set['last_of_days']))
                 if ($set['last_of_days'])
                     @$params->{2}->{5}->{6} = $set['last_of_days']; //Show ads for last some days  (same as old ARC)
-            if (!$search_word)
+//            if (!$search_word)
                 @$params->{2}->{5}->{16} = $media_types; // 0 - Text; 1 - graphics; 2 - Media;
-            if ($search_word)
-                @$params->{2}->{5}->{24} = array($search_word); //Search word (ARC word input)
+//            if ($search_word)
+//                @$params->{2}->{5}->{24} = array($search_word); //Search word (ARC word input)
             $params->{2}->{7} = '';
             if (file_exists($GLOBALS['temp_folder'] . 'some_long_token.txt'))
                 $params->{2}->{7} = file_get_contents($GLOBALS['temp_folder'] . 'some_long_token.txt'); // Some long token from prev. request response to continue paging ads.
@@ -254,6 +254,8 @@ foreach ($search_words as $search_word)
 
             if ($adunit['fulltext']) {
 
+
+/*
                 if (isset($set['whitelist']))
                     if (is_ad_whitelisted($adunit['fulltext'] . ' ' . $adunit['adv_name'] . ' ' . $adunit['adv_id'] . ' ' . $adunit['url']))
                         continue;
@@ -265,31 +267,13 @@ foreach ($search_words as $search_word)
                     goto list_ad;
                 }
 
-                if ($adunit['type'] == 't' || $adunit['type'] == 'Mft') {
-
-                    if (isset($set['do_not_with_adv_name_txt'])) {
-                        if($adunit['adv_name'] != '') {     // Not so bad ad
-                            $adunit['adv_name'] = '!!!-> ' . $adunit['adv_name'];   // To check
-                            //$adunit['not_so_bad'] = true;
-                            goto list_ad;
-                        }
-                }
+                if ($adunit['type'] == 't') {
                     $stopwords = $stopwords_text;
                     if (isset($set['disguised_text']))
                         $set['disguised'] = true;
                     if (isset($set['redirects_text']))
                         $set['redirects'] = true;
-   
                 } else {
-
-                    if (isset($set['do_not_with_adv_name_media'])) {
-                        if($adunit['adv_name'] != '') {     // Not so bad ad
-                            $adunit['adv_name'] = '!!!-> ' . $adunit['adv_name'];   // To check
-                            //$adunit['not_so_bad'] = true;
-                            goto list_ad;
-                        }
-                }
-
                     $stopwords = $stopwords_media;
                     if (isset($set['disguised_media']))
                         $set['disguised'] = true;
@@ -339,14 +323,6 @@ foreach ($search_words as $search_word)
                             $fulltext .= ' ' . lat_replace($fulltext);
                         if (isset($set['check_target_url']))
                             $fulltext .= ' ' . $adunit['url'];
-                            
-                            
-/** TEMP TEMP TEMP  */     $set['check_adv_name'] = true;    /** TEMP TEMP TEMP  */   
- 
- 
-                        if (isset($set['check_adv_name']))
-                            if ($adunit['adv_name'])
-                                $fulltext .= ' ' . $adunit['adv_name'];
 
                         if (mb_stripos($stopword, '!!!', 0, 'UTF-8') === 0) {
                             $stopword = str_replace('!!!', '', $stopword);
@@ -377,10 +353,11 @@ foreach ($search_words as $search_word)
                         goto list_ad;
                     }
                 }
+*/
 
-
-                list_ad : if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
-                    block_ad($ad_id[$index], $digikey_for_req, 0);
+                //list_ad : if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
+                    block_ad($ad_id[$index], $digikey_for_req, 1);
+                    /*
                     if (isset($set['ad_account'])){
                         
                         $blocking_text = trim($adunit['header1'] . ' ' . $adunit['header2']);
@@ -407,15 +384,15 @@ foreach ($search_words as $search_word)
                             if ($adunit['filter'] == 'redirect')
                                  ReportPolicyViolation($ad_id[$index], rand(1,12));
                     }
-                    
-                    if (!isset($set['no_save_any']))
-                        list_ad($adunit, $index, $found);
+
+                    list_ad($adunit, $index, $found);*/
                     $blocked++;
-                } else {
-                    if (!isset($set['no_save_any']))
-                        if (!isset($set['no_save_clear']) || $adunit['not_so_bad'])
-                            list_ad($adunit, $index, 0);
-                }
+            /*    } else {
+                    if (!isset($set['no_save_clear']))
+                        list_ad($adunit, $index, 0);
+                }*/
+                list_ad($adunit, $index, 0);
+                
                 $checked++;
                 unset($set['disguised'], $set['redirects'], $found);
 

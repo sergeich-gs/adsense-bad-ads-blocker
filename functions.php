@@ -136,8 +136,8 @@ function is_data_safely($input_data)
         return false;
     if (strpos($input_data, "}") !== false)
         return false;
-    if (strpos($input_data, "$") !== false)
-        return false;
+    //if (strpos($input_data, "$") !== false)
+        //return false;
     if (strpos($input_data, "strip") !== false)
         return false;
     if (strpos($input_data, "decode") !== false)
@@ -335,10 +335,12 @@ function count_redirects($url)
 
 function find_disguised_latin($ad)
 {
-    $text = trim($ad['header1']);
+    if (isset($ad['header1']))
+        $text = trim($ad['header1']);
     if (isset($ad['header2']))
         $text .= ' ' . trim($ad['header2']);
-    $text .= ' ' . trim($ad['body']);
+    if (isset($ad['body']))
+        $text .= ' ' . trim($ad['body']);
 
     $to_replace = array('-', ':', ';', '{', '}', '(', ')', ',', '%', '"', '+', '–', '&', '.', '/', '\\');
     $text = str_replace($to_replace, ' ', $text);
@@ -352,7 +354,7 @@ function find_disguised_latin($ad)
         if (preg_match('/([а-яёА-ЯЁ]{1,})\w*([а-яёА-ЯЁ]{1,})/u', $word))
             if (mb_strlen($word, 'UTF-8') > 3)
                 if (!preg_match('/(\d{1,})\w*(\d{1,})/u', $word))
-                    if (preg_match('/[aceonpxuyABCEHKMOPTXYαβγδεζηθικλμνξοπρσςτυφχψωқҗҳңҡҝҵҷҹӂӄӆӈӊӌӎӝӟӡӣӥӭӵӷӹӻӽӿѝӷӻґѓғṙṛṝṟᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήḣḥḧḩḫĥħḿṁṃṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱẗàáâãäåāăąȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳᾴάαᾶᾷᾀᾁᾂᾃᾄᾅᾆᾇὰάḁӑӓɑѐèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻòóôõöøōŏőɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄὅọỏốồổỗộớờởỡợӧοσόὸόýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұṅṇṉṋǹćĉċčçƈͼϲҫҁҭkⱪķĸǩḱḳḵқҝҟҡќӄκƙҗҗӝӂxẋẍҳӽӿ]/u', $word))
+                    if (preg_match('/[aceonpxuyABCEHKMOPTXYαβγδεζηθικλμνξοπρσςτυφχψωқҗҳңҡҝҵҷҹӂӄӆӈӊӌӎӝӟӡӣӥӭӵӷӹӻӽӿѝӷӻґѓғṙṛṝṟᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήḣḥḧḩḫĥħḿṁṃṕṗҏṙṛṝṟṡṣṥṧṩṫṭṯṱẗàáâãäåāăąȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳᾴάαᾶᾷᾀᾁᾂᾃᾄᾅᾆᾇὰάḁӑӓɑᴀѐèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻòóôõöøōŏőɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄὅọỏốồổỗộớờởỡợӧοσόὸόýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұṅṇṉṋǹćĉċčçƈͼϲҫҁҭkⱪķĸǩḱḳḵқҝҟҡќӄκƙҗҗӝӂxẋẍҳӽӿᴄᴏᴛℂ০]/u', $word))
                         if (!preg_match('/[a-z]{4,}/u', $word)) {
                             if (preg_match('/^[c]{1}/iu', $word))
                                 if (!preg_match('/[aceonpxuyABCEHKMOPTXY]/u', mb_substr($word, 1, null, 'UTF-8')))
@@ -360,6 +362,7 @@ function find_disguised_latin($ad)
                             $found = $word;
                             break;
                         }
+
     }
     return $found;
 }
@@ -382,21 +385,21 @@ function lat_replace($text)
         $replaces_unicodes['л']='ӆ';
         $replaces_unicodes['э']='ӭ';
         $replaces_unicodes['г']='ӷӻґѓғṙṛṝṟ';
-        $replaces_unicodes['о']='oòóôõöøōŏőσɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄόὅọỏốồổỗộớờởỡợӧοόὸ';
-        $replaces_unicodes['а']='aàáâαãäåāąăȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳάᾁᾴᾉάᾶᾷᾀᾂᾃᾄᾅᾆᾇὰḁӑӓɑ';
-        $replaces_unicodes['е']='eèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗѐ';
-        $replaces_unicodes['у']='yýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұɣ';
+        $replaces_unicodes['о']='oòóôõöøōŏőσɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄόὅọỏốồổỗộớờởỡợӧοόὸᴏ০θ';
+        $replaces_unicodes['а']='aàáâαãäåāąăȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳάᾁᾴᾉάᾶᾷᾀᾂᾃᾄᾅᾆᾇὰḁӑӓɑᴀ';
+        $replaces_unicodes['е']='eèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗѐε';
+        $replaces_unicodes['у']='yýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұɣγ';
         $replaces_unicodes['к']='kⱪķĸǩḱḳḵқҝҟҡќӄκƙ';
         $replaces_unicodes['н']='hḣḥḧḩḫĥħӈӊңηᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήƞṅṇṉṋǹήɲҥʜ';
         $replaces_unicodes['д']='ĝğġģ';
-        $replaces_unicodes['с']='cćĉċčçƈͼϲҫҁḉ';
+        $replaces_unicodes['с']='cćĉċčçƈͼϲҫҁḉᴄℂ';
         $replaces_unicodes['и']='uùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻӥ';
         $replaces_unicodes['х']='xẋẍҳӽӿ';
         $replaces_unicodes['п']='nπ';
         $replaces_unicodes['й']='ѝӣҋ';
         $replaces_unicodes['р']='pρṕṗῤῥҏƥþ';
         $replaces_unicodes['ж']='җҗӝӂ';
-        $replaces_unicodes['т']='tḿṁṃṫṭṯṱẗτҭţťŧʈ';
+        $replaces_unicodes['т']='tḿṁṃṫṭṯṱẗτҭţťŧʈᴛ';
 
         $lat = array('u`');
         $cyr = array('й');
@@ -683,6 +686,15 @@ function get_ad($url, $ad_type)
 
         unset($dom);
 
+        $myrow=str_replace("\n", ' ', $myrow);
+
+        if(isset($adunit['header1']))
+            $ad['header1'] = htmlspecialchars($ad['header1']);
+        if(isset($adunit['header2'])) 
+            $ad['header2'] = htmlspecialchars($ad['header2']);
+        if(isset($adunit['body'])) 
+            $ad['body'] = htmlspecialchars($ad['body']);
+
         $cropped = false;
         if (@mb_strlen($ad['body'], 'UTF-8') >= 160) {
             $ad['body'] = mb_substr($ad['body'], 0, 160, 'UTF-8');
@@ -965,9 +977,6 @@ function multimedia_ad62($html, $do_not_decode = false)
         if (!isset($GLOBALS['set_gl']['utf8_off']))
             foreach ($ad as $index => $value)
                 $ad[$index] = utf8_decode($value);
-    } else {
-        $ad['header2'] = $ad['body'];
-        //$ad['body'] = '';
     }
 
     return $ad;
