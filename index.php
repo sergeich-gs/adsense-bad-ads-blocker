@@ -10,12 +10,12 @@ if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
 if(isset($_GET['cron_settings'])) {
     if (is_data_safely($_GET['cron_settings'])) {
 
-        $suffix = (int) $_GET['cron_settings'];
+        $number_cr = (int) $_GET['cron_settings'];
 
-        $for_cron_settings  = '<input type="hidden" name="cron_settings" value="' . $suffix . '" />';
+        $for_cron_settings  = '<input type="hidden" name="cron_settings" value="' . $number_cr . '" />';
         $cron_warning  = "<h4 style=\"color: red;\">This settings only for cron set №$suffix <a href=\"./\" title=\"Go to main settings\">main</a></h4>";
 
-        $suffix = 'cron' . $suffix;
+        $suffix = 'cron' . $number_cr;
 
         if (file_exists($GLOBALS['settings_folder'] . "settings.$suffix.ini")) {
             $set = file_get_contents($GLOBALS['settings_folder'] . "settings.$suffix.ini");
@@ -335,7 +335,13 @@ $set['redirects_media'] ?>/></label>
 
 	<br /><br />
 
-	<input class="submit" type="submit" value="Update settings" />
+<?php if($cron_warning)
+          $button_text = "Update settings for cron set №" . $number_cr;
+      else
+          $button_text = "Update settings";
+?>
+
+	<input class="submit" type="submit" value="<?= $button_text ?>" />
 
 
 	</form>
