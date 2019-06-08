@@ -9,11 +9,11 @@ $GLOBALS['temp_folder'] = __DIR__ . '/tempdata/';
 $GLOBALS['cookie_file'] = $GLOBALS['temp_folder'] . 'cookie.txt';
 $GLOBALS['xsrftoken_file'] = $GLOBALS['temp_folder'] . 'xsrftoken.txt';
 @$GLOBALS['pub_id'] = trim(file_get_contents($GLOBALS['temp_folder'] . 'pub_id.txt'));
-$GLOBALS['m_useragent'] = 'Mozilla/5.0 (Linux; Android 4.4.4; ru-ru; SAMSUNG GT-I9300I Build/KTU84P) AppleWebKit/537.36 (KHTML, like Gecko) Version/1.5 Chrome/28.0.1500.94 Mobile Safari/537.36';
+$GLOBALS['m_useragent'] = 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1';
 $GLOBALS['creative_review_req_string'] = 'https://www.google.com/adsense/gp/creativeReview?ov=3&pid=' . $GLOBALS['pub_id'] . '&authuser=0&tpid=' . $GLOBALS['pub_id'] . '&hl=en';
-$GLOBALS['blocking_controls_req_string'] = 'https://www.google.com/adsense/gp/blockingControls?ov=3&pid=' . $GLOBALS['pub_id'] . '&authuser=0&tpid=' . $GLOBALS['pub_id'];
-$GLOBALS['arc_tab_req_string'] = 'https://www.google.com/adsense/new/u/0/' . $GLOBALS['pub_id'] . '/main/allowAndBlockAds?webPropertyCode=ca-' . $GLOBALS['pub_id'] . '&tab=arcTab';
-$GLOBALS['new_arc_tab_req_string'] = 'https://www.google.com/adsense/new/u/0/' . $GLOBALS['pub_id'] . '/arc/ca-' . $GLOBALS['pub_id'];
+$GLOBALS['blocking_controls_req_string'] = 'https://www.google.com/adsense/gp/blockingControls?ov=3&pid=' . $GLOBALS['pub_id'] . '&authuser=0&tpid=' . $GLOBALS['pub_id'] . '&hl=en';
+$GLOBALS['arc_tab_req_string'] = 'https://www.google.com/adsense/new/u/0/' . $GLOBALS['pub_id'] . '/main/allowAndBlockAds?webPropertyCode=ca-' . $GLOBALS['pub_id'] . '&tab=arcTab&hl=en';
+$GLOBALS['new_arc_tab_req_string'] = 'https://www.google.com/adsense/new/u/0/' . $GLOBALS['pub_id'] . '/arc/ca-' . $GLOBALS['pub_id'] . '?hl=en';;
 $GLOBALS['myheaders'] = array('accept-language:en-US;q=1,en;q=0.4', 'content-type:application/javascript; charset=UTF-8');
 $GLOBALS['myheaders_new'] = array('accept-language:en-US;q=1,en;q=0.4', 'content-type:application/json;charset=UTF-8');
 $GLOBALS['creative_review_new_string'] = '/ads-publisher-controls/acx/5/proto/creativereview/';
@@ -45,6 +45,9 @@ if (!file_exists($GLOBALS['temp_folder'] . 'autoblocked_urls'))
 
 if (!file_exists($GLOBALS['temp_folder'] . 'accs_ads'))
     mkdir($GLOBALS['temp_folder'] . 'accs_ads', 0775);
+
+if (!file_exists($GLOBALS['temp_folder'] . 'domains_create'))
+    mkdir($GLOBALS['temp_folder'] . 'domains_create', 0775);
 
 
 //if(php_sapi_name()!='cli')
@@ -378,28 +381,29 @@ function lat_replace($text)
 
     if(!isset($GLOBALS['lat_replace'])) {
 
-        $replaces_unicodes['в']='bʙ';
-        $replaces_unicodes['м']='mμӎ';
+        $replaces_unicodes['а']='aàáâαãäåāąăȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳάᾁᾴᾉάᾶᾷᾀᾂᾃᾄᾅᾆᾇὰḁӑӓɑᴀ';
+        $replaces_unicodes['б']='ϭϬ';
+        $replaces_unicodes['в']='bʙϐβ';
+        $replaces_unicodes['г']='ӷӻґѓғṙṛṝṟ';
+        $replaces_unicodes['д']='ĝğġģ';
+        $replaces_unicodes['е']='eèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗѐεĘ';
+        $replaces_unicodes['ж']='җҗӝӂ';
+        $replaces_unicodes['и']='uùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻӥϰ';
+        $replaces_unicodes['й']='ѝӣҋ';
+        $replaces_unicodes['к']='kⱪķĸǩḱḳḵқҝҟҡќӄκƙϗϏ';
+        $replaces_unicodes['л']='ӆ';
+        $replaces_unicodes['м']='mμӎϻϺΜ';
+        $replaces_unicodes['н']='hḣḥḧḩḫĥħӈӊңηᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήƞṅṇṉṋǹήɲҥʜ';
+        $replaces_unicodes['о']='oòóôõöøōŏőσɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄόὅọỏốồổỗộớờởỡợӧοόὸᴏ০θ';
+        $replaces_unicodes['п']='nπ';
+        $replaces_unicodes['р']='pρṕṗῤῥҏƥþקϷ';
+        $replaces_unicodes['с']='cćĉċčçƈͼϲҫҁḉᴄℂϾϹ';
+        $replaces_unicodes['т']='tḿṁṃṫṭṯṱẗτҭţťŧʈᴛΤ';
+        $replaces_unicodes['у']='yýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұɣγϓϒΥ';
+        $replaces_unicodes['х']='xẋẍҳӽӿχΧ';
         $replaces_unicodes['ч']='ҷҹӌӵ';
         $replaces_unicodes['ы']='ӹ';
-        $replaces_unicodes['л']='ӆ';
-        $replaces_unicodes['э']='ӭ';
-        $replaces_unicodes['г']='ӷӻґѓғṙṛṝṟ';
-        $replaces_unicodes['о']='oòóôõöøōŏőσɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄόὅọỏốồổỗộớờởỡợӧοόὸᴏ০θ';
-        $replaces_unicodes['а']='aàáâαãäåāąăȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳάᾁᾴᾉάᾶᾷᾀᾂᾃᾄᾅᾆᾇὰḁӑӓɑᴀ';
-        $replaces_unicodes['е']='eèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗѐε';
-        $replaces_unicodes['у']='yýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұɣγ';
-        $replaces_unicodes['к']='kⱪķĸǩḱḳḵқҝҟҡќӄκƙ';
-        $replaces_unicodes['н']='hḣḥḧḩḫĥħӈӊңηᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήƞṅṇṉṋǹήɲҥʜ';
-        $replaces_unicodes['д']='ĝğġģ';
-        $replaces_unicodes['с']='cćĉċčçƈͼϲҫҁḉᴄℂ';
-        $replaces_unicodes['и']='uùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻӥ';
-        $replaces_unicodes['х']='xẋẍҳӽӿ';
-        $replaces_unicodes['п']='nπ';
-        $replaces_unicodes['й']='ѝӣҋ';
-        $replaces_unicodes['р']='pρṕṗῤῥҏƥþ';
-        $replaces_unicodes['ж']='җҗӝӂ';
-        $replaces_unicodes['т']='tḿṁṃṫṭṯṱẗτҭţťŧʈᴛ';
+        $replaces_unicodes['э']='ӭϿ϶';
 
         $lat = array('u`');
         $cyr = array('й');
@@ -497,6 +501,55 @@ function spaces_count($adunit)
 **/
 
 
+function get_domain_age ($domain)
+{   //https://jsonwhoisapi.com/#pricing
+    if(file_exists($GLOBALS['temp_folder'] . 'domains_create/' . $domain)) {
+
+        $result = file_get_contents($GLOBALS['temp_folder'] . 'domains_create/' . $domain);
+
+    } else {
+
+        $url = 'https://madchecker.com/domain/api/' . $domain . '?properties=creation';
+
+        $result = curl_get($url, '', '');
+
+        $result = json_decode($result);
+
+        if(!isset($result -> data)) {
+            $age = false;
+            goto end_func;
+        }
+
+        if($result -> data -> available == true){
+            $age = false;
+            goto end_func;
+        }
+
+        $result = $result -> data -> creation;
+        $result = strtotime($result);
+
+
+    }
+
+
+    $age = time() - $result;
+    $age = floor($age / 60 / 60 / 24);
+
+    end_func:
+
+    file_put_contents($GLOBALS['temp_folder'] . 'domains_create/' . $domain, $result);
+
+    return $age;
+
+}
+
+
+
+/**
+ **
+**/
+
+
 function redi_curl_get($url, $referer, $myheaders, $getheader, $getbody)
 {
     return curl_all($url, $referer, $myheaders, false, false, $getheader, $getbody, false, $GLOBALS['m_useragent']);
@@ -532,6 +585,7 @@ function curl_all($url, $referer, $myheaders, $post, $postfields, $getheader, $g
     if (!$getbody)
         curl_setopt($ch, CURLOPT_NOBODY, true);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 2);
     curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
     if ($myheaders)
         curl_setopt($ch, CURLOPT_HTTPHEADER, $myheaders);
@@ -690,9 +744,9 @@ function get_ad($url, $ad_type)
 
         if(isset($adunit['header1']))
             $ad['header1'] = htmlspecialchars($ad['header1']);
-        if(isset($adunit['header2'])) 
+        if(isset($adunit['header2']))
             $ad['header2'] = htmlspecialchars($ad['header2']);
-        if(isset($adunit['body'])) 
+        if(isset($adunit['body']))
             $ad['body'] = htmlspecialchars($ad['body']);
 
         $cropped = false;
@@ -2087,6 +2141,9 @@ function remove_old_files($days)
     $folders[] = 'disguised';
     $folders[] = 'redirect';
     $folders[] = 'word';
+    $folders[] = 'domains_create';
+
+
 
     $age = $days * 24 * 3600;
     $count = 0;
