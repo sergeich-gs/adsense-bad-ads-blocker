@@ -46,7 +46,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.8 23.05.2019'; ?>
+$ver = '4.8.1 08.06.2019'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -187,6 +187,23 @@ $set['redirects_media'] ?>/></label>
 	<label title="Block domain of each blocked ad e.g. badsite.com">Block domain: <input name="ad_domain" type="checkbox" value="checked" <?= @$set['ad_domain'] ?>/></label>
 
 	<br />
+
+	<label title="">Check domain register date: <input name="check_domain_date" type="checkbox" value="checked" <?= @$set['check_domain_date'] ?>/></label>
+
+	<br />
+
+	<label title="">Block ads with domains under: <input name="block_ads_domain_under" type="number" value="checked" <?= @$set['block_ads_domain_under'] ?>/> days</label>
+
+	<br />
+
+	<label title="">Block domains under: <input class="" type="number" name="block_domain_under" value="<?= @$set['block_domain_under'] ?>" /> days</label>
+
+
+	<br />  
+    
+    
+    
+    
 
 	<label title="Block ads with «blogspot» in URL">Check «blogspot»: <input name="blogspot" type="checkbox" value="checked" <?= @$set['blogspot'] ?>/></label>
 
