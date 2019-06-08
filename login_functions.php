@@ -8,6 +8,9 @@ function password_form($input_html, $login, $ref_url) {
     $inputs = $forms->item(0)->getElementsByTagName('input');
     $url = $forms->item(0)->getAttribute('action');
 
+    if (isset($GLOBALS['set_gl']['log']))
+        create_log($url, 'answer2_url_pass_form.');
+
     unset($doc);
 
     $postfields = '';
@@ -21,6 +24,9 @@ function password_form($input_html, $login, $ref_url) {
     }
 
     $postfields = trim($postfields, '&');
+    
+    if (isset($GLOBALS['set_gl']['log']))
+        create_log($postfields, 'answer2_postfields_pass_form.');
 
     $login_result = curl_post($url, $postfields, $ref_url, '');
     return $login_result;
@@ -41,6 +47,9 @@ function password_send($input_html, $pass) {
     $inputs = $forms->item(0)->getElementsByTagName('input');
     $url = $forms->item(0)->getAttribute('action');
 
+    if (isset($GLOBALS['set_gl']['log']))
+        create_log($url, 'answer3_url_pass_send.');
+        
     $postfields = '';
     foreach ($inputs as $input) {
 
@@ -55,7 +64,12 @@ function password_send($input_html, $pass) {
 
     $postfields = trim($postfields, '&');
 
-
+    
+    if (isset($GLOBALS['set_gl']['log'])) {
+        $log_postfields = str_replace($pass, '<<user_password>>', $postfields);
+        create_log($log_postfields, 'answer2_postfields_pass_form.');
+    }
+    
     $ref_url = 'https://accounts.google.com/signin/v1/lookup';
 
     $myheaders = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 'accept-language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4', 'content-type: application/x-www-form-urlencoded', 'Cache-Control: max-age=0',
