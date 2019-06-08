@@ -188,6 +188,9 @@ $set['redirects_media'] ?>/></label>
 
 	<br />
 
+		
+		
+	<!--	
 	<label title="">Check domain register date: <input name="check_domain_date" type="checkbox" value="checked" <?= @$set['check_domain_date'] ?>/></label>
 
 	<br />
@@ -201,7 +204,7 @@ $set['redirects_media'] ?>/></label>
 
 	<br />  
     
-    
+    -->
     
     
 
