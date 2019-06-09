@@ -584,8 +584,8 @@ function curl_all($url, $referer, $myheaders, $post, $postfields, $getheader, $g
     curl_setopt($ch, CURLOPT_HEADER, $getheader);
     if (!$getbody)
         curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
     if ($myheaders)
         curl_setopt($ch, CURLOPT_HTTPHEADER, $myheaders);
