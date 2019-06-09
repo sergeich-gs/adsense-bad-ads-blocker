@@ -1666,9 +1666,9 @@ function list_ad($ad, $ad_index, $found)
     if (@$ad['body'])
         $whitelist_body = '<a href="whitelist_ad.php?new_ad=' . rawurlencode($ad['body']) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_body" title="Whitelist ad body" ><img src="img/whl.png" /></a> ';
 
-    $blocking_text = trim($adunit['header1'] . ' ' . $adunit['header2']);
+    $blocking_text = trim($ad['header1'] . ' ' . $ad['header2']);
     if(!$blocking_text)
-        $blocking_text = $adunit['body'];
+        $blocking_text = $ad['body'];
 
     $block_ad = '<a onclick="insert_result_frame(this);' . $for_block_button . '" href="blocker.php?type=ad&act=block&ad_id=' . $ad_id . '&digikey=' . $digikey . '" target="result_frame" class="block block_ad" title="Block this ad" ><img src="img/block.png" />Ad</a>';
     $unblock_ad = '<a onclick="insert_result_frame(this);' . $for_unblock_button . '" href="blocker.php?type=ad&act=unblock&ad_id=' . $ad_id . '&digikey=' . $digikey . '" target="result_frame" class="unblock unblock_ad" title="Unblock this ad" ><img src="img/unblock.png" />Ad</a> ';
