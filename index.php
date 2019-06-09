@@ -46,7 +46,8 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.8.1 08.06.2019'; ?>
+$ver = '4.8.2 09.06.2019'; 
+?>
 <!DOCTYPE html>
 <html>
 <head>
