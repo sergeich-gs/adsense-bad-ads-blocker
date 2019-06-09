@@ -138,8 +138,13 @@ if (stripos($result_auth, 'name="logincaptcha"') !== false) {      /** Captch pr
             }
             $inputs = implode('&', $inputs);
 
+
+            if (isset($GLOBALS['set_gl']['log']))
+                create_log($inputs, 'answer3a_postfields_captcha.');
+
+
             $myheaders_captcha = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 
-            'accept-language: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4', 
+            'accept-language: en-US,en;q=0.8,en-US;q=0.6,en;q=0.4', 
             'content-type: application/x-www-form-urlencoded', 
             'Cache-Control: max-age=0',
             'origin: https://accounts.google.com', 
@@ -149,11 +154,11 @@ if (stripos($result_auth, 'name="logincaptcha"') !== false) {      /** Captch pr
 
             for($i = 1; $i <= 10; $i++) {
                 if (isset($set['log']))
-                    create_log($result_auth, 'answer3a_' . $i . '_captcha');
+                    create_log($result_auth, 'answer3a_' . $i . '_captcha.');
                 $result_auth = redirect_check($result_auth);
             }
             if (isset($set['log']))
-                create_log($result_auth, 'answer3a_11_captcha');
+                create_log($result_auth, 'answer3a_11_captcha.');
 
 
             $forms = get_forms($result_auth); // check remind form
