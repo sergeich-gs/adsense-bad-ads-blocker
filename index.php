@@ -551,7 +551,7 @@ alpari.com
 	<h3 onclick="expand_close('donate', 390);" >Donate</h3>
 
 	<div id="donate" style="height: 0px;" >
-	<p>WMR: R324130067104<br />
+	<p>WMR: R907169982089<br />
 	WMZ: Z117653446838</p>
 	<iframe src="https://money.yandex.ru/quickpay/shop-widget?writer=seller&targets=Thanks%20for%20the%20Blocker&targets-hint=&default-sum=1000&button-text=14&payment-type-choice=on&hint=&successURL=&quickpay=shop&account=410011462510851" width="350" height="198" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
 	Так же в благодарность буду рад принять ссылки с Ваших ресурсов (на любую страницу).
