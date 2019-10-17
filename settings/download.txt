@@ -176,8 +176,8 @@ yourtemplatefinder.com
 zipcruncher.com
 
 discoverancestry.com
-download.metrohotspot.com
-download.totalrecipesearch.com
+metrohotspot.com
+totalrecipesearch.com
 emailfanatic.com
 everydaymemo.com
 gamingassassin.com
