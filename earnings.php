@@ -1,6 +1,6 @@
 <?php include 'functions.php';
 
-$url = 'https://www.google.com/adsense/new/u/0/' . $GLOBALS['pub_id'] . '/home';
+$url = 'https://www.google.com/adsense/new/u/0/' . $GLOBALS['pub_id'] . '/home?hl=en';
 $result = curl_get($url, '', '');
 $result = hex_repl($result);
 
@@ -8,7 +8,6 @@ if (isset($set['log']))
     file_put_contents($GLOBALS['temp_folder'] . 'logs/earn.' . time(), $result);
 
 $result = get_paid_stats($result);
-
 
 $result = $result->{2}->{1};
 $result = $result[0]->{2};

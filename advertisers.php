@@ -61,6 +61,10 @@ $out = '';
 $i = 0;
 if (@$_POST['confirmation'] == 'agree') {
 
+    if(isset($_POST['my_limit']))
+        $unblock_limit = (int)$_POST['my_limit'];
+    else
+        $unblock_limit = 100;
     foreach ($advertisers_list as $adv_obj) {
 
         $adv_id = $adv_obj->{1}->{1}->{1};
@@ -77,7 +81,7 @@ if (@$_POST['confirmation'] == 'agree') {
             //unlink($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $adv_obj->{3});
             //unlink($GLOBALS['temp_folder'] . 'accs_ads/' . $accs_ads_filename);
         }
-        if ($i >= 100) break;
+        if ($i >= $unblock_limit) break;
             
 
         $i++;
@@ -119,7 +123,7 @@ if (@$_POST['confirmation'] == 'agree') {
 
     }
     $to_output = '';
-    if(count($blocked_accs['time'])>0) {
+    if(count($blocked_accs['time'])>1) {
         foreach ($blocked_accs['time'] as $file_name => $time) {
             if( ((stripos($file_name, $GLOBALS['set_gl']['arc']) !== false) && (stripos($file_name, 'adv-') !== false)) || 
             (stripos($file_name, 'adv-') === false) ) {
@@ -217,7 +221,10 @@ input[type="submit"], button { max-width: 200px; margin: 3px; }
 		Do you want to unblock all accounts?<br>
 		You should type «agree» to confirm.<br>
 		There is 100 accs per time limitation.<br>
-		<input type="text" name="confirmation" placeholder="Type «agree»" required autocomplete="off"/><br>
+		<input type="text" name="confirmation" placeholder="Type «agree»" required autocomplete="off"/><br><br>
+        If you want to unblock more or less than<br>
+        100 accs please type quantity here:<br>
+		<input type="tel" name="my_limit" placeholder="Are you sure?" autocomplete="off"/><br> 
 	</label>
 	<br>
 

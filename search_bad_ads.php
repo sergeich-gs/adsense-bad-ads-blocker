@@ -196,7 +196,9 @@ foreach ($search_words as $search_word)
             if (isset($set['reviewed']))
                 @$params->{2}->{3} = 10;
             else
-                @$params->{2}->{3} = 11; // 10 - Reviewed ads; 11 - not rewieved ads; 1 - stats checked and blocked ads. Usless info.
+                @$params->{2}->{3} = 11; // 10 - Reviewed ads; 11 - Not rewieved ads (most impressions); 12 - Prioritized for review; 1 - Blocked ads.
+            if (isset($set['predicted']))
+                @$params->{2}->{3} = 12; //Prioritized for review
             if (isset($set['last_of_days']))
                 if ($set['last_of_days'])
                     @$params->{2}->{5}->{6} = $set['last_of_days']; //Show ads for last some days  (same as old ARC)
@@ -231,7 +233,7 @@ foreach ($search_words as $search_word)
         }
 
         $digikey_for_req = $result->{$result_keyword}->{5}; // Some digits required to control requests.
-        //var_dump($result);
+        //print_r($result);
         foreach ($result->{$result_keyword}->{1} as $key => $node) {
             $ad_req_urls = $node->{5}->{13}; // url we can access ad sourse code
             $ad_type = get_ad_type($node->{5}->{6}); //get type of ad (Text, Rich Media, etc)
@@ -243,6 +245,8 @@ foreach ($search_words as $search_word)
             $ad_id[] = $ad[$key]['ad_id'] = $node->{4}->{1}; // Some sequence required to control requests of each ad; long ad id
             $ad[$key]['adv_long_id'] = $node->{10}->{1}; // Some sequence required to control requests of ad acconut; long adv id
             $ad[$key]['digikey'] = $digikey_for_req;
+            if(!$ad_type)
+                $ad_type = $GLOBALS['ad_type'];            
             if ($ad_type == 'Image')
                 $ad[$key]['header2'] = $ad[$key]['url_displayed'];
             //set_time_limit(900);		//Renew time limit for each ad download
@@ -273,7 +277,8 @@ foreach ($search_words as $search_word)
                             //$adunit['not_so_bad'] = true;
                             goto list_ad;
                         }
-                }
+                    }
+                    
                     $stopwords = $stopwords_text;
                     if (isset($set['disguised_text']))
                         $set['disguised'] = true;
@@ -379,7 +384,12 @@ foreach ($search_words as $search_word)
                 }
 
 
-                list_ad : if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
+                list_ad : 
+                
+                if(isset($set['reviewed']))
+                    $adunit['type'] .= '_ch';
+                
+                if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
                     block_ad($ad_id[$index], $digikey_for_req, 0);
                     if (isset($set['ad_account'])){
                         
@@ -439,7 +449,7 @@ if ($unblocked_count)
     $unblocked_count = "<p>Unblocked $unblocked_count AdWords accounts by age.</p>";
 
 $old_files_removed = '';
-$old_files_removed = remove_old_files(90); //90 days
+$old_files_removed = remove_old_files(140); //90 days
 if ($old_files_removed)
     $old_files_removed = "<p>Removed $old_files_removed old files.</p>";
 

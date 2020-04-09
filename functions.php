@@ -357,7 +357,7 @@ function find_disguised_latin($ad)
         if (preg_match('/([а-яёА-ЯЁ]{1,})\w*([а-яёА-ЯЁ]{1,})/u', $word))
             if (mb_strlen($word, 'UTF-8') > 3)
                 if (!preg_match('/(\d{1,})\w*(\d{1,})/u', $word))
-                    if (preg_match('/[aceonpxuymABCEHKMOPTXYαβγδεζηθιΧΥѝκλμνξοπρσςτυφχψωқҗҳңҡҝҵҷҹӂӄӆӈӊӌӎӝӟӡӣӥӭӵӷӹӻӽӿӷӻґѓғṙṛṝṟᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήḣḥḧḩḫĥħϺΜϻḿṁṃṕṗҏṙṛṝṟṡṣṥṧṩṫṭṯṱẗàáâãäåāăąȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳᾴάαᾶᾷᾀᾁᾂᾃᾄᾅᾆᾇὰάḁӑӓɑᴀѐèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻòóôõöøōŏőɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄὅọỏốồổỗộớờởỡợӧοσόὸόýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұṅṇṉṋǹćĉċčçƈͼϲҫҁϾϹҭkⱪķĸǩḱḳḵқҝҟҡќӄκƙҗҗӝӂxẋẍҳӽӿᴄᴏᴛℂ০קϿϷ϶ϰϭϬϗϓΤϒϏϐĘᴇ]/u', $word))
+                    if (preg_match('/[aceonpxuymABCEHKMOPTXYαβγδεζηθιΧΧXẊẌҲӼӾΧΥѝκλμνξοπρσςτυφχψωқҗҳңҡҝҵҷҹӂӄӆӈӊӌӎӝӟӡӣӥӭӵӷӹӻӽӿӷӻґѓғṙṛṝṟᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήḣḥḧḩḫĥħϺΜϻḿṁṃṕṗҏṙṛṝṟṡṣṥṧṩṫṭṯṱẗàáâãäåāăąȁȃǎǟǡǻȧẚạảấầẩẫậắằẳẵặἀἁἂἃἄἅἆἇᾰᾱᾲᾳᾴάαᾶᾷᾀᾁᾂᾃᾄᾅᾆᾇὰάḁӑӓɑᴀѐèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻòóôõöøōŏőɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄὅọỏốồổỗộớờởỡợӧοσόὸόýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұṅṇṉṋǹćĉċčçƈͼϲҫҁϾϹҭkⱪķĸǩḱḳḵқҝҟҡќӄκƙҗҗӝӂxẋẍҳӽӿᴄᴏᴛℂ০קϿϷ϶ϰϭϬϗϓΤϒϏϐĘᴇ]/u', $word))  //
                         if (!preg_match('/[a-z]{4,}/u', $word)) {
                             if (preg_match('/^[c]{1}/iu', $word))
                                 if (!preg_match('/[aceonpxuyABCEHKMOPTXY]/u', mb_substr($word, 1, null, 'UTF-8')))
@@ -386,7 +386,7 @@ function lat_replace($text)
         $replaces_unicodes['в']='bʙϐβ';
         $replaces_unicodes['г']='ӷӻґѓғṙṛṝṟ';
         $replaces_unicodes['д']='ĝğġģ';
-        $replaces_unicodes['е']='eèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗѐεĘ';
+        $replaces_unicodes['е']='eèéêëēĕėęěȅȇȩẹẻẽếềểễệөӫḕḗḙḛḝҽҿӗѐεĘᴇ';
         $replaces_unicodes['ж']='җҗӝӂ';
         $replaces_unicodes['и']='uùúûüǔǖǘǚǜȕȗũūŭůűųưʋὺύụủứừửữựῠῡῢΰῦῧὐὑὒὓὔὕὖὗṳṵṷṹṻӥϰ';
         $replaces_unicodes['й']='ѝӣҋ';
@@ -394,13 +394,13 @@ function lat_replace($text)
         $replaces_unicodes['л']='ӆ';
         $replaces_unicodes['м']='mμӎϻϺΜ';
         $replaces_unicodes['н']='hḣḥḧḩḫĥħӈӊңηᾐᾑᾒᾓᾔᾕᾖᾗῂῃῄῆῇἠἡἢἣἤἥἦἧὴήƞṅṇṉṋǹήɲҥʜ';
-        $replaces_unicodes['о']='oòóôõöøōŏőσɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄόὅọỏốồổỗộớờởỡợӧοόὸᴏ০θ';
+        $replaces_unicodes['о']='oòóôõöøōŏőσɵơȍȏǒǿȫȭȯǫǭȱṍṏṑṓὀὁὂὃὄόὅọỏốồổỗộớờởỡợӧοόὸᴏ০θOÒÓÔÕÖØŌŎŐΣƟƠȌȎǑǾȪȬȮǪǬȰṌṎṐṒὈὉὊὋὌΌὍỌỎỐỒỔỖỘỚỜỞỠỢӦΟΌῸ';
         $replaces_unicodes['п']='nπ';
         $replaces_unicodes['р']='pρṕṗῤῥҏƥþקϷ';
-        $replaces_unicodes['с']='cćĉċčçƈͼϲҫҁḉᴄℂϾϹ';
+        $replaces_unicodes['с']='cćĉċčçƈͼϲҫҁḉᴄℂϾϹCĆĈĊČÇƇϾϹҪҀḈ';
         $replaces_unicodes['т']='tḿṁṃṫṭṯṱẗτҭţťŧʈᴛΤ';
-        $replaces_unicodes['у']='yýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұɣγϓϒΥ';
-        $replaces_unicodes['х']='xẋẍҳӽӿχΧ';
+        $replaces_unicodes['у']='yýÿƴɏŷȳỳỵỷỹӯӱӳẙẏўүұɣγϓϒΥYÝŸƳɎŶȲỲỴỶỸӮӰӲẙẎЎҮҰƔ';
+        $replaces_unicodes['х']='xẋẍҳӽӿχΧXẊẌҲӼӾΧ';
         $replaces_unicodes['ч']='ҷҹӌӵ';
         $replaces_unicodes['ы']='ӹ';
         $replaces_unicodes['э']='ӭϿ϶';
@@ -659,7 +659,6 @@ function get_ad($url, $ad_type)
 
                     $ad = multimedia_ad62($ad_html);             // Multi-format, small size ad
                     $ad['type'] = 'Mf62';
-
                 }
 
             if (!$ad)
@@ -704,6 +703,30 @@ function get_ad($url, $ad_type)
             $ad['fulltext'] = '1';
             $ad['type'] = 'Img';
 
+        } elseif (mb_stripos($ad_html, 'data-rh-set-type="53"', 70000, 'UTF-8') !== false) {
+
+            $ad = text_ad($ad_html);
+            $ad['type'] = 't';
+            $ad_type = 'Text';
+
+        } elseif (mb_stripos($ad_html, 'data-rh-set-type="15"', 70000, 'UTF-8') !== false) {
+
+            $ad = multimedia_ad15($ad_html);
+            $ad['type'] = 'M1';
+            $ad_type = 'Rich Media';
+
+        } elseif (mb_stripos($ad_html, 'data-rh-set-type="0"', 70000, 'UTF-8') !== false) {
+            
+            $ad = multimedia_ad0($ad_html);         // Multi-format, text ad
+            $ad['type'] = 'Mft';
+            $ad_type = 'Multi-format';
+
+        } elseif (mb_stripos($ad_html, 'data-rh-set-type="26"', 70000, 'UTF-8') !== false || mb_stripos($ad_html, 'data-rh-set-type="25"', 70000, 'UTF-8') !== false) {
+                
+            $ad = multimedia_ad25_26($ad_html);     // Rich Media
+            $ad['type'] = 'M2';
+            $ad_type = 'Rich Media';
+
         } elseif (mb_stripos($ad_html, 'var adData = JSON.parse', 70000, 'UTF-8') !== false) {
 
             $ad = multiformat_ad($ad_html);
@@ -722,7 +745,9 @@ function get_ad($url, $ad_type)
                 create_log($ad_html, 'ad.un.' . $ad_type . '.');        // Unknown ad
             return false;
         }
-
+        
+        $GLOBALS['ad_type'] = $ad_type;
+        
         $ad['fulltext'] = trim(mb_strtolower($ad['fulltext'], 'UTF-8'));
 
         if (!$ad['fulltext']) {
@@ -740,8 +765,6 @@ function get_ad($url, $ad_type)
 
         unset($dom);
 
-        $myrow=str_replace("\n", ' ', $myrow);
-
         if(isset($adunit['header1']))
             $ad['header1'] = htmlspecialchars($ad['header1']);
         if(isset($adunit['header2']))
@@ -750,16 +773,16 @@ function get_ad($url, $ad_type)
             $ad['body'] = htmlspecialchars($ad['body']);
 
         $cropped = false;
-        if (@mb_strlen($ad['body'], 'UTF-8') >= 160) {
-            $ad['body'] = mb_substr($ad['body'], 0, 160, 'UTF-8');
+        if (@mb_strlen($ad['body'], 'UTF-8') >= 190) {
+            $ad['body'] = mb_substr($ad['body'], 0, 190, 'UTF-8');
             $cropped = true;
         }
-        if (@mb_strlen($ad['header1'], 'UTF-8') >= 40) {
-            $ad['header1'] = mb_substr($ad['header1'], 0, 40, 'UTF-8');
+        if (@mb_strlen($ad['header1'], 'UTF-8') >= 60) {
+            $ad['header1'] = mb_substr($ad['header1'], 0, 60, 'UTF-8');
             $cropped = true;
         }
-        if (@mb_strlen($ad['header2'], 'UTF-8') >= 95) {
-            $ad['header2'] = mb_substr($ad['header2'], 0, 95, 'UTF-8');
+        if (@mb_strlen($ad['header2'], 'UTF-8') >= 135) {
+            $ad['header2'] = mb_substr($ad['header2'], 0, 135, 'UTF-8');
             $cropped = true;
         }
         if ($cropped)
@@ -821,6 +844,7 @@ function load_single_html_ad($url)
         if (!$ad['body'])
             $ad['body'] = $dom->textContent;
 
+        $ad['body'] = str_replace('\\\\n', '', $ad['body']);
         $fulltext = implode(' ', $ad);
         $ad['fulltext'] = $fulltext;
 
@@ -1172,6 +1196,7 @@ function html5_1_ad($html)
                     $ad['body'] .= $value . " ";
         }
 
+        $ad['body'] = str_replace('\\\\n', '', $ad['body']);
         $fulltext = implode(' ', $ad);
         $ad['fulltext'] = $fulltext;
     }

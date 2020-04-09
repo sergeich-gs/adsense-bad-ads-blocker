@@ -1,5 +1,7 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 header("Content-type: text/html; charset=utf-8");
+
 include 'functions.php';
 if (is_data_safely($_SERVER['HTTP_USER_AGENT']))
     file_put_contents($GLOBALS['temp_folder'] . 'useragent.txt', $_SERVER['HTTP_USER_AGENT']);
@@ -46,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.8.2 09.06.2019'; 
+$ver = '4.8.3 10.04.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -71,6 +73,9 @@ if (!isset($set['display_ad_url'])) { ?>
 <?php } ?>
 
 <script type="text/javascript" src="script.js?v=<?= $ver ?>"></script>
+
+
+
 </head>
 <body>
 
@@ -189,9 +194,10 @@ $set['redirects_media'] ?>/></label>
 
 	<br />
 
-		
-		
-	<!--	
+
+
+
+<!--
 	<label title="">Check domain register date: <input name="check_domain_date" type="checkbox" value="checked" <?= @$set['check_domain_date'] ?>/></label>
 
 	<br />
@@ -202,10 +208,9 @@ $set['redirects_media'] ?>/></label>
 
 	<label title="">Block domains under: <input class="" type="number" name="block_domain_under" value="<?= @$set['block_domain_under'] ?>" /> days</label>
 
-
 	<br />  
+-->
     
-    -->
     
     
 
@@ -229,11 +234,10 @@ $set['redirects_media'] ?>/></label>
 
 	<br />
 
-<?php if($set['arc'] == 'old_arc') { ?>
-	<label><span class="red_arrow" >Check only predicted blocks: </span><input name="predicted" type="checkbox" value="checked" <?= @$set['predicted'] ?>/></label>
+	<label><span class="red_arrow" >Check only «Prioritized for review»: </span><input name="predicted" type="checkbox" value="checked" <?= @$set['predicted'] ?>/></label>
 
 	<br />
-<?php } ?>
+
 	<label title="Do not block ads if its advertiser has a name" >Do not block advs with name: </label>
     <label>Text: <input name="do_not_with_adv_name_txt" type="checkbox" value="checked" <?= @$set['do_not_with_adv_name_txt'] ?>/></label>
     <label>Media: <input name="do_not_with_adv_name_media" type="checkbox" value="checked" <?= @$set['do_not_with_adv_name_media'] ?>/></label>
@@ -729,6 +733,8 @@ alpari.com
 <?= $html_sep ?>
 <?php /* footer/*sep*/ ?>
 
+        
+        
 </body>
 </html>
 
