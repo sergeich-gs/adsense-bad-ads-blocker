@@ -1461,7 +1461,9 @@ function add_blocked_url($urls)
     $urls = str_replace('http:', '', $urls);
     $urls = str_replace('https:', '', $urls);
     $urls = str_replace('ftp:', '', $urls);
-    $urls = str_replace('ftps:', '', $urls);
+    $urls = str_replace(',', "\n", $urls);
+    $urls = str_replace(';', "\n", $urls);
+    $urls = str_replace(' ', "\n", $urls);
 
     $list = explode("\n", $urls);
 
@@ -1470,7 +1472,7 @@ function add_blocked_url($urls)
         $url = trim($url);
         $url = rtrim($url, "/");
         if (!$url) continue;
-        if (mb_strpos($url, '.', 0, 'UTF-8')===false) continue;
+        if (mb_strpos($url, '.', 0, 'UTF-8') === false) continue;
         $jsoned_url[] = '{"1":{"1":0,"2":"ca-' . $GLOBALS['pub_id'] . '"},"2":"' . $url . '","4":1}';
 
         $filename = $GLOBALS['temp_folder'] . 'autoblocked_urls/' . md5($url);
@@ -1659,7 +1661,7 @@ function list_ad($ad, $ad_index, $found)
     if ($host)
         $whitelist_domain = '<a href="whitelist_ad.php?new_ad=' . rawurlencode($host) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_domain" title="Whitelist domain (' . $host . ')" ><img src="img/whl.png" /></a> ';
 
-    $url = '<p class="displayurl">' . $whitelist_domain . '<a href="http://nullrefer.com/?' . $ad['url'] . '" title="' . $ad['url'] . '" target="_blank" rel="noreferrer" >' . $ad['displayUrl'] . '</a> (' . $ad['type'] . ')' . $link_url_blocker . $report . '</p>' . $nl;
+    $url = '<p class="displayurl">' . $whitelist_domain . '<a href="http://www.fakeref.com/?' . $ad['url'] . '" title="' . $ad['url'] . '" target="_blank" rel="noreferrer" >' . $ad['displayUrl'] . '</a> (' . $ad['type'] . ')' . $link_url_blocker . $report . '</p>' . $nl;
 
     $filename = time() . '.' . $ad_index . '.' . rand(0, 9);
 

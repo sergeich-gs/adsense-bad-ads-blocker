@@ -66,7 +66,9 @@ if (@$_POST['confirmation'] == 'agree') {
     else
         $unblock_limit = 100;
     foreach ($advertisers_list as $adv_obj) {
-
+        
+        if ($i >= $unblock_limit) break;
+        
         $adv_id = $adv_obj->{1}->{1}->{1};
         $result = unblock_adwords_account($adv_id);
         if (is_object($result->error))
@@ -81,8 +83,6 @@ if (@$_POST['confirmation'] == 'agree') {
             //unlink($GLOBALS['temp_folder'] . 'autoblocked_accs/' . $adv_obj->{3});
             //unlink($GLOBALS['temp_folder'] . 'accs_ads/' . $accs_ads_filename);
         }
-        if ($i >= $unblock_limit) break;
-            
 
         $i++;
     }

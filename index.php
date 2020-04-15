@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.8.3 10.04.2020'; 
+$ver = '4.8.4 15.04.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -575,12 +575,7 @@ alpari.com
 
 	<div id="adsenselinks" style="height: 0px;" >
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/home" target="_blank" rel="noreferrer" >Home</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>&tab=arcTab" target="_blank" rel="noreferrer" >Old ARC</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>&tab=urlsTab" target="_blank" rel="noreferrer" >Blocked URLs</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>&tab=gcbTab" target="_blank" rel="noreferrer" >General Categories</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>&tab=scbTab" target="_blank" rel="noreferrer" >Sensitive Categories</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>&tab=adnetworksTab" target="_blank" rel="noreferrer" >Ad Networks</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>&tab=adServingTab" target="_blank" rel="noreferrer" >Ad Serving</a> <br />
+	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>" target="_blank" rel="noreferrer" >Blocked advertisers (old)</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/arc/ca-<?= $GLOBALS['pub_id'] ?>" target="_blank" rel="noreferrer" >New ARC</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/opt/experiments" target="_blank" rel="noreferrer" >Experiments</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/myads/adbalance" target="_blank" rel="noreferrer" >Ad Balance</a> <br />
