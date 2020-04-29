@@ -263,10 +263,13 @@ foreach ($search_words as $search_word)
                         continue;
 
                 if ($search_word) {
-                    $found['word'] = 1;
-                    $adunit['stopword'] = 'S->' . $search_word;
-                    $adunit['filter'] = 'word';
-                    goto list_ad;
+                    
+                    if (mb_stripos($adunit['fulltext'] . ' ' . $adunit['url'], $search_word, 0, 'UTF-8') !== false) { //if we can find any bad word in results of Google search
+                        $found['word'] = 1;
+                        $adunit['stopword'] = 'S->' . $search_word;
+                        $adunit['filter'] = 'word';
+                    }                    //If not we have some ad with similar text without our query.
+                    goto list_ad; 
                 }
 
                 if ($adunit['type'] == 't' || $adunit['type'] == 'Mft') {
@@ -346,7 +349,7 @@ foreach ($search_words as $search_word)
                             $fulltext .= ' ' . $adunit['url'];
                             
                             
-/** TEMP TEMP TEMP  */     $set['check_adv_name'] = true;    /** TEMP TEMP TEMP  */   
+/** TEMP TEMP TEMP  */     //$set['check_adv_name'] = true;    /** TEMP TEMP TEMP  */   
  
  
                         if (isset($set['check_adv_name']))
@@ -468,7 +471,10 @@ if (!isset($cycle_report))
 
 
 $exe_time = time() - $start_time;
-$exe_time = date("i:s", $exe_time); ?>
+$exe_time = date("i:s", $exe_time); 
+header('X-FRAME-OPTIONS: SAMEORIGIN');
+header("Content-type: text/html; charset=utf-8");
+?>
 <!DOCTYPE html>
 <html>
 <head>

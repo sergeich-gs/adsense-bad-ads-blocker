@@ -92,7 +92,7 @@ function time_convert(seconds) {
 
 function start_searching(address, frame_id) {
 	setTimeout(function() {	wait(frame_id); }, 10);
-	document.getElementById(frame_id).src=address;
+	//document.getElementById(frame_id).src=address; 
 	//window.frames[0].src=address;
 	//document.getElementById(frame_id).location.href=address;
 	//document.getElementById(frame_id).location.assign(address);

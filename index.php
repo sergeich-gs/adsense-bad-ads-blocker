@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.8.4 15.04.2020'; 
+$ver = '4.8.5 29.04.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -511,16 +511,6 @@ $set['redirects_media'] ?>/></label>
 
 
 <?php if (is_still_log_in()) { ?>
-
-<!--
-	<a href="blocked.php" target="_blank" onclick="set_waiting();" ><button>Get blocked ads (in new tab)</button></a>
-alice.yandex.ru
-alpari.com
-alice.yandex.ru
-alpari.com
-alice.yandex.ru
-alpari.com
--->
 
 	<form method="post" target="working_frame" action="blocker_url.php" class="form_for_urls" onsubmit="start_searching('blocker_url.php', 'working_frame');">
 
