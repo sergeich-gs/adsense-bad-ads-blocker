@@ -34,7 +34,7 @@ if ($count < $set['num_of_cycles']) {
 
     //$a_continue='<p><a href="'.$continue_url.'">Click here to continue</a></p>';
 
-    $pls_wait = '<br />Please wait... <img src="img/waiting.gif" height="20"/>';
+    $pls_wait = '<br />Please wait... <img src="img/waiting.svg" height="20"/>';
 } else
     $pls_wait = '';
 

@@ -101,6 +101,15 @@ function start_searching(address, frame_id) {
 
 function wait(frame_id) {
 	document.getElementById(frame_id).removeAttribute('src');
+    
+    /*
+    var iframe = document.getElementById(frame_id);
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write('');
+    iframe.contentWindow.document.close();
+	document.getElementById(frame_id).innerHTML = '';
+	document.getElementById(frame_id).innerText = '';
+    */
 	document.getElementById(frame_id).classList.add('wait');
 	return true;
 }

@@ -54,7 +54,7 @@ div.sep .working_frame  { height: 140px; }
 div.sep a[href="blocked.php"] { display: none; }
 div.sep div.timer { display: inline-block; margin-left: 30px; }
 
-.wait { background-image: url('img/waiting.gif'); background-repeat: no-repeat; background-position-x: center; background-position-y: 7%; }
+.wait { background-image: url('img/waiting.svg'); background-repeat: no-repeat; background-position-x: center; background-position-y: 7%; }
 
 span.red_arrow + input[type="checkbox"]:checked::after { content:'⇇'; color:#f00; font-weight: bold; font-size: 40px; position: relative; bottom: 12px; left: 60px;  }
 
