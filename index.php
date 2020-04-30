@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.8.5a 30.04.2020'; 
+$ver = '4.8.6 30.04.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -475,7 +475,7 @@ $set['redirects_media'] ?>/></label>
 <?php if (is_still_log_in()) { ?>
 
 <?php     if (!isset($set['frames_off'])) { ?>
-	<a href="search_bad_ads.php" target="working_frame" onclick="start_searching('search_bad_ads.php', 'working_frame');" ><button>Start searching</button></a>
+	<a href="search_bad_ads.php" target="working_frame" onclick="start_searching('search_bad_ads.php', 'working_frame');" id="search_bad_ads_link" ><button>Start searching</button></a>
 <?php     } else { ?>
 	<a href="search_bad_ads.php" target="_blank" onclick="start_searching('search_bad_ads.php', '_blank');" ><button>Start searching (in new tab)</button></a>
 <?php     } ?>
