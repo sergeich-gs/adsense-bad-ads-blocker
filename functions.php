@@ -94,6 +94,7 @@ if (isset($set['arc5'])) {
     }
 }
 
+
 $GLOBALS['set_gl'] = $set;
 $nl = "\n";
 
@@ -105,7 +106,7 @@ if(isset($set['whitelist']))
     if ($set['whitelist'])
         $GLOBALS['whitelist'] = file($GLOBALS['settings_folder'] . 'whitelist.txt', FILE_IGNORE_NEW_LINES);
 
-
+$set['pub_id_adsense'] = $GLOBALS['pub_id'];
 if ($set['arc'] == 'adx') {
     //@$GLOBALS['pub_id']=file_get_contents($GLOBALS['temp_folder'].'pub_id.txt');        // pub_id_adx
     $GLOBALS['pub_id'] = $set['pub_id_adx'];

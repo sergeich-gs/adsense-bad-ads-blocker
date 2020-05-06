@@ -58,9 +58,14 @@ div.sep div.timer { display: inline-block; margin-left: 30px; }
 
 span.red_arrow + input[type="checkbox"]:checked::after { content:'⇇'; color:#f00; font-weight: bold; font-size: 40px; position: relative; bottom: 12px; left: 60px;  }
 
-label.nc { display:none;  }
-input[type="radio"]#arc_adx:checked + label.nc { display:initial;  }
+label.nc { display:none; }
+input[type="radio"]#arc_adx:checked + label.nc { display:initial; }
 
+label.nc_adsense { display:none; }
+input[type="radio"]#adsense_new:checked ~ label.nc_adsense { display:initial; }
+input[type="radio"]#adsense_old:checked ~ label.nc_adsense { display:initial; }
+
+.g_cookie { width: 98%; margin: auto; height: 90px; }
 
 button.json_string { margin-top: -25px; width: 120px; height: 25px; margin-right: 5%; position: relative; top: 40px; }
 

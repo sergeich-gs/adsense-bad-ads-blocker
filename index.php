@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.8.6 30.04.2020'; 
+$ver = '4.9 06.05.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -309,16 +309,20 @@ $set['redirects_media'] ?>/></label>
 
 <?php $arc_checked[$set['arc']] = 'checked'; ?>
 	Use ARC:
-	<label title="Get ads from new Ads Review Center" >New:<input name="arc" type="radio" value="arc5" <?= @$arc_checked['arc5'] ?>/></label>
-	<label title="Get ads from old Ads Review Center" >Old:<input name="arc" type="radio" value="old_arc" <?= @$arc_checked['old_arc'] ?>/></label>
+	<label title="Get ads from new Ads Review Center" for="adsense_new">New:</label><input name="arc" type="radio" value="arc5" <?= @$arc_checked['arc5'] ?> id="adsense_new" />
+	<label title="Get ads from old Ads Review Center" for="adsense_old">Old:</label><input name="arc" type="radio" value="old_arc" <?= @$arc_checked['old_arc'] ?> id="adsense_old" />
 	<label title="Get ads from AdX Review Center" for="arc_adx">AdX:</label><input name="arc" type="radio" value="adx" <?= @$arc_checked['adx'] ?> id="arc_adx"/>
 
 	<label class="nc" title="Type here your AdX Pub Id">
 		<br />
-		AdX pub id (only for AdX):<br />
-		<input  name="pub_id_adx" type="text" placeholder="pub-0000000000000000" value="<?= @$set['pub_id_adx'] ?>" />
+		AdX Pub Id (only for AdX):<br />
+		<input name="pub_id_adx" type="text" placeholder="pub-0000000000000000" value="<?= @$set['pub_id_adx'] ?>" />
 	</label>
-
+	<label class="nc_adsense" title="Type here your AdSense Pub Id">
+		<br />
+		AdSense Pub Id (only for AdSense):<br />
+		<input name="pub_id_adsense" type="text" placeholder="pub-0000000000000000" value="<?= @$set['pub_id_adsense'] ?>" />
+	</label>
 
 
 	<br /><br />
@@ -433,7 +437,7 @@ $set['redirects_media'] ?>/></label>
 <div class="right_colulmn colulmns">
 <?= $html_sep ?>
 <?php /* auth/*sep*/ ?>
-	<h3 onclick="expand_close('auth_form');" >Google Auth</h3>
+	<h3 onclick="expand_close('auth_form', 360);" >Google Auth</h3>
 
 
 	<form method="post" action="login.php" id="auth_form" class="auth_form" target="working_frame" style="height: 0px;" onsubmit="wait('working_frame');">
@@ -443,7 +447,7 @@ $set['redirects_media'] ?>/></label>
 
 	<label>
 		Password:<br />
-		<input class="password" type="password" name="password" placeholder="Will not be saved" required />
+		<input class="password" type="password" name="password" placeholder="Will not be saved" />
 	</label>
 	<br />
 <?php     if (!isset($set['frames_off'])) { ?>
@@ -451,6 +455,10 @@ $set['redirects_media'] ?>/></label>
 <?php     } else { ?>
 	<input class="submit" type="submit" value="Login to Google (in new tab)" formtarget="_blank" />
 <?php     } ?>
+    <br />
+    Or just paste here your Google cookies and save:<br />   
+    <textarea class="g_cookie" name="g_cookie"></textarea>
+    <input class="submit" type="submit" name="save_cookie_button" value="Save cookie"<?php if (isset($set['frames_off'])) { ?> formtarget="_blank"<?php } ?> />
 
 <?php     } ?>
 

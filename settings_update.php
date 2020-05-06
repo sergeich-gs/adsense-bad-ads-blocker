@@ -9,6 +9,14 @@ foreach ($_POST as $value)
 if(isset($_POST['username']))
     unset($_POST['username']);
 
+if(isset($_POST['pub_id_adsense'])) {
+    $_POST['pub_id_adsense'] = trim($_POST['pub_id_adsense']);
+    if($_POST['pub_id_adsense']) {
+        file_put_contents($GLOBALS['temp_folder'] . 'pub_id.txt', trim($_POST['pub_id_adsense']));
+        unset($_POST['pub_id_adsense']);     
+    }
+}
+
 if(isset($_POST['cron_settings'])) {
 
     $suffix = (int) $_POST['cron_settings'];

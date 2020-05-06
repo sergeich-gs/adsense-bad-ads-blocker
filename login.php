@@ -8,8 +8,29 @@ body { background: #fff; }
 </style>
 </head>
 <body>
-<?php include 'functions.php';
+<?php
+
+include 'functions.php';
+
+if (isset($_POST['save_cookie_button'])) {
+    if($_POST['save_cookie_button'] == 'Save cookie') {
+        $_POST['g_cookie'] = trim($_POST['g_cookie']);
+        if($_POST['g_cookie']) {
+            if (is_data_safely($_POST['g_cookie'])) {
+                if(file_put_contents($GLOBALS['cookie_file'], $_POST['g_cookie'])) {
+                    echo '<p>Your Google cookies are saved. It seems you are logged in.</p>';
+                    echo '<p>You can <a href="' . $_SERVER['HTTP_REFERER'] . '" target="_parent">refresh the page</a> to check it.</p>';
+                } else {
+                    echo '<p> Something went wrong with saving your cookies to file "' . $GLOBALS['cookie_file'] . '".</p>';
+                }
+                goto end_of_file;
+            }
+        }
+    }
+}
+
 include 'login_functions.php';
+
 
 if (!isset($_POST['password']))
     die('Password required.');
@@ -22,10 +43,12 @@ $GLOBALS['result_tmp'] = '';
 if(isset($_GET['captcha']))
     goto captcha_input;
 
+/*
 if (file_exists($GLOBALS['cookie_file']))
     unlink($GLOBALS['cookie_file']); //delete prev cookie
 if (file_exists($GLOBALS['temp_folder'] . 'pub_id.txt'))
     unlink($GLOBALS['temp_folder'] . 'pub_id.txt'); //delete prev pub id
+*/
 
 $login_files = scandir($GLOBALS['temp_folder']);
 unset($login_files[0], $login_files[1]); //removes . and ..
@@ -143,11 +166,11 @@ if (stripos($result_auth, 'name="logincaptcha"') !== false) {      /** Captch pr
                 create_log($inputs, 'answer3a_postfields_captcha.');
 
 
-            $myheaders_captcha = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 
-            'accept-language: en-US,en;q=0.8,en-US;q=0.6,en;q=0.4', 
-            'content-type: application/x-www-form-urlencoded', 
+            $myheaders_captcha = array('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'accept-language: en-US,en;q=0.8,en-US;q=0.6,en;q=0.4',
+            'content-type: application/x-www-form-urlencoded',
             'Cache-Control: max-age=0',
-            'origin: https://accounts.google.com', 
+            'origin: https://accounts.google.com',
             'upgrade-insecure-requests: 1');
 
             $result_auth = curl_post($url, $inputs, $ref_url, $myheaders_captcha);
@@ -234,6 +257,9 @@ else {
     /**
      * 2-stage auth end
      */
-} ?>
+}
+end_of_file:
+
+?>
 </body>
 </html>
