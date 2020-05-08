@@ -241,8 +241,6 @@ input[type="submit"], button { max-width: 200px; margin: 3px; }
 
 <p>Execution time: <?= $exe_time ?>.</p>
 
-<p><?= $check_another_arc ?>.</p>
-
 <p class="adv_ids">
 
 <?= $out ?>
