@@ -55,6 +55,9 @@ if (isset($argv)) {
     }
 }
 
+if(!$GLOBALS['pub_id'])
+    die("<p>Your Pub Id is empty. Please fill it in «Debug, login and other...» section.</p>");
+
 if ($set['arc'] == 'arc5')
     $GLOBALS['arc_tab_req_string'] = $GLOBALS['new_arc_tab_req_string'];
 
