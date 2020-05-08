@@ -15,7 +15,7 @@ if(isset($_GET['cron_settings'])) {
         $number_cr = (int) $_GET['cron_settings'];
 
         $for_cron_settings  = '<input type="hidden" name="cron_settings" value="' . $number_cr . '" />';
-        $cron_warning  = "<h4 style=\"color: red;\">This settings only for cron set №$suffix <a href=\"./\" title=\"Go to main settings\">main</a></h4>";
+        $cron_warning  = "<h4 style=\"color: red;\">This settings only for cron set №$number_cr <a href=\"./\" title=\"Go to main settings\">main</a></h4>";
 
         $suffix = 'cron' . $number_cr;
 
@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.9.1 08.05.2020'; 
+$ver = '4.9.2 08.05.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -459,7 +459,7 @@ $set['redirects_media'] ?>/></label>
     Or just paste here your Google cookies and save:<br />   
     <textarea class="g_cookie" name="g_cookie"></textarea>
     <input class="submit" type="submit" name="save_cookie_button" value="Save cookie"<?php if (isset($set['frames_off'])) { ?> formtarget="_blank"<?php } ?> />
-
+    Extention for Chrome to get cookies: <a href="https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg" target="_blank" >cookies.txt</a>
 <?php     } ?>
 
 <?php     if (is_still_log_in()) { ?>
