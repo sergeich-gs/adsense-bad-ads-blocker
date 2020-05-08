@@ -24,7 +24,7 @@ get_xsrf_token();
 
 $list = get_blocked_urls_list();
 
-foreach ($list->result->{1} as $url_obj)
+foreach ($list->default->{1} as $url_obj)
     $urls[] = $url_obj->{3}->{1};
 
 sort($urls);
@@ -34,20 +34,25 @@ $i = 0;
 
 if (@$_POST['confirmation'] == 'agree') {
 
+    if(isset($_POST['my_limit']))
+        $unblock_limit = (int)$_POST['my_limit'];
+    else
+        $unblock_limit = 100;
     foreach ($urls as $url) {
 
+        if ($i >= $unblock_limit) 
+            break;
+        
         $result = block_unblock_url($url, 'unblock');
         if (is_object($result->error))
             die('<p>' . $result->error->code . ' ' . $result->error->message . '</p>');
 
-        @$result = $result->result->{1};
+        @$result = $result->default->{1};
         @$result = $result[0]->{4};
         if ($result == 0) {
             $result = ' unblocked';
             $out .= $url . $result . "<br><br>\n";
         }
-        if ($i >= 100)
-            break;
 
         $i++;
     }
@@ -160,7 +165,10 @@ input[type="submit"], button { max-width: 200px; margin: 3px; }
 		Do you want to unblock all URLs?<br>
 		You should type «agree» to confirm.<br>
 		There is 100 URLs per time limitation.<br>
-		<input type="text" name="confirmation" placeholder="Type «agree»" required autocomplete="off"/><br>
+		<input type="text" name="confirmation" placeholder="Type «agree»" required autocomplete="off"/><br><br>
+        If you want to unblock more or less than<br>
+        100 accs please type quantity here:<br>
+		<input type="tel" name="my_limit" placeholder="Are you sure?" autocomplete="off"/><br> 
 	</label>
 	<br>
 

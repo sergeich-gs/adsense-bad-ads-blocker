@@ -6,6 +6,9 @@ if (!is_still_log_in()) {
     die('You should log in to Google first');
 }
 
+if(!$GLOBALS['pub_id'])
+    die("<p>Your Pub Id is empty. Please fill it in «Debug, login and other...» section.</p>");
+
 if (isset($argv)) {
 
     if (strpos($argv[1], '!!!') !== false)
@@ -54,9 +57,6 @@ if (isset($argv)) {
         die();
     }
 }
-
-if(!$GLOBALS['pub_id'])
-    die("<p>Your Pub Id is empty. Please fill it in «Debug, login and other...» section.</p>");
 
 if ($set['arc'] == 'arc5')
     $GLOBALS['arc_tab_req_string'] = $GLOBALS['new_arc_tab_req_string'];

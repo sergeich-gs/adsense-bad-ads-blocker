@@ -17,6 +17,7 @@ $GLOBALS['new_arc_tab_req_string'] = 'https://www.google.com/adsense/new/u/0/' .
 $GLOBALS['myheaders'] = array('accept-language:en-US;q=1,en;q=0.4', 'content-type:application/javascript; charset=UTF-8');
 $GLOBALS['myheaders_new'] = array('accept-language:en-US;q=1,en;q=0.4', 'content-type:application/json;charset=UTF-8');
 $GLOBALS['creative_review_new_string'] = '/ads-publisher-controls/acx/5/proto/creativereview/';
+$GLOBALS['blocking_controls_new_string'] = '/ads-publisher-controls/acx/5/proto/blockingcontrols/';
 
 if (!file_exists($GLOBALS['temp_folder']))
     mkdir($GLOBALS['temp_folder'], 0775);
@@ -717,13 +718,13 @@ function get_ad($url, $ad_type)
             $ad_type = 'Rich Media';
 
         } elseif (mb_stripos($ad_html, 'data-rh-set-type="0"', 70000, 'UTF-8') !== false) {
-            
+
             $ad = multimedia_ad0($ad_html);         // Multi-format, text ad
             $ad['type'] = 'Mft';
             $ad_type = 'Multi-format';
 
         } elseif (mb_stripos($ad_html, 'data-rh-set-type="26"', 70000, 'UTF-8') !== false || mb_stripos($ad_html, 'data-rh-set-type="25"', 70000, 'UTF-8') !== false) {
-                
+
             $ad = multimedia_ad25_26($ad_html);     // Rich Media
             $ad['type'] = 'M2';
             $ad_type = 'Rich Media';
@@ -746,9 +747,9 @@ function get_ad($url, $ad_type)
                 create_log($ad_html, 'ad.un.' . $ad_type . '.');        // Unknown ad
             return false;
         }
-        
+
         $GLOBALS['ad_type'] = $ad_type;
-        
+
         $ad['fulltext'] = trim(mb_strtolower($ad['fulltext'], 'UTF-8'));
 
         if (!$ad['fulltext']) {
@@ -1369,6 +1370,7 @@ function get_stats($ad_id)
 
     $id_len = strlen($ad_id);
     $id_len = check_ad_id_length($id_len);
+
     if ($GLOBALS['set_gl']['arc'] == 'adx' || $id_len == 120)
         $result = creative_review('getApprovalStats', $params);
     elseif ($id_len == 104 || $id_len == 108)
@@ -1399,11 +1401,11 @@ function get_advertisers_list()       // function for get list of all blocked Ad
     if ($GLOBALS['set_gl']['arc'] == 'arc5') {
         $result = creative_review_new('GetAdWordsAdvertiserDecisions', $params);
         $result_keyword = 'default';
-    }
-    else {
+    } else {
         $result = creative_review('getAdWordsAdvertiserDecisions', $params);
         $result_keyword = 'result';
     }
+
     unset($params);
     $result = $result->$result_keyword->{1};
     return $result;
@@ -1419,7 +1421,8 @@ function get_blocked_urls_list()       // function for get list of all blocked u
 {
     $params = '{"1":[{"1":0,"2":"ca-' . $GLOBALS['pub_id'] . '"}],"2":""}';
 
-    $result = blocking_controls('getAdvertiserUrlApprovals', $params);
+    //$result = blocking_controls('getAdvertiserUrlApprovals', $params);
+    $result = blocking_controls_new('GetAdvertiserUrlApprovals', $params);
     unset($params);
     return $result;
 }
@@ -1442,8 +1445,8 @@ function block_unblock_url($url, $unblock = 'unblock')       // block and unbloc
 
     $params = '{"1":[{"1":{"1":0,"2":"ca-' . $GLOBALS['pub_id'] . '"},"2":"' . $url . '","3":0,"4":' . $mean_digit . '}]}';
 
-    $result = blocking_controls('setAdvertiserUrlApprovals', $params);
-
+    //$result = blocking_controls('setAdvertiserUrlApprovals', $params);
+    $result = blocking_controls_new('SetAdvertiserUrlApprovals', $params);
     unlink($GLOBALS['temp_folder'] . 'autoblocked_urls/' . md5($url));
 
     unset($params);
@@ -1487,7 +1490,8 @@ function add_blocked_url($urls)
 
     $params = '{"1":[' . implode(',', $jsoned_url) . ']}';
 
-    $result = blocking_controls('setAdvertiserUrlApprovals', $params);
+    //$result = blocking_controls('setAdvertiserUrlApprovals', $params);
+    $result = blocking_controls_new('SetAdvertiserUrlApprovals', $params);
     unset($params);
 
 
@@ -1849,6 +1853,51 @@ function creative_review_new($method, $params)
         file_put_contents($GLOBALS['temp_folder'] . 'some_digi_token.txt', $result->default->{5}); // Renew token
     if (@$result->default->{6})
         file_put_contents($GLOBALS['temp_folder'] . 'some_long_token.txt', $result->default->{6}); // Renew token
+
+    return $result;
+}
+
+
+/**
+ **
+**/
+
+
+function blocking_controls_new($method, $params)
+{
+    if (!isset($GLOBALS['xsrftoken_new']))
+        $GLOBALS['xsrftoken_new'] = file_get_contents($GLOBALS['temp_folder'] . 'xsrftoken_new.txt');
+
+    $myheaders = $GLOBALS['myheaders_new'];
+    $myheaders[] = 'x-framework-xsrf-token:' . $GLOBALS['xsrftoken_new'];
+
+    $query['pc'] = 'ca-' . $GLOBALS['pub_id'];
+    $query['onearcClient'] = 'adsense';
+    $query['hl'] = 'en_US';
+
+    foreach ($query as $index => $value)
+        $rpc[] = $index . '=' . $value;
+
+    $append = ':1';
+    $query['rpcTrackingId'] = $GLOBALS['blocking_controls_new_string'] . $method . '?' . implode('&', $rpc) . $append;
+    $query = http_build_query($query);
+    $url = 'https://www.google.com' . $GLOBALS['blocking_controls_new_string'] . $method . '?' . $query;
+
+    $result = curl_post($url, $params, $GLOBALS['new_arc_tab_req_string'], $myheaders);
+
+    if (isset($GLOBALS['set_gl']['log'])){
+        create_log($url . "\n" . $params . "\n" . $GLOBALS['arc_tab_req_string'] . "\n", 'CR_new_req.' . $method . '.');
+        create_log($result, 'CR_new.' . $method . '.');
+    }
+
+    if (mb_strpos($result, 'Error 400 (Not Found)', 0, 'UTF-8') !== false) {
+        return '-32000 XSRF token validation';
+    }
+
+    $list = explode("\n", $result, 2);
+    $result = $list[1];
+
+    $result = json_decode($result); // decode result string
 
     return $result;
 }

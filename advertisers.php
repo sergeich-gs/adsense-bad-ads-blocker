@@ -67,14 +67,15 @@ if (@$_POST['confirmation'] == 'agree') {
         $unblock_limit = 100;
     foreach ($advertisers_list as $adv_obj) {
         
-        if ($i >= $unblock_limit) break;
+        if ($i >= $unblock_limit) 
+            break;
         
         $adv_id = $adv_obj->{1}->{1}->{1};
         $result = unblock_adwords_account($adv_id);
         if (is_object($result->error))
             die('<p>' . $result->error->code . ' ' . $result->error->message . '</p>');
 
-        $result = $result->result->{1};
+        $result = $result->$result_keyword->{1};
         $result = $result[0]->{1};
         if ($result) {
             $result = ' unblocked';
@@ -138,11 +139,12 @@ if (@$_POST['confirmation'] == 'agree') {
 
 
 
+/* It's old. When was 2 ARCs: Old and New.
 if ($GLOBALS['set_gl']['arc'] == 'arc5')
     $check_another_arc = '<a href="advertisers.php?arc=old_arc">Check Accounts from old ARC</a>';
 else
     $check_another_arc = '<a href="advertisers.php?arc=arc5">Check Accounts from new ARC</a>';
-
+*/
 
 /*
 if(@$_POST['confirmation']=='agree') {		// Acc folder cleaning

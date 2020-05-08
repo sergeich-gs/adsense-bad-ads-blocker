@@ -26,7 +26,7 @@ again : if (isset($_GET['url'])) {
     if (@is_object($result->error))
         die('<p>' . $result->error->code . ' ' . $result->error->message . '</p>');
 
-    @$result = $result->result->{1};
+    @$result = $result->default->{1};
     @$result = $result[0]->{4};
 
     if ($result)
@@ -81,7 +81,7 @@ if (isset($_GET['url_to_add'])) {
     if (@is_object($result->error))
         die('<p>' . $result->error->code . ' ' . $result->error->message . '</p>');
 
-    @$result = $result->result->{1};
+    @$result = $result->default->{1};
     @$result = $result[0]->{4};
 
     if ($result)
