@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.9.2 08.05.2020'; 
+$ver = '4.9.3 08.05.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -437,13 +437,16 @@ $set['redirects_media'] ?>/></label>
 <div class="right_colulmn colulmns">
 <?= $html_sep ?>
 <?php /* auth/*sep*/ ?>
-	<h3 onclick="expand_close('auth_form', 360);" >Google Auth</h3>
+	<h3 onclick="expand_close('auth_form', 430);" >Google Auth</h3>
 
 
 	<form method="post" action="login.php" id="auth_form" class="auth_form" target="working_frame" style="height: 0px;" onsubmit="wait('working_frame');">
-<?php if (isset($set['login'])) { ?>
 
 <?php     if (!is_still_log_in()) { ?>
+
+<?php
+            if (@$set['login']) {
+?>
 
 	<label>
 		Password:<br />
@@ -456,19 +459,25 @@ $set['redirects_media'] ?>/></label>
 	<input class="submit" type="submit" value="Login to Google (in new tab)" formtarget="_blank" />
 <?php     } ?>
     <br />
+<?php 
+            } else {
+    echo '<p>You should enter and save login first for auth by password. Left bottom under «Debug and other...» </p>';
+            }
+?>
+
+    
     Or just paste here your Google cookies and save:<br />   
     <textarea class="g_cookie" name="g_cookie"></textarea>
     <input class="submit" type="submit" name="save_cookie_button" value="Save cookie"<?php if (isset($set['frames_off'])) { ?> formtarget="_blank"<?php } ?> />
-    Extention for Chrome to get cookies: <a href="https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg" target="_blank" >cookies.txt</a>
+    Extention for Chrome to get cookies: <a href="https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg" target="_blank" >cookies.txt</a><br />
+    Don't forget to fill your pub-id! Left bottom under «Debug and other...».
 <?php     } ?>
 
 <?php     if (is_still_log_in()) { ?>
 	<a href="logout.php" target="working_frame" onclick="wait('working_frame');" >Log out</a>
 <?php     } ?>
 
-<?php } else {
-    echo '<p>You should enter and save login first. Left bottom under «Debug and other...» </p>';
-} ?>
+
 
 	</form>
 
