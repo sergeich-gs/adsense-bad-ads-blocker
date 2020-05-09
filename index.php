@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.10 08.05.2020'; 
+$ver = '4.10.1 09.05.2020'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -310,7 +310,7 @@ $set['redirects_media'] ?>/></label>
 <?php $arc_checked[$set['arc']] = 'checked'; ?>
 	Use ARC:
 	<label title="Get ads from new Ads Review Center" for="adsense_new">New:</label><input name="arc" type="radio" value="arc5" <?= @$arc_checked['arc5'] ?> id="adsense_new" />
-	<label title="Get ads from old Ads Review Center" for="adsense_old">Old:</label><input name="arc" type="radio" value="old_arc" <?= @$arc_checked['old_arc'] ?> id="adsense_old" />
+	<label title="Get ads from old Ads Review Center" for="adsense_old">Old:</label><input name="arc" type="radio" value="old_arc" <?= @$arc_checked['old_arc'] ?> id="adsense_old" disabled />
 	<label title="Get ads from AdX Review Center" for="arc_adx">AdX:</label><input name="arc" type="radio" value="adx" <?= @$arc_checked['adx'] ?> id="arc_adx"/>
 
 	<label class="nc" title="Type here your AdX Pub Id">
