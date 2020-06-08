@@ -35,6 +35,10 @@ $i = 0;
 if (@$_POST['confirmation'] == 'agree') {
 
     if(isset($_POST['my_limit']))
+        if(!$_POST['my_limit'])
+            unset($_POST['my_limit']);
+
+    if($_POST['my_limit'])
         $unblock_limit = (int)$_POST['my_limit'];
     else
         $unblock_limit = 100;

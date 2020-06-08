@@ -48,7 +48,8 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.10.1 09.05.2020'; 
+$ver = '4.11 08.06.2020'; 
+$v = str_replace(' ', '', $ver);
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,10 +61,10 @@ $ver = '4.10.1 09.05.2020';
 <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=4, minimum-scale=0.1" />
 
-<link rel="stylesheet" type="text/css" href="style.css?v=<?= $ver ?>"/>
+<link rel="stylesheet" type="text/css" href="style.css?v=<?= $v ?>"/>
 
 <?php if (!isset($set['b_unb_buttons'])) { ?>
-<link rel="stylesheet" type="text/css" href="b_unb.css?v=<?= $ver ?>"/>
+<link rel="stylesheet" type="text/css" href="b_unb.css?v=<?= $v ?>"/>
 <?php }
 
 if (!isset($set['display_ad_url'])) { ?>
@@ -72,7 +73,7 @@ if (!isset($set['display_ad_url'])) { ?>
 </style>
 <?php } ?>
 
-<script type="text/javascript" src="script.js?v=<?= $ver ?>"></script>
+<script type="text/javascript" src="script.js?v=<?= $v ?>"></script>
 
 
 

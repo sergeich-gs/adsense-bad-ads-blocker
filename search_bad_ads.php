@@ -242,8 +242,11 @@ foreach ($search_words as $search_word)
             $ad_type = get_ad_type($node->{5}->{6}); //get type of ad (Text, Rich Media, etc)
             $ad[$key] = get_ad($ad_req_urls, $ad_type); //Indexes of returned array: fulltext, header1, header2, body
             $ad[$key]['adv_name'] = $node->{5}->{17}; // advertiser name
+            if($node->{5}->{18})
+                $ad[$key]['adv_name'] = trim($ad[$key]['adv_name'] . ' (' . $node->{5}->{18} . ')'); // advertiser name found by Google
             $ad[$key]['adv_id'] = $node->{5}->{20}; // advertiser id
             $ad[$key]['url'] = $node->{5}->{14};
+            $ad[$key]['url'] = $ad[$key]['url'][0];
             $ad[$key]['url_displayed'] = $node->{5}->{15};
             $ad_id[] = $ad[$key]['ad_id'] = $node->{4}->{1}; // Some sequence required to control requests of each ad; long ad id
             $ad[$key]['adv_long_id'] = $node->{10}->{1}; // Some sequence required to control requests of ad acconut; long adv id
