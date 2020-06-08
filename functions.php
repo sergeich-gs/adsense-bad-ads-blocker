@@ -1668,7 +1668,7 @@ function list_ad($ad, $ad_index, $found)
 
     $url = '<p class="displayurl">' . $whitelist_domain . '<a href="https://nullrefer.com/?' . $ad['url'] . '" title="' . $ad['url'] . '" target="_blank" rel="noreferrer" >' . $ad['displayUrl'] . '</a> (' . $ad['type'] . ')' . $link_url_blocker . $report . '</p>' . $nl;
 
-    $filename = time() . '.' . $ad_index . '.' . rand(0, 9);
+    $filename = time() . '.' . $ad_index . '.' . rand(0, 99);
 
     if ($found) {
         $id2white = 'ad_id=' . $ad_id . '&';
@@ -2190,8 +2190,8 @@ function create_log($result, $filename)
 function getmicrotime()
 {
     $list = explode(" ", microtime());
-    $usec = (string )round($list[0], 3) * 1000;
-    $sec = (string )$list[1];
+    $usec = (string)round($list[0], 3) * 1000;
+    $sec = (string)$list[1];
     return $sec . $usec;
 }
 

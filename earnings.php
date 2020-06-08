@@ -5,7 +5,8 @@ $result = curl_get($url, '', '');
 $result = hex_repl($result);
 
 if (isset($set['log']))
-    file_put_contents($GLOBALS['temp_folder'] . 'logs/earn.' . time(), $result);
+    create_log($result, 'earn.');
+
 
 $result = get_paid_stats($result);
 
