@@ -253,7 +253,7 @@ $set['redirects_media'] ?>/></label>
 
 	<br />
 
-	<label title="Block every hour domains from BlockedAds.ru site">Block from «<a target="_blank" href="https://blockedads.ru/">BlockedAds</a>»: <input name="blockedads_site" type="checkbox" value="checked" <?= @$set['blockedads_site'] ?>/></label>
+	<label title="Block every 20 minutes domains from BlockedAds.ru site">Block from «<a target="_blank" href="https://blockedads.ru/">BlockedAds</a>»: <input name="blockedads_site" type="checkbox" value="checked" <?= @$set['blockedads_site'] ?>/></label>
 
     <?php 
     if($set['arc'] != 'arc5')
