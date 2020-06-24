@@ -79,6 +79,37 @@ if ($set['arc'] == 'arc5') {
 }
 
 
+if (isset($set['blockedads_site'])) {
+
+    $time_filename = $GLOBALS['temp_folder'] . 'last_blockedads.txt';
+
+    if(!file_exists($time_filename))
+        file_put_contents($time_filename, '0');
+
+    $last_blockedads_time = file_get_contents($time_filename);
+
+    if(time() - $last_blockedads_time >= 1200) {     //If more, than hour ago
+
+        $last_blockedads_list_md5 = $GLOBALS['temp_folder'] . 'last_blockedads_list_md5.txt';
+    
+        if(!file_exists($last_blockedads_list_md5))
+            file_put_contents($last_blockedads_list_md5, '');
+
+        $last_blockedads_list = file_get_contents($last_blockedads_list_md5);
+
+        $url = 'https://blockedads.ru/feed?md5pub_id=' . md5($GLOBALS['pub_id']);
+        $domains_list = curl_get($url, '', '');
+        $domains_list = trim($domains_list, ',');
+        
+        if(md5($domains_list) != $last_blockedads_list) {            // If there are any changes
+            add_blocked_url($domains_list);
+            file_put_contents($last_blockedads_list_md5, md5($domains_list));
+        }
+        file_put_contents($time_filename, time());
+    }
+}
+
+
 if (isset($set['searchwords_check'])) {
     @$search_words = file($GLOBALS['settings_folder'] . 'search_words.txt', FILE_IGNORE_NEW_LINES);
     $GLOBALS['set_gl']['reviewed'] = $set['reviewed'] = true; //search not only new ads
@@ -252,7 +283,7 @@ foreach ($search_words as $search_word)
             $ad[$key]['adv_long_id'] = $node->{10}->{1}; // Some sequence required to control requests of ad acconut; long adv id
             $ad[$key]['digikey'] = $digikey_for_req;
             if(!$ad_type)
-                $ad_type = $GLOBALS['ad_type'];            
+                $ad_type = $GLOBALS['ad_type'];
             if ($ad_type == 'Image')
                 $ad[$key]['header2'] = $ad[$key]['url_displayed'];
             //set_time_limit(900);		//Renew time limit for each ad download
@@ -269,13 +300,13 @@ foreach ($search_words as $search_word)
                         continue;
 
                 if ($search_word) {
-                    
+
                     if (mb_stripos($adunit['fulltext'] . ' ' . $adunit['url'], $search_word, 0, 'UTF-8') !== false) { //if we can find any bad word in results of Google search
                         $found['word'] = 1;
                         $adunit['stopword'] = 'S->' . $search_word;
                         $adunit['filter'] = 'word';
                     }                    //If not we have some ad with similar text without our query.
-                    goto list_ad; 
+                    goto list_ad;
                 }
 
                 if ($adunit['type'] == 't' || $adunit['type'] == 'Mft') {
@@ -287,13 +318,13 @@ foreach ($search_words as $search_word)
                             goto list_ad;
                         }
                     }
-                    
+
                     $stopwords = $stopwords_text;
                     if (isset($set['disguised_text']))
                         $set['disguised'] = true;
                     if (isset($set['redirects_text']))
                         $set['redirects'] = true;
-   
+
                 } else {
 
                     if (isset($set['do_not_with_adv_name_media'])) {
@@ -353,11 +384,11 @@ foreach ($search_words as $search_word)
                             $fulltext .= ' ' . lat_replace($fulltext);
                         if (isset($set['check_target_url']))
                             $fulltext .= ' ' . $adunit['url'];
-                            
-                            
-/** TEMP TEMP TEMP  */     //$set['check_adv_name'] = true;    /** TEMP TEMP TEMP  */   
- 
- 
+
+
+/** TEMP TEMP TEMP  */     //$set['check_adv_name'] = true;    /** TEMP TEMP TEMP  */
+
+
                         if (isset($set['check_adv_name']))
                             if ($adunit['adv_name'])
                                 $fulltext .= ' ' . $adunit['adv_name'];
@@ -393,15 +424,15 @@ foreach ($search_words as $search_word)
                 }
 
 
-                list_ad : 
-                
+                list_ad :
+
                 if(isset($set['reviewed']))
                     $adunit['type'] .= '_ch';
-                
+
                 if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
                     block_ad($ad_id[$index], $digikey_for_req, 0);
                     if (isset($set['ad_account'])){
-                        
+
                         $blocking_text = trim($adunit['header1'] . ' ' . $adunit['header2']);
                         if(!$blocking_text)
                             $blocking_text = $adunit['body'];
@@ -426,7 +457,7 @@ foreach ($search_words as $search_word)
                             if ($adunit['filter'] == 'redirect')
                                  ReportPolicyViolation($ad_id[$index], rand(1,12));
                     }
-                    
+
                     if (!isset($set['no_save_any']))
                         list_ad($adunit, $index, $found);
                     $blocked++;
@@ -477,7 +508,7 @@ if (!isset($cycle_report))
 
 
 $exe_time = time() - $start_time;
-$exe_time = date("i:s", $exe_time); 
+$exe_time = date("i:s", $exe_time);
 header('X-FRAME-OPTIONS: SAMEORIGIN');
 header("Content-type: text/html; charset=utf-8");
 ?>

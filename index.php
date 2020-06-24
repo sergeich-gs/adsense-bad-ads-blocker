@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.11 08.06.2020'; 
+$ver = '4.12 24.06.2020'; 
 $v = str_replace(' ', '', $ver);
 ?>
 <!DOCTYPE html>
@@ -250,6 +250,10 @@ $set['redirects_media'] ?>/></label>
 	<br />
 
 	<label>Get ad stats: <input name="get_stats" type="checkbox" value="checked" <?= @$set['get_stats'] ?>/></label>
+
+	<br />
+
+	<label title="Block every hour domains from BlockedAds.ru site">Block from «<a target="_blank" href="https://blockedads.ru/">BlockedAds</a>»: <input name="blockedads_site" type="checkbox" value="checked" <?= @$set['blockedads_site'] ?>/></label>
 
     <?php 
     if($set['arc'] != 'arc5')
