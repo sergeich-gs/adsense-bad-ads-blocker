@@ -88,7 +88,7 @@ if (isset($set['blockedads_site'])) {
 
     $last_blockedads_time = file_get_contents($time_filename);
 
-    if(time() - $last_blockedads_time >= 1200) {     //If more, than hour ago
+    if(time() - $last_blockedads_time >= 1200) {     //If more, than hour/3 ago
 
         $last_blockedads_list_md5 = $GLOBALS['temp_folder'] . 'last_blockedads_list_md5.txt';
     

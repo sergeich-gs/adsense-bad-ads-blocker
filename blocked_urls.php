@@ -185,7 +185,7 @@ input[type="submit"], button { max-width: 200px; margin: 3px; }
 	http://<br>
 	<textarea name="urls" class="area_for_urls"></textarea>
 
-	<input class="submit" type="submit" value="Block URLs" />
+	<input class="submit" type="submit" value="Block URLs (max. 200)" />
 
 	</form>
 

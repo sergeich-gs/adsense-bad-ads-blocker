@@ -23,7 +23,7 @@ if(isset($_GET['cron_settings'])) {
             $set = file_get_contents($GLOBALS['settings_folder'] . "settings.$suffix.ini");
             $set = json_decode($set, 1);
         }
-        
+
         if(isset($set['set_name'])) {
             $set['set_name'] = base64_decode($set['set_name']);
             $set['set_name'] = htmlspecialchars($set['set_name']);
@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.12 24.06.2020'; 
+$ver = '4.13 12.07.2020';
 $v = str_replace(' ', '', $ver);
 ?>
 <!DOCTYPE html>
@@ -209,11 +209,11 @@ $set['redirects_media'] ?>/></label>
 
 	<label title="">Block domains under: <input class="" type="number" name="block_domain_under" value="<?= @$set['block_domain_under'] ?>" /> days</label>
 
-	<br />  
+	<br />
 -->
-    
-    
-    
+
+
+
 
 	<label title="Block ads with «blogspot» in URL">Check «blogspot»: <input name="blogspot" type="checkbox" value="checked" <?= @$set['blogspot'] ?>/></label>
 
@@ -230,7 +230,7 @@ $set['redirects_media'] ?>/></label>
 	<label title="Search for stop word in target URL too">Check target URL: <input name="check_target_url" type="checkbox" value="checked" <?= @$set['check_target_url'] ?>/></label>
 
 	<br />
- 
+
 	<label title="Some advertisers has a name. If adv. has name it will be checked">Check adv. name: <input name="check_adv_name" type="checkbox" value="checked" <?= @$set['check_adv_name'] ?>/></label>
 
 	<br />
@@ -244,7 +244,7 @@ $set['redirects_media'] ?>/></label>
     <label>Media: <input name="do_not_with_adv_name_media" type="checkbox" value="checked" <?= @$set['do_not_with_adv_name_media'] ?>/></label>
 
 	<br />
- 
+
 	<label>Mark reviewed as reviewed: <input name="mark_reviewed" type="checkbox" value="checked" <?= @$set['mark_reviewed'] ?>/></label>
 
 	<br />
@@ -255,13 +255,13 @@ $set['redirects_media'] ?>/></label>
 
 	<label title="Block every 20 minutes domains from BlockedAds.ru site">Block from «<a target="_blank" href="https://blockedads.ru/">BlockedAds</a>»: <input name="blockedads_site" type="checkbox" value="checked" <?= @$set['blockedads_site'] ?>/></label>
 
-    <?php 
+    <?php
     if($set['arc'] != 'arc5')
         $hidden_reports = 'style="display: none;" ';
        else
         $hidden_reports = '';
     ?>
-    
+
 	<p <?=$hidden_reports?> title="Equal button «REPORT AD» you can see after ad blocking. Works only with new ARC!" >Report ad blocked by:<br />
 	<label title="Blocked for any word of any list">Words: <input name="report_words" type="checkbox" value="checked" <?= @$set['report_words'] ?>/></label>
 	<label title="Blocked for disguised symbols">Disguised: <input name="report_disg" type="checkbox" value="checked" <?= @$set['report_disg'] ?>/></label>
@@ -297,7 +297,7 @@ $set['redirects_media'] ?>/></label>
 	<label>Don't save clear ads: <input name="no_save_clear" type="checkbox" value="checked" <?= @$set['no_save_clear'] ?>/></label>
 
 	<br />
-    
+
 	<label><span class="red_arrow" >Don't save any ads: </span><input name="no_save_any" type="checkbox" value="checked" <?= @$set['no_save_any'] ?>/></label>
 
 	<br />
@@ -342,7 +342,7 @@ $set['redirects_media'] ?>/></label>
 		<input class="login" name="login" type="text"  value="<?= @$set['login'] ?>" placeholder="Will be saved" />
 	</label>
 <?php } ?>
-    
+
 <?php /*
 	<p title="Or just add the string to crontab file to run each 10 minutes. If ypu don't see a full path to file use full path instead.">*  *  *  *  * <?php echo exec('whoami'); ?> /usr/bin/php <?= dirname(__file__); ?>/search_bad_ads.php</p>
 */ ?>
@@ -464,14 +464,14 @@ $set['redirects_media'] ?>/></label>
 	<input class="submit" type="submit" value="Login to Google (in new tab)" formtarget="_blank" />
 <?php     } ?>
     <br />
-<?php 
+<?php
             } else {
     echo '<p>You should enter and save login first for auth by password. Left bottom under «Debug and other...» </p>';
             }
 ?>
 
-    
-    Or just paste here your Google cookies and save:<br />   
+
+    Or just paste here your Google cookies and save:<br />
     <textarea class="g_cookie" name="g_cookie"></textarea>
     <input class="submit" type="submit" name="save_cookie_button" value="Save cookie"<?php if (isset($set['frames_off'])) { ?> formtarget="_blank"<?php } ?> />
     Extention for Chrome to get cookies: <a href="https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg" target="_blank" >cookies.txt</a><br />
@@ -538,7 +538,7 @@ $set['redirects_media'] ?>/></label>
 
 	<textarea name="urls" class="area_for_urls_main" placeholder="Put here list of domains or URLs for block (with or without http://). Each on new line."><?="\n\n\n\n\n\n\n\n\n\n\n\n\n\n"?></textarea>
 
-	<input class="submit" type="submit" value="Block URLs" />
+	<input class="submit" type="submit" value="Block URLs (max. 200)" />
 
 	</form>
 
@@ -740,8 +740,8 @@ $set['redirects_media'] ?>/></label>
 <?= $html_sep ?>
 <?php /* footer/*sep*/ ?>
 
-        
-        
+
+
 </body>
 </html>
 

@@ -1469,7 +1469,11 @@ function add_blocked_url($urls)
     $urls = str_replace(';', "\n", $urls);
     $urls = str_replace(' ', "\n", $urls);
 
-    $list = explode("\n", $urls);
+    $limit = 200;
+    $list = explode("\n", $urls, $limit + 1);
+    if(isset($list[$limit]))
+        unset($list[$limit]);
+
 
     foreach ($list as $url) {
 
