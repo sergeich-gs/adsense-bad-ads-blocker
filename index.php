@@ -48,7 +48,7 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.13 12.07.2020';
+$ver = '4.14 10.12.2020';
 $v = str_replace(' ', '', $ver);
 ?>
 <!DOCTYPE html>
@@ -274,8 +274,6 @@ $set['redirects_media'] ?>/></label>
 
 	<div id="debug" style="height: <?php if($cron_warning) echo $height_expand; else echo '0'; ?>px;" >
 
-	<button class="json_string" formtarget="working_frame" formaction="json_string.php" tabindex="-1" >Show json-string</button>
-
 	<button class="cron_settings" formtarget="working_frame" formaction="cron_settings.php" tabindex="-1" >Show settings for cron</button>
 
     <input class="cron_settings_input" name="username" type="text" placeholder="username for cron settings" value="<?php echo exec('whoami'); ?>" />
@@ -489,7 +487,7 @@ $set['redirects_media'] ?>/></label>
 <?= $html_sep ?>
 <?php /* 4/*sep*/ ?>
 
-	<br /><br /><br />
+	<br />
 
 <?= $html_sep ?>
 <?php /* working_frame_with_buttons/*sep*/ ?>

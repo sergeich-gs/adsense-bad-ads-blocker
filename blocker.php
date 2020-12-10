@@ -17,7 +17,7 @@ if (isset($_GET['ad_id'])) {
 
     $from = '';
     $id_len = strlen($_GET['ad_id']);
-    if ($GLOBALS['set_gl']['arc'] == 'adx') {
+    /*if ($GLOBALS['set_gl']['arc'] == 'adx') {
         $from = 'from AdX';
         $result_keyword = 'result';
     } else
@@ -26,10 +26,10 @@ if (isset($_GET['ad_id'])) {
             $result_keyword = 'result';
 
         } else
-            if ($id_len == 104 || $id_len == 108 || $id_len == 36 || $id_len == 40) {
+            if ($id_len == 104 || $id_len == 108 || $id_len == 36 || $id_len == 40) {*/
                 $from = 'from new ARC';
                 $result_keyword = 'default';
-            }
+            //}
 
     $unblock = 0;
     if (isset($_GET['act']))

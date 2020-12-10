@@ -92,7 +92,7 @@ function time_convert(seconds) {
 
 function start_searching(address, frame_id) {
 	setTimeout(function() {	wait(frame_id); }, 10);
-	//document.getElementById(frame_id).src=address; 
+	//document.getElementById(frame_id).src=address;
 	//window.frames[0].src=address;
 	//document.getElementById(frame_id).location.href=address;
 	//document.getElementById(frame_id).location.assign(address);
@@ -101,7 +101,7 @@ function start_searching(address, frame_id) {
 
 function start_searching_js(address, frame_id) {
 	setTimeout(function() {	wait(frame_id); }, 10);
-	document.getElementById(frame_id).click(); 
+	document.getElementById(frame_id).click();
 	//window.frames[0].src=address;
 	//document.getElementById(frame_id).location.href=address;
 	//document.getElementById(frame_id).location.assign(address);
@@ -112,7 +112,7 @@ function start_searching_js(address, frame_id) {
 
 function wait(frame_id) {
 	document.getElementById(frame_id).removeAttribute('src');
-    
+
     /*
     var iframe = document.getElementById(frame_id);
     iframe.contentWindow.document.open();
@@ -184,7 +184,7 @@ function move(obj_id, position)	{
 		obj.style.right='193%';
 		obj.style.width='300%';
 		break
-		
+
 	case '1_bot':
 		obj.style.right='0%';
 		obj.style.width='300%';
@@ -197,7 +197,7 @@ function move(obj_id, position)	{
 		obj.style.right='200%';
 		obj.style.width='300%';
 		break
-		
+
  	case 'left':
 		obj.style.right='0%';
 		obj.style.width='157%';
@@ -206,7 +206,7 @@ function move(obj_id, position)	{
 		obj.style.right='78%';
 		obj.style.width='186%';
 		break
-		
+
 	case 'left_bot':
 		obj.style.right='0%';
 		obj.style.width='150%';
@@ -215,8 +215,8 @@ function move(obj_id, position)	{
 		obj.style.right='50%';
 		obj.style.width='150%';
 		break
-		
-		
+
+
 	default:
 		obj.style.right='0%';
 		obj.style.width='100%';
@@ -226,38 +226,87 @@ function move(obj_id, position)	{
 }
 
 
-                                
-                                
-                  
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
+
+
+function CreateRequest() {
+    var Request = false;
+    if (window.XMLHttpRequest) {
+        Request = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        try {    Request = new ActiveXObject("Microsoft.XMLHTTP"); }
+         catch (CatchException) { Request = new ActiveXObject("Msxml2.XMLHTTP"); }
+    }
+    return Request;
+}
+
+
+function SendRequest(r_method, r_path, r_args, r_handler) {
+    var Request = CreateRequest();
+    if (!Request)
+        return;
+    Request.onreadystatechange = function(){
+        if (Request.readyState == 4) {
+            r_handler(Request);
+        }
+    }
+    if (r_method.toLowerCase() == "get" && r_args.length > 0)
+    r_path += "?" + r_args;
+
+    Request.open(r_method, r_path, true);
+
+    if (r_method.toLowerCase() == "post") {
+        Request.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=utf-8");
+        Request.send(r_args);
+    }
+    else Request.send(null);
+}
+
+
+
+/**
+
+    var Handler = function(Request) {
+        var result = JSON.parse(Request.responseText);
+
+        document.getElementById('87').classList.remove('waiting');
+    }
+
+    document.getElementById('777').classList.add('waiting');
+    SendRequest("GET",'http://<?=$_SERVER['HTTP_HOST']?>/api/get.php?y=' + io, '', Handler);
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

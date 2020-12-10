@@ -72,11 +72,11 @@ unset($first_result);
  * Get first access tokens:
  **/
 
-if ($set['arc'] == 'arc5') {
+//if ($set['arc'] == 'arc5') {
     get_xsrf_token_new();
-} else {
-    get_xsrf_token();
-}
+//} else {
+//    get_xsrf_token();
+//}
 
 
 if (isset($set['blockedads_site'])) {
@@ -119,7 +119,7 @@ if (isset($set['searchwords_check'])) {
         unset($set['stopwords_check']);
     if (isset($set['mark_reviewed']))
         unset($set['mark_reviewed']);
-    if ($set['arc'] == 'arc5')
+    //if ($set['arc'] == 'arc5')
         $set['reviewed'] = true;
 } else
     $search_words[] = '';
@@ -132,10 +132,10 @@ if (isset($set['stopwords_check'])) {
         $stopwords_media = file($GLOBALS['settings_folder'] . 'stopwords_media.txt', FILE_IGNORE_NEW_LINES);
 }
 
-if ($set['arc'] == 'arc5') {
+//if ($set['arc'] == 'arc5') {
     @unlink($GLOBALS['temp_folder'] . 'some_long_token.txt');
     @unlink($GLOBALS['temp_folder'] . 'some_digi_token.txt');
-}
+//}
 
 if(!isset($start_pos))
     if(isset($set['start_pos']))
@@ -161,11 +161,11 @@ foreach ($search_words as $search_word)
             $type['rtb'] = '4';
         $media_types = '[' . implode(',', $type) . ']';
 
-        if ($set['arc'] != 'arc5') { // Old ARC
+        //if ($set['arc'] != 'arc5') { // Old ARC         //There is no longer old ARC
             /**
              * Get temporary access tokens from old ARC:
              **/
-
+            /*
             $params = new stdClass();
             @$params->{1} = 'ca-' . $GLOBALS['pub_id'];
             $params = json_encode($params);
@@ -174,10 +174,11 @@ foreach ($search_words as $search_word)
                 die('<p>' . $result->error->code . ' ' . $result->error->message . '</p>');
             $some_long_token = $result->result->{1}->{1}->{1}; // some auth token...
             unset($params);
-
+            */
             /**
              * Get ads list from old ARC:
              **/
+             /*                        There is no longer old ARC
             $params = new stdClass();
             @$params->{1} = 'ca-' . $GLOBALS['pub_id']; // Publisher Id ca-pub-...
             if (isset($set['reviewed']))
@@ -211,8 +212,8 @@ foreach ($search_words as $search_word)
 
             $result = creative_review('searchArcApprovals', $params);
             $result_keyword = 'result';
-
-        } else { // New ARC
+            */
+        //} else { // New ARC         //There is no longer old ARC
 
             /**
              * Get ads list from new ARC:
@@ -253,7 +254,7 @@ foreach ($search_words as $search_word)
             $result = creative_review_new('SearchApprovals', $params);
             $result_keyword = 'default';
 
-        }
+        // }    There is no longer old ARC
 
         if (@is_object($result->error))
             die('<p>' . $result->error->code . ' ' . $result->error->message . '</p>');
@@ -266,21 +267,21 @@ foreach ($search_words as $search_word)
             break;
         }
 
-        $digikey_for_req = $result->{$result_keyword}->{5}; // Some digits required to control requests.
+        @$digikey_for_req = $result->{$result_keyword}->{5}; // Some digits required to control requests.
         //print_r($result);
         foreach ($result->{$result_keyword}->{1} as $key => $node) {
-            $ad_req_urls = $node->{5}->{13}; // url we can access ad sourse code
-            $ad_type = get_ad_type($node->{5}->{6}); //get type of ad (Text, Rich Media, etc)
+            @$ad_req_urls = $node->{5}->{13}; // url we can access ad sourse code
+            @$ad_type = get_ad_type($node->{5}->{6}); //get type of ad (Text, Rich Media, etc)
             $ad[$key] = get_ad($ad_req_urls, $ad_type); //Indexes of returned array: fulltext, header1, header2, body
             $ad[$key]['adv_name'] = $node->{5}->{17}; // advertiser name
-            if($node->{5}->{18})
-                $ad[$key]['adv_name'] = trim($ad[$key]['adv_name'] . ' (' . $node->{5}->{18} . ')'); // advertiser name found by Google
-            $ad[$key]['adv_id'] = $node->{5}->{20}; // advertiser id
-            $ad[$key]['url'] = $node->{5}->{14};
+            //if($node->{5}->{18})
+                //$ad[$key]['adv_name'] = trim($ad[$key]['adv_name'] . ' (' . $node->{5}->{18} . ')'); // advertiser name found by Google
+            @$ad[$key]['adv_id'] = $node->{5}->{20}; // advertiser id
+            @$ad[$key]['url'] = $node->{5}->{14};
             $ad[$key]['url'] = $ad[$key]['url'][0];
-            $ad[$key]['url_displayed'] = $node->{5}->{15};
-            $ad_id[] = $ad[$key]['ad_id'] = $node->{4}->{1}; // Some sequence required to control requests of each ad; long ad id
-            $ad[$key]['adv_long_id'] = $node->{10}->{1}; // Some sequence required to control requests of ad acconut; long adv id
+            @$ad[$key]['url_displayed'] = $node->{5}->{15};
+            @$ad_id[] = $ad[$key]['ad_id'] = $node->{4}->{1}; // Some sequence required to control requests of each ad; long ad id
+            @$ad[$key]['adv_long_id'] = $node->{10}->{1}; // Some sequence required to control requests of ad acconut; long adv id
             $ad[$key]['digikey'] = $digikey_for_req;
             if(!$ad_type)
                 $ad_type = $GLOBALS['ad_type'];
@@ -376,7 +377,7 @@ foreach ($search_words as $search_word)
                 }
 
                 $found['word'] = 0;
-                if (isset($set['stopwords_check']) || isset($set['badadlist_check'])) {
+                if (isset($set['stopwords_check'])) {
 
                     foreach ($stopwords as $stopword) {
                         $fulltext = $adunit['fulltext'];
@@ -398,6 +399,34 @@ foreach ($search_words as $search_word)
                             if (preg_match('/[ .!?"\',;:–—‒―1-9-]' . $stopword . '[ .!?"\',;:–—‒―1-9-]/iu', $fulltext)) {
                                 $found['word'] = 1;
                                 $adunit['stopword'] = '!' . $stopword;
+                                $adunit['filter'] = 'word';
+                                goto list_ad;
+                            }
+                        } elseif (mb_stripos($stopword, 'domain:', 0, 'UTF-8') === 0) {     // Checking only at domain name
+                            $stopword = str_replace('domain:', '', $stopword);
+                            $domain = parse_url($adunit['url'], PHP_URL_HOST);
+                            $domain = str_replace('www.', '', $domain);
+                            if (mb_stripos($stopword, '$', 0, 'UTF-8') !== false) {   // There is end string mark
+                                $stopword = str_replace('$', '', $stopword);
+                                $stopword = str_replace('.', '\.', $stopword);
+                                if (preg_match('/' . $stopword . '$/iu', $domain)) {
+                                    $found['word'] = 1;
+                                    $adunit['stopword'] = 'd:' . $stopword . '$';
+                                    $adunit['filter'] = 'word';
+                                    goto list_ad;
+                                }
+                            } elseif (mb_stripos($stopword, '^', 0, 'UTF-8') !== false) {   // There is start string mark
+                                $stopword = str_replace('^', '', $stopword);
+                                $stopword = str_replace('.', '\.', $stopword);
+                                if (preg_match('/^' . $stopword . '/iu', $domain)) {
+                                    $found['word'] = 1;
+                                    $adunit['stopword'] = 'd:^' . $stopword;
+                                    $adunit['filter'] = 'word';
+                                    goto list_ad;
+                                }
+                            } elseif (mb_stripos($domain, $stopword, 0, 'UTF-8') !== false) {    // No any start/end string mark
+                                $found['word'] = 1;
+                                $adunit['stopword'] = 'd:' . $stopword;
                                 $adunit['filter'] = 'word';
                                 goto list_ad;
                             }
@@ -446,17 +475,17 @@ foreach ($search_words as $search_word)
                     } elseif (isset($set['ad_url']))
                         add_blocked_url($adunit['url']);
 
-                    if ($set['arc'] == 'arc5') {
-                        if (isset($set['report_words']))
-                            if ($adunit['filter'] == 'word')
-                                 ReportPolicyViolation($ad_id[$index], rand(1,12));
-                        if (isset($set['report_disg']))
-                            if ($adunit['filter'] == 'disguised')
-                                 ReportPolicyViolation($ad_id[$index], rand(1,12));
-                        if (isset($set['report_redir']))
-                            if ($adunit['filter'] == 'redirect')
-                                 ReportPolicyViolation($ad_id[$index], rand(1,12));
-                    }
+                    //if ($set['arc'] == 'arc5') {
+                    if (isset($set['report_words']))
+                        if ($adunit['filter'] == 'word')
+                            ReportPolicyViolation($ad_id[$index], rand(1,12));
+                    if (isset($set['report_disg']))
+                        if ($adunit['filter'] == 'disguised')
+                            ReportPolicyViolation($ad_id[$index], rand(1,12));
+                    if (isset($set['report_redir']))
+                        if ($adunit['filter'] == 'redirect')
+                            ReportPolicyViolation($ad_id[$index], rand(1,12));
+                    //}
 
                     if (!isset($set['no_save_any']))
                         list_ad($adunit, $index, $found);

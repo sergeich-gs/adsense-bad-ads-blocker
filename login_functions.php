@@ -1,6 +1,21 @@
 <?php $GLOBALS['url_ref'] = $GLOBALS['temp_folder'] . 'url_ref.txt';
 
-function password_form($input_html, $login, $ref_url) {
+
+function clean_old_cron_cookie()
+{
+    $login_files = scandir($GLOBALS['temp_folder']);
+    unset($login_files[0], $login_files[1]); //removes . and ..
+    foreach ($login_files as $login_file) {
+        if (mb_stripos($login_file, '.cron.', 0, 'UTF-8') !== false) {
+            unlink($GLOBALS['temp_folder'] . '/' . $login_file);
+        }
+    }
+}
+
+
+
+function password_form($input_html, $login, $ref_url)
+{
 
     $doc = new DOMDocument();
     @$doc->loadHTML($input_html);
@@ -38,7 +53,8 @@ function password_form($input_html, $login, $ref_url) {
  **/
 
 
-function password_send($input_html, $pass) {
+function password_send($input_html, $pass)
+{
 
     $doc = new DOMDocument();
     @$doc->loadHTML($input_html);
@@ -89,7 +105,8 @@ function password_send($input_html, $pass) {
  **/
 
 
-function redirect_check($input_html) {
+function redirect_check($input_html)
+{
 
     $doc = new DOMDocument();
     @$doc->loadHTML($input_html);
@@ -146,8 +163,8 @@ function redirect_check($input_html) {
  **/
 
 
-function get_forms($input_html) {
-
+function get_forms($input_html)
+{
     $doc = new DOMDocument();
     @$doc->loadHTML($input_html);
 
@@ -197,7 +214,8 @@ function get_forms($input_html) {
  **/
 
 
-function sms_form_save($sms_form) {
+function sms_form_save($sms_form)
+{
     $nl = '
 ';
     $ref_url = file_get_contents($GLOBALS['url_ref']);
@@ -239,7 +257,8 @@ SMS-code:<br />
  **/
 
 
-function captcha_form_save($captcha_form) {
+function captcha_form_save($captcha_form)
+{
     $nl = '
 ';
 
@@ -296,7 +315,8 @@ Password again, please:<br />
  **/
 
 
-function pre_sms_press($pre_sms_form) {
+function pre_sms_press($pre_sms_form)
+{
 
     $ref_url = file_get_contents($GLOBALS['url_ref']);
 
@@ -328,7 +348,8 @@ function pre_sms_press($pre_sms_form) {
  **/
 
 
-function change_method($change_form) {
+function change_method($change_form)
+{
 
     $ref_url = file_get_contents($GLOBALS['url_ref']);
 
@@ -371,7 +392,8 @@ function change_method($change_form) {
  **/
 
 
-function log_in_check($input_html) {
+function log_in_check($input_html)
+{
 
     $success_message = 'Login successful! <a href="./" target="_top">Please refresh the page</a>';
 
@@ -416,7 +438,8 @@ function log_in_check($input_html) {
  **/
 
 
-function remind_me_later($remind_form) {
+function remind_me_later($remind_form)
+{
 
     $ref_url = file_get_contents($GLOBALS['url_ref']);
 

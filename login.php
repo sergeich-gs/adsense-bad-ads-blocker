@@ -11,6 +11,7 @@ body { background: #fff; }
 <?php
 
 include 'functions.php';
+include 'login_functions.php';
 
 if (isset($_POST['save_cookie_button'])) {
     if($_POST['save_cookie_button'] == 'Save cookie') {
@@ -18,6 +19,7 @@ if (isset($_POST['save_cookie_button'])) {
         if($_POST['g_cookie']) {
             if (is_data_safely($_POST['g_cookie'])) {
                 if(file_put_contents($GLOBALS['cookie_file'], $_POST['g_cookie'])) {
+                    clean_old_cron_cookie();
                     echo '<p>Your Google cookies are saved. It seems you are logged in.</p>';
                     echo '<p>You can <a href="' . $_SERVER['HTTP_REFERER'] . '" target="_parent">refresh the page</a> to check it.</p>';
                 } else {
@@ -29,7 +31,7 @@ if (isset($_POST['save_cookie_button'])) {
     }
 }
 
-include 'login_functions.php';
+
 
 
 if (!isset($_POST['password']))
@@ -50,14 +52,7 @@ if (file_exists($GLOBALS['temp_folder'] . 'pub_id.txt'))
     unlink($GLOBALS['temp_folder'] . 'pub_id.txt'); //delete prev pub id
 */
 
-$login_files = scandir($GLOBALS['temp_folder']);
-unset($login_files[0], $login_files[1]); //removes . and ..
-foreach ($login_files as $login_file) {
-    if (mb_strpos($login_file, '.cron.', null, 'UTF-8') !== false) {
-        unlink($GLOBALS['temp_folder'] . '/' . $login_file);
-    }
-}
-
+clean_old_cron_cookie();
 
 /**
  * —*	Get login form

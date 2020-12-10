@@ -35,14 +35,14 @@ input[type="number"] { width: 60px; }
 input[type="number"].run_interval { width: 80px; }
 input[type="checkbox"], input[type="radio"] {width: 25px; height: 25px; position: relative; top:7px;}
 
-input[type="submit"], button { width: 90%; margin: 3px auto; height: 40px; display: block; }
+input[type="submit"], button { width: 90%; margin: 3px auto; height: 40px; display: block; font-size: 20px; border: 1px solid #b9b9b9;}
 div.right_colulmn a  { text-decoration: none; }
 
 input.login, input.password { width: 90%; }
 
 .left_colulmn label { white-space: nowrap; }
 
-.wordlist { width: 100%; height: 300px; }
+.wordlist { width: 100%; height: 300px; font-size: 15px; border: 1px solid #b9b9b9;}
 
 .working_frame  { width: 96%; height: 240px; border: outset 3px #ccc; }
 
@@ -67,9 +67,7 @@ input[type="radio"]#adsense_old:checked ~ label.nc_adsense { display:initial; }
 
 .g_cookie { width: 98%; margin: auto; height: 90px; }
 
-button.json_string { margin-top: -25px; width: 120px; height: 25px; margin-right: 5%; position: relative; top: 40px; }
-
-button.cron_settings { margin-top: -45px; width: 120px; height: 45px; margin-right: 5%; position: relative; top: 90px; }
+button.cron_settings { margin-top: -45px; width: 120px; height: 45px; margin-right: 5%; position: relative; top: 90px; font-size: 15px;}
 
 .cron_settings_input { display: block; margin: 3px auto; margin-top: -20px; width: 120px; height: 20px; margin-right: 5%; position: relative; top: 120px; }
 
@@ -84,7 +82,7 @@ div h3[onclick^="expand_close"]:active { color: #ccc; }
 
 div.cycles { width: 100%; height: 20px; position: relative; }
 div.cycles a { width: initial; position: absolute; }
-div.cycles a button { width: initial; height: 20px; }
+div.cycles a button { width: initial; height: 28px; }
 
 div.cycles a:first-child { left:5%; }
 div.cycles a:last-child { right:5%;}

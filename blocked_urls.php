@@ -7,7 +7,7 @@ if (!is_still_log_in()) {
 }
 
 
-$first_result = curl_get($GLOBALS['arc_tab_req_string'], '', '');
+$first_result = curl_get($GLOBALS['new_arc_tab_req_string'], '', '');
 
 if (isset($set['log']))
     create_log($first_result, 's1_b.url.');
@@ -20,7 +20,7 @@ unset($first_result);
  * Get first access tokens:
  **/
 
-get_xsrf_token();
+get_xsrf_token_new();
 
 $list = get_blocked_urls_list();
 

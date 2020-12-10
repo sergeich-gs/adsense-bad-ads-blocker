@@ -10,14 +10,14 @@ foreach ($_GET as $value)
     if (!is_data_safely($value))
         die();
 
-if (isset($_GET['arc'])) {
+/*if (isset($_GET['arc'])) {
     if ($_GET['arc'] == 'arc5')
         $GLOBALS['set_gl']['arc'] = $set['arc'] = 'arc5';
     if ($_GET['arc'] == 'old_arc')
         $GLOBALS['set_gl']['arc'] = $set['arc'] = 'old_arc';
-}
+}*/
 
-$first_result = curl_get($GLOBALS['arc_tab_req_string'], '', '');
+$first_result = curl_get($GLOBALS['new_arc_tab_req_string'], '', '');
 
 if (isset($set['log']))
     create_log($first_result, 's1_adv.');
@@ -28,17 +28,16 @@ unset($first_result);
 /**
  * Get first access tokens:
 **/
-get_xsrf_token();
+get_xsrf_token_new();
 
 
 $advertisers_list = get_advertisers_list();
 
-
-if ($GLOBALS['set_gl']['arc'] == 'arc5')
+//if ($GLOBALS['set_gl']['arc'] == 'arc5')
     $result_keyword = 'default';
-else
+/*else
     $result_keyword = 'result';
-
+*/
 
 /**
  * Get list of already blocked accounts:
