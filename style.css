@@ -198,6 +198,7 @@ p.adv_ids { margin: 20px; float: left;}
 .nav_top { top: 10px; z-index: 40;  padding: 0px 0px 10px; background: #fffc; border-bottom: 1px solid #ddda;}
 .nav_bottom { bottom: 10px; z-index: 30; padding: 10px 0px 0px; background: #fffc; border-top: 1px solid #ddda;}
 
+.colulmns {padding-top: 30px; }
 .colulmns_bot {padding-bottom: 90px; }
 
 .first, .first_bot { position: relative; -webkit-transition: .5s; transition: .5s; transition-duration: .5s; transition-timing-function: ease-in-out; }
