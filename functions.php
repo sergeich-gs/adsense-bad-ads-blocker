@@ -1,7 +1,10 @@
 <?php //—
-ini_set('max_execution_time', 600); //600 seconds = 10 minutes
-ini_set('memory_limit', '250M');
+ini_set('max_execution_time', 1800); //600 seconds = 10 minutes; 1800 = 30 min.
+ini_set('memory_limit', '450M');
 ini_set('short_open_tag', 1);
+
+$ver = '4.15 14.12.2020';
+$v = str_replace(' ', '', $ver);
 
 $GLOBALS['settings_folder'] = __DIR__ . '/settings/';
 $GLOBALS['temp_folder'] = __DIR__ . '/tempdata/';
@@ -90,7 +93,7 @@ if (isset($set['log'])) {
     ini_set('display_startup_errors', 0);
 }
 
-if (isset($set['arc5'])) 
+if (isset($set['arc5']))
     $set['arc'] = 'arc5';
 /*} else {
     if (!isset($set['arc'])) {
@@ -617,21 +620,71 @@ function curl_all($url, $referer, $myheaders, $post, $postfields, $getheader, $g
 **/
 
 
-function get_ad_type($html_string)
+function get_ad_type($ad_data_string)
 {
-    $type = 'undefined';
-    if (mb_strpos($html_string, 'Multi-format', 0, 'UTF-8') !== false)
-        $type = 'Multi-format';
-    if (mb_strpos($html_string, 'Rich Media', 0, 'UTF-8') !== false)
-        $type = 'Rich Media';
-    if (mb_strpos($html_string, 'HTML5', 0, 'UTF-8') !== false)
-        $type = 'HTML5';
-    if (mb_strpos($html_string, 'Text', 0, 'UTF-8') !== false)
-        $type = 'Text';
-    if (mb_strpos($html_string, 'Image', 0, 'UTF-8') !== false)
-        $type = 'Image';
+    $type[1] = $type[2] = $ad_data_string;
+
+    if(!$ad_data_string) {
+        $type[1] = 'Text';
+        $type[2] = '102';
+        return $type;
+    }
+
+    if($ad_data_string == 81)
+        $type[1] = 'Text';
+    elseif($ad_data_string == 102)
+        $type[1] = 'Text';
+    elseif($ad_data_string == 1)
+        $type[1] = 'Text';
+    elseif($ad_data_string == 76)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 82)
+        $type[1] = 'Multi-format';
+    elseif($ad_data_string == 103)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 91)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 93)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 17)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 55)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 26)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 46)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 33)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 118)
+        $type[1] = 'Rich Media';
+    elseif($ad_data_string == 2)
+        $type[1] = 'Image';
+    elseif($ad_data_string == 3)
+        $type[1] = 'Image';
 
     return $type;
+/**
+102 - Text mini: Short header and text
+1 - Text old: Header and text
+81 - Text: 2 Headers and text
+
+103 - Rich Media
+91 - Rich Media
+82 - Many formats
+46 - Rich Media with map
+26 - Google Play
+76 - Rich Media (undecodable) Link to...
+77 - Rich Media (undecodable) Link to...
+93 - Rich Media from another URL Like image. Custom_layout.
+17 - Rich Media animated image
+55 - Rich Media big (with text)
+33 - some shit...
+118 - Video
+
+2,3 - Image
+*/
+
 }
 
 
@@ -640,20 +693,53 @@ function get_ad_type($html_string)
 **/
 
 
-function get_ad($url, $ad_type)
+function get_ad($url, $ad_type_arr)
 {
+    $ad_type = $ad_type_arr[1];
+
+    if($ad_type == 118 || $ad_type == 76 || $ad_type == 77 || $ad_type == 33 || $ad_type == 55 || $ad_type == 17 || $ad_type == 93) {
+        if (isset($GLOBALS['set_gl']['log'])) {
+            create_log($ad_html, 'ad.unkn.' . $ad_type . '_' . $ad_type_arr[2] . '.');      // Ad without any text
+            $GLOBALS['ad_log_name'] = 'ad.unkn.' . $ad_type . '_' . $ad_type_arr[2] . '_t.';
+        }
+        return false;
+    }
+
     $ad_html = curl_get($url, $GLOBALS['arc_tab_req_string'], '');
     if ($ad_html) {
         $ad_html = hex_repl($ad_html);
-
+            
         if ($ad_type == 'Text') {
 
-            $ad = text_ad($ad_html);
-            $ad['type'] = 't';
+            $ad = text_ad($ad_html, $ad_type_arr[2]);
+            $ad['type'] = 't' . $ad_type_arr[2];
+            
+            if(!$ad && $ad_type_arr[2] == '102') {
+                $ad = text_ad($ad_html);
+                if($ad) {
+                    $ad_type_arr[2] = '81';
+                    $ad['type'] = 't' . $ad_type_arr[2];
+                }
+                
+            }
+            if(!$ad) {
+                if (mb_stripos($ad_html, 'data-rh-set-type="62"', 70000, 'UTF-8') !== false) {
 
+                    $ad = multimedia_ad62($ad_html);             // Multi-format, small size ad
+                    $ad['type'] = 'Mf62';
+                    $ad_type_arr[2] = '62';
+                }
+            }
         } elseif ($ad_type == 'Multi-format') {
 
-            $ad = multiformat_ad($ad_html);
+            if ($ad_type_arr[2] == 82) {
+                
+                $ad = multimedia_ad0($ad_html);
+                $ad['type'] = 'M82';
+            }
+
+            if (!$ad)
+                $ad = multiformat_ad($ad_html);
 
             if (!$ad)
                 if (mb_stripos($ad_html, 'data-rh-set-type="0"', 70000, 'UTF-8') !== false) {
@@ -671,11 +757,28 @@ function get_ad($url, $ad_type)
                 $ad = multiformat_ad_old35($ad_html);
 
             if (!isset($ad['type']))
-                $ad['type'] = 'Mf';
+                $ad['type'] = 'Mf?';
 
         } elseif ($ad_type == 'Rich Media') {
 
-            if (mb_stripos($ad_html, 'data-rh-set-type="26"', 70000, 'UTF-8') !== false || mb_stripos($ad_html, 'data-rh-set-type="25"', 70000, 'UTF-8') !== false) { // File size about 156 Kb
+            if ($ad_type_arr[2] == 103) {   // || $ad_type_arr[2] == 91
+
+                $ad = multimedia_ad103($ad_html);
+                if (!$ad)
+                    $ad = multimedia_ad103_dom($ad_html);
+                $ad['type'] = 'M' . $ad_type_arr[2];
+
+            } elseif ($ad_type_arr[2] == 46) {
+
+                $ad = multimedia_ad46($ad_html);
+                $ad['type'] = 'M46';
+
+            } elseif ($ad_type_arr[2] == 26 || $ad_type_arr[2] == 28) {
+
+                $ad = multimedia_ad26($ad_html);
+                $ad['type'] = 'M' . $ad_type_arr[2];
+
+            } elseif (mb_stripos($ad_html, 'data-rh-set-type="26"', 70000, 'UTF-8') !== false || mb_stripos($ad_html, 'data-rh-set-type="25"', 70000, 'UTF-8') !== false) { // File size about 156 Kb
 
                 $ad = multimedia_ad25_26($ad_html);     // Rich Media
                 $ad['type'] = 'M2';
@@ -687,32 +790,32 @@ function get_ad($url, $ad_type)
 
             }
 
-        } elseif ($ad_type == 'HTML5') {
-
-            $ad = html5_2_ad($ad_html);
+        // } elseif ($ad_type == 'HTML5') { No longer such type
+            if (!$ad)
+                $ad = html5_2_ad($ad_html);
             if (!$ad)
                 $ad = html5_1_ad($ad_html);
-            else
-                $ad['type'] = 'H52';
+            //else
+                //$ad['type'] = 'H52';
 
             if (!$ad)
                 $ad = text_ad($ad_html); //Some HTML5 ads have same format as text ad
-            else
-                $ad['type'] = 'H51';
+            //else
+                //$ad['type'] = 'H51';
 
             if (!isset($ad['type']))
-                $ad['type'] = 't';
+                $ad['type'] = 't?';
 
         } elseif ($ad_type == 'Image') {
 
             $ad['header1'] = 'Image';
             $ad['fulltext'] = '1';
-            $ad['type'] = 'Img';
+            $ad['type'] = 'Img' . $ad_type_arr[2];
 
         } elseif (mb_stripos($ad_html, 'data-rh-set-type="53"', 70000, 'UTF-8') !== false) {
 
             $ad = text_ad($ad_html);
-            $ad['type'] = 't';
+            $ad['type'] = 't' . $ad_type_arr[2];
             $ad_type = 'Text';
 
         } elseif (mb_stripos($ad_html, 'data-rh-set-type="15"', 70000, 'UTF-8') !== false) {
@@ -747,23 +850,29 @@ function get_ad($url, $ad_type)
 
         } else {
 
-            if (isset($GLOBALS['set_gl']['log']))
-                create_log($ad_html, 'ad.un.' . $ad_type . '.');        // Unknown ad
+            if (isset($GLOBALS['set_gl']['log'])) {
+                create_log($ad_html, 'ad.un.' . $ad_type . '_' . $ad_type_arr[2] . '.');        // Unknown ad
+                $GLOBALS['ad_log_name'] = 'ad.un.' . $ad_type . '_' . $ad_type_arr[2] . '_t.';
+            }
             return false;
         }
 
         $GLOBALS['ad_type'] = $ad_type;
 
-        $ad['fulltext'] = trim(mb_strtolower($ad['fulltext'], 'UTF-8'));
-
         if (!$ad['fulltext']) {
-            if (isset($GLOBALS['set_gl']['log']))
-                create_log($ad_html, 'ad.unkn.' . $ad_type . '.');      // Ad without any text
+            if (isset($GLOBALS['set_gl']['log'])) {
+                create_log($ad_html, 'ad.unkn.' . $ad_type . '_' . $ad_type_arr[2] . '.');      // Ad without any text
+                $GLOBALS['ad_log_name'] = 'ad.unkn.' . $ad_type . '_' . $ad_type_arr[2] . '_t.';
+            }
             return false;
         }
 
-        if (isset($GLOBALS['set_gl']['log']))
-            create_log($ad_html, 'ad.' . $ad_type . '.');
+        $ad['fulltext'] = trim($ad['fulltext']);
+
+        if (isset($GLOBALS['set_gl']['log'])) {
+            create_log($ad_html, 'ad.' . $ad_type . '_' . $ad_type_arr[2] . '.');
+            $GLOBALS['ad_log_name'] = 'ad.' . $ad_type . '_' . $ad_type_arr[2] . '_t.';
+        }
         foreach ($ad as $index => $value) {
             $value = trim($value);
             $ad[$index] = str_replace('  ', ' ', $value);
@@ -792,13 +901,153 @@ function get_ad($url, $ad_type)
             $cropped = true;
         }
         if ($cropped)
-            @$ad['fulltext'] = trim(mb_strtolower($ad['header1'] . ' ' . $ad['header2'] . ' ' . $ad['body'] . ' ' . $ad['displayUrl'], 'UTF-8'));
+            @$ad['fulltext'] = trim($ad['header1'] . ' ' . $ad['header2'] . ' ' . $ad['body'] . ' ' . $ad['displayUrl']);
 
         return $ad;
 
     } else
         return false;
 
+}
+
+
+/**
+ **
+**/
+
+
+function multimedia_ad103_dom($html)
+{
+    $list = explode('</head>', $html, 2);
+    if ($list[1])
+        $ad_html = $list[1];
+    else
+        return false;
+    unset($list, $html);
+
+    $list = explode('meta content="ns-', $ad_html, 2);
+    $class_name = $list[1];
+    $list = explode('"', $class_name, 2);
+    $class_name = $list[0];
+
+    $ad_html = str_replace('<br>', ' ', $ad_html);
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    @$dom->loadHTML($ad_html);
+    unset($ad_html, $list);
+
+    foreach ($dom->getElementsByTagName('a') as $a_node) {
+
+        if (stripos($a_node->getAttribute('class'), $class_name . '-e-4') !== false) {
+            $ad['header1'] = $a_node->textContent;
+            continue;
+        }
+
+        if (stripos($a_node->getAttribute('class'), $class_name . '-e-9') !== false) {
+            $ad['body'] = $a_node->textContent;
+            continue;
+        }
+    }
+
+    if (!isset($GLOBALS['set_gl']['utf8_off']))
+        foreach ($ad as $index => $value)
+            $ad[$index] = utf8_decode($value);
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
+
+    return $ad;
+}
+
+
+/**
+ **
+**/
+
+
+function multimedia_ad103($html)
+{
+  $list = explode('var adData = {', $html, 2);
+    if ($list[1])
+        $ad_js = $list[1];
+    else
+        return false;
+    unset($list, $html);
+
+    $list = explode('};</script>', $ad_js, 2);
+    $ad_js = $list[0];
+    unset($list);
+
+    $ad_js = str_replace('[{', "',", $ad_js);
+
+    $list = explode("',", $ad_js);
+    unset($ad_js);
+    foreach ($list as $value) {
+        $string = explode(":", $value, 2);
+        $index = trim($string[0], "[{}]' ");
+        $value = trim($string[1], "[{}]' ");
+        $ad_data[$index] = $value;
+    }
+
+    $ad['header1'] = $ad_data['subject'];
+    $ad['header2'] = $ad_data['headline'];
+    $ad['body'] = $ad_data['description'];
+    if($ad_data['description'] != $ad_data['content'])
+        $ad['body'] .= ' ' .  $ad_data['content'];
+    if($ad['header2'] == $ad['body'])
+        $ad['header2'] = '';
+
+    $ad['displayUrl'] = trim($ad_data['visible_url'] . ' ' .  $ad_data['callToActionButton1']);
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
+    return $ad;
+}
+
+
+/**
+ **
+**/
+
+
+function multimedia_ad46($html)
+{
+    $list = explode('</head>', $html, 2);
+    if ($list[1])
+        $ad_html = $list[1];
+    else
+        return false;
+    unset($list, $html);
+
+    $list = explode('meta content="ns-', $ad_html, 2);
+    $class_name = $list[1];
+    $list = explode('"', $class_name, 2);
+    $class_name = $list[0];
+
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    @$dom->loadHTML($ad_html);
+    unset($ad_html, $list);
+
+    foreach ($dom->getElementsByTagName('a') as $a_node) {
+
+        if (stripos($a_node->getAttribute('class'), $class_name . '-e-11') !== false) {
+            $ad['header1'] = $a_node->textContent;
+            continue;
+        }
+
+        if (stripos($a_node->getAttribute('class'), $class_name . '-e-13') !== false) {
+            $ad['body'] = $a_node->textContent;
+            continue;
+        }
+    }
+
+    if (!isset($GLOBALS['set_gl']['utf8_off']))
+        foreach ($ad as $index => $value)
+            $ad[$index] = utf8_decode($value);
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
+
+    return $ad;
 }
 
 
@@ -850,13 +1099,13 @@ function load_single_html_ad($url)
         if (!$ad['body'])
             $ad['body'] = $dom->textContent;
 
-        $ad['body'] = str_replace('\\\\n', '', $ad['body']);
-        $fulltext = implode(' ', $ad);
-        $ad['fulltext'] = $fulltext;
-
         if (!isset($GLOBALS['set_gl']['utf8_off']))
             foreach ($ad as $index => $value)
                 $ad[$index] = utf8_decode($value);
+
+        $ad['body'] = str_replace('\\\\n', '', $ad['body']);
+        $fulltext = implode(' ', $ad);
+        $ad['fulltext'] = $fulltext;
 
         return $ad;
     } else
@@ -902,13 +1151,62 @@ function multimedia_ad15($html)
     if(isset($ad62['displayUrl']))
         $ad['displayUrl'] = $ad62['displayUrl'];
 
+    if (!isset($GLOBALS['set_gl']['utf8_off']))
+        foreach ($ad as $index => $value)
+            $ad[$index] = utf8_decode($value);
 
     $fulltext = implode(' ', $ad);
     $ad['fulltext'] = $fulltext;
 
+    return $ad;
+}
+
+
+/**
+ **
+**/
+
+function multimedia_ad26($html)
+{
+    $list = explode('</head>', $html);
+    $ad_html = array_pop($list);
+    unset($list, $html);
+
+    $ad_html = str_replace('<br>', ' ', $ad_html);
+    $dom = new DOMDocument('1.0', 'UTF-8');
+    @$dom->loadHTML($ad_html);
+    unset($ad_html);
+
+    foreach ($dom->getElementsByTagName('div') as $div_node) {
+
+        if (stripos($div_node->getAttribute('class'), 'short-app-name') !== false) {
+            $ad['header1'] = $div_node->textContent;
+            continue;
+        }
+
+        if (stripos($div_node->getAttribute('class'), 'headline') !== false) {
+            $ad['body'] = $div_node->textContent;
+            continue;
+        }
+
+        if (stripos($div_node->getAttribute('class'), 'review-count') !== false) {
+            $review = $div_node->textContent;
+            continue;
+        }
+
+        if (stripos($div_node->getAttribute('class'), 'install-count') !== false) {
+            $install = $div_node->textContent;
+            continue;
+        }
+    }
+    $ad['header2'] = 'Review: ' . $review . '; Inst: ' . $install;
+
     if (!isset($GLOBALS['set_gl']['utf8_off']))
         foreach ($ad as $index => $value)
             $ad[$index] = utf8_decode($value);
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
 
     return $ad;
 }
@@ -925,6 +1223,7 @@ function multimedia_ad25_26($html)
     $ad_html = array_pop($list);
     unset($list, $html);
 
+    $ad_html = str_replace('<br>', ' ', $ad_html);
     $dom = new DOMDocument('1.0', 'UTF-8');
     @$dom->loadHTML($ad_html);
     unset($ad_html);
@@ -953,13 +1252,12 @@ function multimedia_ad25_26($html)
                 $ad['displayUrl'] .= $div_node->textContent . ' ';
     }
 
-
-    $fulltext = implode(' ', $ad);
-    $ad['fulltext'] = $fulltext;
-
     if (!isset($GLOBALS['set_gl']['utf8_off']))
         foreach ($ad as $index => $value)
             $ad[$index] = utf8_decode($value);
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
 
     return $ad;
 }
@@ -978,7 +1276,7 @@ function multimedia_ad0($html)
     $ad_html = array_pop($list);
     unset($list, $html);
 
-
+    $ad_html = str_replace('<br>', ' ', $ad_html);
     $dom = new DOMDocument('1.0', 'UTF-8');
     @$dom->loadHTML($ad_html);
     unset($ad_html);
@@ -1004,13 +1302,12 @@ function multimedia_ad0($html)
     if(isset($ad62['displayUrl']))
         $ad['displayUrl'] = $ad62['displayUrl'];
 
-
-    $fulltext = implode(' ', $ad);
-    $ad['fulltext'] = $fulltext;
-
     if (!isset($GLOBALS['set_gl']['utf8_off']))
         foreach ($ad as $index => $value)
             $ad[$index] = utf8_decode($value);
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
 
     return $ad;
 }
@@ -1030,6 +1327,7 @@ function multimedia_ad62($html, $do_not_decode = false)
     $ad_html = array_shift($list);
     unset($list, $html);
 
+    $ad_html = str_replace('<br>', ' ', $ad_html);
     $dom = new DOMDocument('1.0', 'UTF-8');
     @$dom->loadHTML($ad_html);
     unset($ad_html);
@@ -1053,15 +1351,14 @@ function multimedia_ad62($html, $do_not_decode = false)
     if(!$ad['displayUrl'])
         unset($ad['displayUrl']);
 
-
-    $fulltext = implode(' ', $ad);
-    $ad['fulltext'] = $fulltext;
-
     if(!$do_not_decode) {
         if (!isset($GLOBALS['set_gl']['utf8_off']))
             foreach ($ad as $index => $value)
                 $ad[$index] = utf8_decode($value);
     }
+
+    $fulltext = implode(' ', $ad);
+    $ad['fulltext'] = $fulltext;
 
     return $ad;
 }
@@ -1072,52 +1369,80 @@ function multimedia_ad62($html, $do_not_decode = false)
 **/
 
 
-function text_ad($html)
+function text_ad($html, $type = '81')
 {
     $list = explode('</head>', $html);
     $ad_html = array_pop($list);
     unset($list, $html);
 
+    $ad_html = str_replace('<br>', ' ', $ad_html);
     $dom = new DOMDocument('1.0', 'UTF-8');
     @$dom->loadHTML($ad_html);
     unset($ad_html);
 
-    foreach ($dom->getElementsByTagName('a') as $a_node) {
-        //if( stripos($a_node->getAttribute('class'), 'rhbackground')!==false ) $ad['fulltext']=$a_node->textContent;
-        if (stripos($a_node->getAttribute('class'), 'rhtitleline1') !== false) {
-            $ad['header1'] = $a_node->textContent;
-            continue;
-        }
+    if($type == '102') {
 
-        if (stripos($a_node->getAttribute('class'), 'rhtitleline2') !== false) {
-            $ad['header2'] = $a_node->textContent;
-            continue;
-        }
+        foreach ($dom->getElementsByTagName('div') as $div_index => $div_node) {
 
-        if (stripos($a_node->getAttribute('class'), 'rhbody') !== false) {
-            $ad['body'] = $a_node->textContent;
-            continue;
-        }
+            if (stripos($div_node->getAttribute('class'), 'N35Pnd') !== false) {    // N35Pnd header
+                $ad['header1'] = trim($div_node->textContent);
+                continue;
+            }
 
-        //Old ads (with just 1 header) support
-        if (stripos($a_node->getAttribute('class'), 'rhtitle ') !== false || stripos($a_node->getAttribute('class'), 'rhtitle"') !== false) {
-            $ad['header1'] = $a_node->textContent;
-            continue;
-        }
+            if (stripos($div_node->getAttribute('class'), 'ksOqgb') !== false) {      // ksOqgb body
+                $ad['body'] = trim($div_node->textContent);
+                continue;
+            }
 
-        if (stripos($a_node->getAttribute('class'), 'rhurl ') !== false || stripos($a_node->getAttribute('class'), 'rhurl"') !== false) {
-            $ad['displayUrl'] = $a_node->textContent;
-            continue;
+            if (stripos($div_node->getAttribute('class'), 'h4H19b') !== false) {      // h4H19b url
+                $div_node->removeChild($div_node->getElementsByTagname('span')[0]);     // Removes "Ad·"
+                $ad['displayUrl'] = trim($div_node->textContent);
+                continue;
+            }
+        }
+        $l = mb_strlen($ad['displayUrl'], 'UTF-8') - 2;
+        $ad['displayUrl'] = mb_substr($ad['displayUrl'], 1, $l, 'UTF-8');
+    } else {
+        foreach ($dom->getElementsByTagName('a') as $a_node) {
+
+            if (stripos($a_node->getAttribute('class'), 'rhtitleline1') !== false) {
+                $ad['header1'] = trim($a_node->textContent);
+                continue;
+            }
+
+            if (stripos($a_node->getAttribute('class'), 'rhtitleline2') !== false) {
+                $ad['header2'] = trim($a_node->textContent);
+                continue;
+            }
+
+            if (stripos($a_node->getAttribute('class'), 'rhbody') !== false) {
+                $ad['body'] = trim($a_node->textContent);
+                continue;
+            }
+
+            //Old ads (with just 1 header) support
+            if (stripos($a_node->getAttribute('class'), 'rhtitle') !== false) { // if (stripos($a_node->getAttribute('class'), 'rhtitle ') !== false || stripos($a_node->getAttribute('class'), 'rhtitle') !== false) {
+                $ad['header1'] = trim($a_node->textContent);
+                continue;
+            }
+
+            if (stripos($a_node->getAttribute('class'), 'rhurl') !== false) { //if (stripos($a_node->getAttribute('class'), 'rhurl ') !== false || stripos($a_node->getAttribute('class'), 'rhurl') !== false) {
+                $ad['displayUrl'] = trim($a_node->textContent);
+                continue;
+            }
         }
     }
-
-    $fulltext = implode(' ', $ad);
-    $ad['fulltext'] = $fulltext;
 
     if (!isset($GLOBALS['set_gl']['utf8_off']))
         foreach ($ad as $index => $value)
             $ad[$index] = utf8_decode($value);
 
+    $fulltext = implode(' ', $ad);
+    if(!$fulltext)
+        return false;
+        
+    $ad['fulltext'] = $fulltext;
+    
     return $ad;
 }
 
@@ -1698,15 +2023,18 @@ function list_ad($ad, $ad_index, $found)
         '" onclick="insert_result_frame(this);" target="result_frame" rel="noreferrer" class="whitelist whitelist_ad" title="Whitelist this ad (2 headers and body), unblock ad and acc" ><img src="img/whl.png" /></a>';
 
     if (@$ad['header1'])
-        $whitelist_header1 = '<a href="whitelist_ad.php?new_ad=' . rawurlencode($ad['header1']) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_header1" title="Whitelist this header (' . $ad['header1'] .
+        $whitelist_header1 = '<a href="whitelist_ad.php?new_ad=' . rawurlencode(mb_strtolower($ad['header1'], 'UTF-8')) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_header1" title="Whitelist this header (' . $ad['header1'] .
             ')" ><img src="img/whl.png" /></a> ';
     if (@$ad['header2'])
-        $whitelist_header2 = '<a href="whitelist_ad.php?new_ad=' . rawurlencode($ad['header2']) . '" onclick="insert_result_frame(this.parentNode.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_header2" title="Whitelist this header (' . $ad['header2'] .
+        $whitelist_header2 = '<a href="whitelist_ad.php?new_ad=' . rawurlencode(mb_strtolower($ad['header2'], 'UTF-8')) . '" onclick="insert_result_frame(this.parentNode.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_header2" title="Whitelist this header (' . $ad['header2'] .
             ')" ><img src="img/whl.png" /></a> ';
     if (@$ad['body'])
-        $whitelist_body = '<a href="whitelist_ad.php?new_ad=' . rawurlencode($ad['body']) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_body" title="Whitelist ad body" ><img src="img/whl.png" /></a> ';
-
-    $blocking_text = trim($ad['header1'] . ' ' . $ad['header2']);
+        $whitelist_body = '<a href="whitelist_ad.php?new_ad=' . rawurlencode(mb_strtolower($ad['body'], 'UTF-8')) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_body" title="Whitelist ad body" ><img src="img/whl.png" /></a> ';
+    
+    $blocking_text = $ad['header1'];
+    if(isset($ad['header2']))
+        $blocking_text .= ' ' . $ad['header2'];        
+        
     if(!$blocking_text)
         $blocking_text = $ad['body'];
 
@@ -1718,8 +2046,9 @@ function list_ad($ad, $ad_index, $found)
 
     $ad_header = '<div class="ad_header"><span class="adv_id">' . $ad['adv_name'] . ' ' . $ad['adv_id'] . '</span> ' . $stopword . '</div>' . $nl;
     //title="'.$ad['fulltext'].'"
-
-    $header2 = "<br>\n<span>" . $whitelist_header2 . $ad['header2'] . '</span>';
+    
+    if(isset($ad['header2']))
+        $header2 = "<br>\n<span>" . $whitelist_header2 . $ad['header2'] . '</span>';
     $header = '<h2>' . $whitelist_header1 . $header1 . $header2 . '</h2>' . $nl;
 
     $text = '<div class="ad">' . $nl . $whitelist_ad . $nl . $ad_header . $header . '<p class="body" title="ad text">' . $whitelist_body . $ad['body'] . '</p>' . $nl . '<p class="ad_url" title="Full ad URL">' . $ad_url . '</p>' . $nl . $url . '</div><span class="block_buttons">' . $block_ad .
@@ -1755,7 +2084,7 @@ function is_ad_whitelisted($ad_fulltext)
     $ad_fulltext = mb_strtolower($ad_fulltext, 'UTF-8');
     foreach ($GLOBALS['whitelist'] as $whitestring) {
         if ($whitestring)
-            if (mb_stripos($ad_fulltext, $whitestring, 0, 'UTF-8') !== false) { //if we can find any word
+            if (mb_strpos($ad_fulltext, $whitestring, 0, 'UTF-8') !== false) { //if we can find any word
                 return true;
                 break;
             }
@@ -1858,16 +2187,19 @@ function creative_review_new($method, $params)
     }
 
     $list = explode("\n", $result, 2);
-    $result = $list[1];
+    if(isset($list[1])) {
+        $result = $list[1];
 
-    $result = json_decode($result); // decode result string
-
-    if (@$result->default->{5})
-        file_put_contents($GLOBALS['temp_folder'] . 'some_digi_token.txt', $result->default->{5}); // Renew token
-    if (@$result->default->{6})
-        file_put_contents($GLOBALS['temp_folder'] . 'some_long_token.txt', $result->default->{6}); // Renew token
-
-    return $result;
+        $result = json_decode($result); // decode result string
+    
+        if (@$result->default->{5})
+            file_put_contents($GLOBALS['temp_folder'] . 'some_digi_token.txt', $result->default->{5}); // Renew token
+        if (@$result->default->{6})
+            file_put_contents($GLOBALS['temp_folder'] . 'some_long_token.txt', $result->default->{6}); // Renew token
+    
+        return $result;
+    } else
+        return false;
 }
 
 
@@ -2193,7 +2525,9 @@ function create_log($result, $filename)
     if (!isset($GLOBALS['result_tmp']))
         $GLOBALS['result_tmp'] = '';
     if ($result != $GLOBALS['result_tmp']) {
-        file_put_contents($GLOBALS['temp_folder'] . 'logs/' . $filename . getmicrotime(), $result);
+        $microtime = getmicrotime();
+        $microtime = substr($microtime, 5);
+        file_put_contents($GLOBALS['temp_folder'] . 'logs/' . $filename . $microtime, $result);
         $GLOBALS['result_tmp'] = $result;
     }
     return true;

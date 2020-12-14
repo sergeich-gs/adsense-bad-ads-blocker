@@ -48,8 +48,6 @@ for($i = 1; $i <= 10; $i++) {
 $settings_folder = basename($GLOBALS['settings_folder']) . '/';
 $cron_folder = dirname($GLOBALS['settings_folder']);
 $html_sep = '';
-$ver = '4.14 10.12.2020';
-$v = str_replace(' ', '', $ver);
 ?>
 <!DOCTYPE html>
 <html>
@@ -61,10 +59,10 @@ $v = str_replace(' ', '', $ver);
 <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=4, minimum-scale=0.1" />
 
-<link rel="stylesheet" type="text/css" href="style.css?v=<?= $v ?>"/>
+<link rel="stylesheet" type="text/css" href="style.css?v=<?= @$v ?>"/>
 
 <?php if (!isset($set['b_unb_buttons'])) { ?>
-<link rel="stylesheet" type="text/css" href="b_unb.css?v=<?= $v ?>"/>
+<link rel="stylesheet" type="text/css" href="b_unb.css?v=<?= @$v ?>"/>
 <?php }
 
 if (!isset($set['display_ad_url'])) { ?>
@@ -73,7 +71,7 @@ if (!isset($set['display_ad_url'])) { ?>
 </style>
 <?php } ?>
 
-<script type="text/javascript" src="script.js?v=<?= $v ?>"></script>
+<script type="text/javascript" src="script.js?v=<?= @$v ?>"></script>
 
 
 
@@ -588,8 +586,6 @@ $set['redirects_media'] ?>/></label>
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/home" target="_blank" rel="noreferrer" >Home</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/main/allowAndBlockAds?webPropertyCode=ca-<?= $GLOBALS['pub_id'] ?>" target="_blank" rel="noreferrer" >Blocked advertisers (old)</a> <br />
 	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/arc/ca-<?= $GLOBALS['pub_id'] ?>" target="_blank" rel="noreferrer" >New ARC</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/opt/experiments" target="_blank" rel="noreferrer" >Experiments</a> <br />
-	<a href="https://www.google.com/adsense/new/u/0/<?= $GLOBALS['pub_id'] ?>/myads/adbalance" target="_blank" rel="noreferrer" >Ad Balance</a> <br />
 
 	</div>
 

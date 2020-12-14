@@ -91,7 +91,7 @@ if (isset($set['blockedads_site'])) {
     if(time() - $last_blockedads_time >= 1200) {     //If more, than hour/3 ago
 
         $last_blockedads_list_md5 = $GLOBALS['temp_folder'] . 'last_blockedads_list_md5.txt';
-    
+
         if(!file_exists($last_blockedads_list_md5))
             file_put_contents($last_blockedads_list_md5, '');
 
@@ -100,7 +100,7 @@ if (isset($set['blockedads_site'])) {
         $url = 'https://blockedads.ru/feed?md5pub_id=' . md5($GLOBALS['pub_id']);
         $domains_list = curl_get($url, '', '');
         $domains_list = trim($domains_list, ',');
-        
+
         if(md5($domains_list) != $last_blockedads_list) {            // If there are any changes
             add_blocked_url($domains_list);
             file_put_contents($last_blockedads_list_md5, md5($domains_list));
@@ -271,7 +271,7 @@ foreach ($search_words as $search_word)
         //print_r($result);
         foreach ($result->{$result_keyword}->{1} as $key => $node) {
             @$ad_req_urls = $node->{5}->{13}; // url we can access ad sourse code
-            @$ad_type = get_ad_type($node->{5}->{6}); //get type of ad (Text, Rich Media, etc)
+            @$ad_type = get_ad_type($node->{5}->{1}); //get type of ad (Text, Rich Media, Img, etc)
             $ad[$key] = get_ad($ad_req_urls, $ad_type); //Indexes of returned array: fulltext, header1, header2, body
             $ad[$key]['adv_name'] = $node->{5}->{17}; // advertiser name
             //if($node->{5}->{18})
@@ -287,19 +287,27 @@ foreach ($search_words as $search_word)
                 $ad_type = $GLOBALS['ad_type'];
             if ($ad_type == 'Image')
                 $ad[$key]['header2'] = $ad[$key]['url_displayed'];
-            //set_time_limit(900);		//Renew time limit for each ad download
+
+            if (isset($GLOBALS['set_gl']['log'])) {
+                $ad_text_for_log = '';
+                foreach ($ad[$key] as $index => $value) {
+                    $ad_text_for_log .= $index. ': ' . $value . "\n";
+                }
+                create_log($ad_text_for_log, $GLOBALS['ad_log_name']);
+            }
         }
 
         unset($result, $ad_req_urls);
 
         foreach ($ad as $index => $adunit) {
 
-            if ($adunit['fulltext']) {
+            if (true) { //if ($adunit['fulltext']) { For chech ads without any text (by URL).
 
                 if (isset($set['whitelist']))
                     if (is_ad_whitelisted($adunit['fulltext'] . ' ' . $adunit['adv_name'] . ' ' . $adunit['adv_id'] . ' ' . $adunit['url']))
                         continue;
-
+                        
+                $found['word'] = $found['redirect'] = $found['blogspot'] = $found['disguised'] = false;
                 if ($search_word) {
 
                     if (mb_stripos($adunit['fulltext'] . ' ' . $adunit['url'], $search_word, 0, 'UTF-8') !== false) { //if we can find any bad word in results of Google search
@@ -310,7 +318,7 @@ foreach ($search_words as $search_word)
                     goto list_ad;
                 }
 
-                if ($adunit['type'] == 't' || $adunit['type'] == 'Mft') {
+                if (strpos($adunit['type'], 't') !== false || strpos($adunit['type'], 'Img') !== false) {   //Some text ad or image ad
 
                     if (isset($set['do_not_with_adv_name_txt'])) {
                         if($adunit['adv_name'] != '') {     // Not so bad ad
@@ -326,7 +334,7 @@ foreach ($search_words as $search_word)
                     if (isset($set['redirects_text']))
                         $set['redirects'] = true;
 
-                } else {
+                } else {    //Media ads
 
                     if (isset($set['do_not_with_adv_name_media'])) {
                         if($adunit['adv_name'] != '') {     // Not so bad ad
@@ -342,9 +350,9 @@ foreach ($search_words as $search_word)
                     if (isset($set['redirects_media']))
                         $set['redirects'] = true;
                 }
-                if ($adunit['type'] == 'Img') {
+                /*if ($adunit['type'] == 'Img') {
                     $stopwords = $stopwords_text;
-                }
+                }*/
 
                 $found['blogspot'] = 0;
                 if (isset($set['blogspot'])) {
@@ -379,6 +387,8 @@ foreach ($search_words as $search_word)
                 $found['word'] = 0;
                 if (isset($set['stopwords_check'])) {
 
+                    if(!isset($adunit['fulltext']))
+                        $adunit['fulltext'] = '';
                     foreach ($stopwords as $stopword) {
                         $fulltext = $adunit['fulltext'];
                         if (isset($set['lat2cyr']))
@@ -394,7 +404,8 @@ foreach ($search_words as $search_word)
                             if ($adunit['adv_name'])
                                 $fulltext .= ' ' . $adunit['adv_name'];
 
-                        if (mb_stripos($stopword, '!!!', 0, 'UTF-8') === 0) {
+                        $fulltext = mb_strtolower($fulltext, 'UTF-8');
+                        if (mb_strpos($stopword, '!!!', 0, 'UTF-8') === 0 && $fulltext) {
                             $stopword = str_replace('!!!', '', $stopword);
                             if (preg_match('/[ .!?"\',;:–—‒―1-9-]' . $stopword . '[ .!?"\',;:–—‒―1-9-]/iu', $fulltext)) {
                                 $found['word'] = 1;
@@ -402,36 +413,39 @@ foreach ($search_words as $search_word)
                                 $adunit['filter'] = 'word';
                                 goto list_ad;
                             }
-                        } elseif (mb_stripos($stopword, 'domain:', 0, 'UTF-8') === 0) {     // Checking only at domain name
+                        } elseif (mb_strpos($stopword, 'domain:', 0, 'UTF-8') === 0) {     // Checking only at domain name
                             $stopword = str_replace('domain:', '', $stopword);
                             $domain = parse_url($adunit['url'], PHP_URL_HOST);
                             $domain = str_replace('www.', '', $domain);
-                            if (mb_stripos($stopword, '$', 0, 'UTF-8') !== false) {   // There is end string mark
+                            $domain = mb_strtolower($domain, 'UTF-8');
+                            if (mb_strpos($stopword, '$', 0, 'UTF-8') !== false) {   // There is end string mark
                                 $stopword = str_replace('$', '', $stopword);
                                 $stopword = str_replace('.', '\.', $stopword);
                                 if (preg_match('/' . $stopword . '$/iu', $domain)) {
                                     $found['word'] = 1;
+                                    $stopword = str_replace('\\', '', $stopword);
                                     $adunit['stopword'] = 'd:' . $stopword . '$';
                                     $adunit['filter'] = 'word';
                                     goto list_ad;
                                 }
-                            } elseif (mb_stripos($stopword, '^', 0, 'UTF-8') !== false) {   // There is start string mark
+                            } elseif (mb_strpos($stopword, '^', 0, 'UTF-8') !== false) {   // There is start string mark
                                 $stopword = str_replace('^', '', $stopword);
                                 $stopword = str_replace('.', '\.', $stopword);
                                 if (preg_match('/^' . $stopword . '/iu', $domain)) {
                                     $found['word'] = 1;
+                                    $stopword = str_replace('\\', '', $stopword);
                                     $adunit['stopword'] = 'd:^' . $stopword;
                                     $adunit['filter'] = 'word';
                                     goto list_ad;
                                 }
-                            } elseif (mb_stripos($domain, $stopword, 0, 'UTF-8') !== false) {    // No any start/end string mark
+                            } elseif (mb_strpos($domain, $stopword, 0, 'UTF-8') !== false) {    // No any start/end string mark
                                 $found['word'] = 1;
                                 $adunit['stopword'] = 'd:' . $stopword;
                                 $adunit['filter'] = 'word';
                                 goto list_ad;
                             }
-                        } else {
-                            if (mb_stripos($fulltext, $stopword, 0, 'UTF-8') !== false) { //if we can find any bad word
+                        } elseif($fulltext) {
+                            if (mb_strpos($fulltext, $stopword, 0, 'UTF-8') !== false) { //if we can find any bad word
                                 $found['word'] = 1;
                                 $adunit['stopword'] = $stopword;
                                 $adunit['filter'] = 'word';
@@ -461,8 +475,11 @@ foreach ($search_words as $search_word)
                 if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
                     block_ad($ad_id[$index], $digikey_for_req, 0);
                     if (isset($set['ad_account'])){
-
-                        $blocking_text = trim($adunit['header1'] . ' ' . $adunit['header2']);
+                        
+                        $blocking_text = $adunit['header1'];
+                        if (isset($adunit['header2']))
+                            $blocking_text .= ' ' . $adunit['header2'];
+                            
                         if(!$blocking_text)
                             $blocking_text = $adunit['body'];
                         block_ad_account($ad_id[$index], 0, $blocking_text, $adunit['adv_id'], $adunit['adv_name']);
@@ -496,7 +513,7 @@ foreach ($search_words as $search_word)
                             list_ad($adunit, $index, 0);
                 }
                 $checked++;
-                unset($set['disguised'], $set['redirects'], $found);
+                unset($set['disguised'], $set['redirects']);
 
             }
         }
