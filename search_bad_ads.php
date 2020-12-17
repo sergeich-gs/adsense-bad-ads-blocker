@@ -113,8 +113,6 @@ if (isset($set['blockedads_site'])) {
 if (isset($set['searchwords_check'])) {
     @$search_words = file($GLOBALS['settings_folder'] . 'search_words.txt', FILE_IGNORE_NEW_LINES);
     $GLOBALS['set_gl']['reviewed'] = $set['reviewed'] = true; //search not only new ads
-    if (isset($set['badadlist_check']))
-        unset($set['badadlist_check']);
     if (isset($set['stopwords_check']))
         unset($set['stopwords_check']);
     if (isset($set['mark_reviewed']))
@@ -288,7 +286,7 @@ foreach ($search_words as $search_word)
             if ($ad_type == 'Image')
                 $ad[$key]['header2'] = $ad[$key]['url_displayed'];
 
-            if (isset($GLOBALS['set_gl']['log'])) {
+            if (isset($set['log'])) {
                 $ad_text_for_log = '';
                 foreach ($ad[$key] as $index => $value) {
                     $ad_text_for_log .= $index. ': ' . $value . "\n";
@@ -304,10 +302,11 @@ foreach ($search_words as $search_word)
             if (true) { //if ($adunit['fulltext']) { For chech ads without any text (by URL).
 
                 if (isset($set['whitelist']))
-                    if (is_ad_whitelisted($adunit['fulltext'] . ' ' . $adunit['adv_name'] . ' ' . $adunit['adv_id'] . ' ' . $adunit['url']))
+                    if (is_ad_whitelisted($adunit['fulltext'] . ' ' . $adunit['adv_name'] . ' ' . $adunit['adv_id'] . ' ' . $adunit['url'] . ' ' . $adunit['url_displayed']))
                         continue;
-                        
+
                 $found['word'] = $found['redirect'] = $found['blogspot'] = $found['disguised'] = false;
+
                 if ($search_word) {
 
                     if (mb_stripos($adunit['fulltext'] . ' ' . $adunit['url'], $search_word, 0, 'UTF-8') !== false) { //if we can find any bad word in results of Google search
@@ -475,11 +474,11 @@ foreach ($search_words as $search_word)
                 if ($found['word'] || $found['redirect'] || $found['blogspot'] || $found['disguised']) {
                     block_ad($ad_id[$index], $digikey_for_req, 0);
                     if (isset($set['ad_account'])){
-                        
+
                         $blocking_text = $adunit['header1'];
                         if (isset($adunit['header2']))
                             $blocking_text .= ' ' . $adunit['header2'];
-                            
+
                         if(!$blocking_text)
                             $blocking_text = $adunit['body'];
                         block_ad_account($ad_id[$index], 0, $blocking_text, $adunit['adv_id'], $adunit['adv_name']);

@@ -3,7 +3,7 @@ ini_set('max_execution_time', 1800); //600 seconds = 10 minutes; 1800 = 30 min.
 ini_set('memory_limit', '450M');
 ini_set('short_open_tag', 1);
 
-$ver = '4.15 14.12.2020';
+$ver = '4.15.1 17.12.2020';
 $v = str_replace(' ', '', $ver);
 
 $GLOBALS['settings_folder'] = __DIR__ . '/settings/';
@@ -630,6 +630,7 @@ function get_ad_type($ad_data_string)
         return $type;
     }
 
+
     if($ad_data_string == 81)
         $type[1] = 'Text';
     elseif($ad_data_string == 102)
@@ -708,19 +709,19 @@ function get_ad($url, $ad_type_arr)
     $ad_html = curl_get($url, $GLOBALS['arc_tab_req_string'], '');
     if ($ad_html) {
         $ad_html = hex_repl($ad_html);
-            
+
         if ($ad_type == 'Text') {
 
             $ad = text_ad($ad_html, $ad_type_arr[2]);
             $ad['type'] = 't' . $ad_type_arr[2];
-            
+
             if(!$ad && $ad_type_arr[2] == '102') {
                 $ad = text_ad($ad_html);
                 if($ad) {
                     $ad_type_arr[2] = '81';
                     $ad['type'] = 't' . $ad_type_arr[2];
                 }
-                
+
             }
             if(!$ad) {
                 if (mb_stripos($ad_html, 'data-rh-set-type="62"', 70000, 'UTF-8') !== false) {
@@ -733,7 +734,7 @@ function get_ad($url, $ad_type_arr)
         } elseif ($ad_type == 'Multi-format') {
 
             if ($ad_type_arr[2] == 82) {
-                
+
                 $ad = multimedia_ad0($ad_html);
                 $ad['type'] = 'M82';
             }
@@ -1440,9 +1441,9 @@ function text_ad($html, $type = '81')
     $fulltext = implode(' ', $ad);
     if(!$fulltext)
         return false;
-        
+
     $ad['fulltext'] = $fulltext;
-    
+
     return $ad;
 }
 
@@ -2030,11 +2031,11 @@ function list_ad($ad, $ad_index, $found)
             ')" ><img src="img/whl.png" /></a> ';
     if (@$ad['body'])
         $whitelist_body = '<a href="whitelist_ad.php?new_ad=' . rawurlencode(mb_strtolower($ad['body'], 'UTF-8')) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_body" title="Whitelist ad body" ><img src="img/whl.png" /></a> ';
-    
+
     $blocking_text = $ad['header1'];
     if(isset($ad['header2']))
-        $blocking_text .= ' ' . $ad['header2'];        
-        
+        $blocking_text .= ' ' . $ad['header2'];
+
     if(!$blocking_text)
         $blocking_text = $ad['body'];
 
@@ -2046,7 +2047,7 @@ function list_ad($ad, $ad_index, $found)
 
     $ad_header = '<div class="ad_header"><span class="adv_id">' . $ad['adv_name'] . ' ' . $ad['adv_id'] . '</span> ' . $stopword . '</div>' . $nl;
     //title="'.$ad['fulltext'].'"
-    
+
     if(isset($ad['header2']))
         $header2 = "<br>\n<span>" . $whitelist_header2 . $ad['header2'] . '</span>';
     $header = '<h2>' . $whitelist_header1 . $header1 . $header2 . '</h2>' . $nl;
@@ -2082,9 +2083,23 @@ function list_ad($ad, $ad_index, $found)
 function is_ad_whitelisted($ad_fulltext)
 {
     $ad_fulltext = mb_strtolower($ad_fulltext, 'UTF-8');
+
+    if (isset($GLOBALS['set_gl']['log'])) {
+        if(is_array($GLOBALS['ad_type'])) {
+            $GLOBALS['ad_type'] = implode(';', $ad_data_string);
+        }        
+        $tmp_wl = '';
+            foreach ($GLOBALS['whitelist'] as $whitestring) {
+                $tmp_wl .= $whitestring . "\n";
+            }
+        create_log($ad_fulltext . "\n\n" . $tmp_wl, 'WL_' . $GLOBALS['ad_type'] . '.');
+    }
+
     foreach ($GLOBALS['whitelist'] as $whitestring) {
         if ($whitestring)
             if (mb_strpos($ad_fulltext, $whitestring, 0, 'UTF-8') !== false) { //if we can find any word
+                if (isset($GLOBALS['set_gl']['log']))
+                    create_log($whitestring, 'WL_m_' . $GLOBALS['ad_type'] . '.');
                 return true;
                 break;
             }
@@ -2191,12 +2206,12 @@ function creative_review_new($method, $params)
         $result = $list[1];
 
         $result = json_decode($result); // decode result string
-    
+
         if (@$result->default->{5})
             file_put_contents($GLOBALS['temp_folder'] . 'some_digi_token.txt', $result->default->{5}); // Renew token
         if (@$result->default->{6})
             file_put_contents($GLOBALS['temp_folder'] . 'some_long_token.txt', $result->default->{6}); // Renew token
-    
+
         return $result;
     } else
         return false;
