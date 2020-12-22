@@ -11,10 +11,11 @@ if(!$GLOBALS['pub_id'])
 
 if (isset($argv)) {
 
-    if (strpos($argv[1], '!!!') !== false)
+    if (strpos($argv[1], '!!!') !== false) {
         $override = 1;
-    $argv[1] = str_replace('!!!', '', $argv[1]);
-
+        $argv[1] = str_replace('!!!', '', $argv[1]);
+    }
+    
     $json_check = substr($argv[1], 0, 1);
 
     if ($json_check == '{') {
@@ -53,7 +54,7 @@ if (isset($argv)) {
     $GLOBALS['xsrftoken_file'] = $GLOBALS['temp_folder'] . 'xsrftoken.cron.' . $md5string . '.txt';
 
     if (!is_still_log_in()) {
-        unlink($GLOBALS['cookie_file']);
+        //unlink($GLOBALS['cookie_file']);
         die();
     }
 }

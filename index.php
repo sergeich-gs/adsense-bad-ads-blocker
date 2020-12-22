@@ -470,7 +470,7 @@ $set['redirects_media'] ?>/></label>
     Or just paste here your Google cookies and save:<br />
     <textarea class="g_cookie" name="g_cookie"></textarea>
     <input class="submit" type="submit" name="save_cookie_button" value="Save cookie"<?php if (isset($set['frames_off'])) { ?> formtarget="_blank"<?php } ?> />
-    Extention for Chrome to get cookies: <a href="https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg" target="_blank" >cookies.txt</a><br />
+    Extention for Chrome to get cookies: <a href="https://chrome.google.com/webstore/detail/get-cookiestxt/bgaddhkoddajcdgocldbbfleckgcbcid/related" target="_blank" >cookies.txt</a><br />
     Don't forget to fill your pub-id! Left bottom under «Debug and other...».
 <?php     } ?>
 

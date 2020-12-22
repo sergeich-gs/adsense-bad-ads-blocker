@@ -3,7 +3,7 @@ ini_set('max_execution_time', 1800); //600 seconds = 10 minutes; 1800 = 30 min.
 ini_set('memory_limit', '450M');
 ini_set('short_open_tag', 1);
 
-$ver = '4.15.1 17.12.2020';
+$ver = '4.15.2 22.12.2020';
 $v = str_replace(' ', '', $ver);
 
 $GLOBALS['settings_folder'] = __DIR__ . '/settings/';
