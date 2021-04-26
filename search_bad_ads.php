@@ -49,8 +49,12 @@ if (isset($argv)) {
 
     $cookie = file_get_contents($GLOBALS['cookie_file']);
     $GLOBALS['cookie_file'] = $GLOBALS['temp_folder'] . 'cookie.cron.' . $md5string . '.txt';
+    
     if (!file_exists($GLOBALS['cookie_file']))
         file_put_contents($GLOBALS['cookie_file'], $cookie);
+    elseif(filesize($GLOBALS['cookie_file']) < 5000)
+        file_put_contents($GLOBALS['cookie_file'], $cookie);
+        
     $GLOBALS['xsrftoken_file'] = $GLOBALS['temp_folder'] . 'xsrftoken.cron.' . $md5string . '.txt';
 
     if (!is_still_log_in()) {

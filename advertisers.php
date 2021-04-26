@@ -1,6 +1,7 @@
 <?php //—
 $start_time = time();
 include_once 'functions.php';
+$GLOBALS['CURLOPT_TIMEOUT'] = 30; //Adjust it if you need more (If you can not see bloked accounts).
 
 if (!is_still_log_in()) {
     die('<p>You should log in to Google first</p>');

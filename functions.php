@@ -3,7 +3,7 @@ ini_set('max_execution_time', 1800); //600 seconds = 10 minutes; 1800 = 30 min.
 ini_set('memory_limit', '450M');
 ini_set('short_open_tag', 1);
 
-$ver = '4.15.2 22.12.2020';
+$ver = '4.16 26.04.2021';
 $v = str_replace(' ', '', $ver);
 
 $GLOBALS['settings_folder'] = __DIR__ . '/settings/';
@@ -23,6 +23,8 @@ $GLOBALS['myheaders_new'] = array('accept-language:en-US;q=1,en;q=0.4', 'content
 $GLOBALS['creative_review_new_string'] = '/ads-publisher-controls/acx/5/proto/creativereview/';
 $GLOBALS['blocking_controls_new_string'] = '/ads-publisher-controls/acx/5/proto/blockingcontrols/';
 $GLOBALS['request_domain'] = 'www.google.com';
+$GLOBALS['CURLOPT_CONNECTTIMEOUT'] = 5;
+$GLOBALS['CURLOPT_TIMEOUT'] = 5;
 
 
 if (!file_exists($GLOBALS['temp_folder']))
@@ -593,8 +595,8 @@ function curl_all($url, $referer, $myheaders, $post, $postfields, $getheader, $g
     curl_setopt($ch, CURLOPT_HEADER, $getheader);
     if (!$getbody)
         curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $GLOBALS['CURLOPT_CONNECTTIMEOUT']);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $GLOBALS['CURLOPT_TIMEOUT']);
     curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate');
     if ($myheaders)
         curl_setopt($ch, CURLOPT_HTTPHEADER, $myheaders);
