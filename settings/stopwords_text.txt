@@ -1,157 +1,3 @@
-domain:.ao$
-domain:.bf$
-domain:.bi$
-domain:.bj$
-domain:.bw$
-domain:.cf$
-domain:.cg$
-domain:.ci$
-domain:.cm$
-domain:.cv$
-domain:.dj$
-domain:.dz$
-domain:.eg$
-domain:.eh$
-domain:.er$
-domain:.et$
-domain:.ga$
-domain:.gh$
-domain:.gm$
-domain:.gn$
-domain:.gq$
-domain:.gw$
-domain:.ke$
-domain:.km$
-domain:.lr$
-domain:.ls$
-domain:.ly$
-domain:.ma$
-domain:.mg$
-domain:.ml$
-domain:.mr$
-domain:.mu$
-domain:.mw$
-domain:.mz$
-domain:.na$
-domain:.ne$
-domain:.ng$
-domain:.re$
-domain:.rw$
-domain:.sc$
-domain:.sd$
-domain:.sh$
-domain:.sl$
-domain:.sn$
-domain:.so$
-domain:.ss$
-domain:.st$
-domain:.sz$
-domain:.td$
-domain:.tk$
-domain:.tn$
-domain:.tz$
-domain:.ug$
-domain:.zm$
-domain:.zr$
-domain:.zw$
-domain:.website$
-domain:.go.id$
-domain:.turbo.
-domain:.8b.
-domain:.udo.
-domain:.waw.
-domain:.voog.
-domain:.ua-shop.
-domain:.ucraft.
-domain:.urest.
-domain:.omnixia.
-domain:.jimdosite.
-domain:.github.
-domain:.beget.
-domain:.webflow.
-domain:.koko.
-domain:.epizy.
-domain:.amazonaws.
-domain:script.google.
-domain:.bitrix24.site
-domain:.bitrix24site.
-domain:.000webhostapp.
-domain:.godaddysites.
-domain:.sejl.site
-domain:.usluga.
-domain:.fanana.
-domain:.ulcraft.
-domain:.n.nu
-domain:.creatium.
-domain:.cloudfront.
-domain:.ukit.
-domain:.na4u.
-domain:.sitelio.
-domain:.mbmproxy.
-domain:.webnode.
-domain:.teletype.
-domain:.multiscreensite.
-domain:.doodlekit.
-domain:.mycindr.
-domain:.bookmark.
-domain:.strikingly.
-domain:.tumblr.
-domain:.moonfruit.
-domain:.yolasite.
-domain:.mozello.
-domain:.emyspot.
-domain:.nethouse.
-domain:.website2.
-domain:.plp7.
-domain:.weblium.
-domain:.wixsite.
-domain:.alltrades.
-domain:.herokuapp.
-domain:.mobirisesite.
-domain:.bravesites.
-domain:.zyrosite.
-domain:.uflorist.
-domain:.ugo.
-domain:0.tilda.
-domain:1.tilda.
-domain:2.tilda.
-domain:3.tilda.
-domain:4.tilda.
-domain:5.tilda.
-domain:6.tilda.
-domain:7.tilda.
-domain:8.tilda.
-domain:9.tilda.
-domain:.tilda.
-domain:0.myflexbe.
-domain:1.myflexbe.
-domain:2.myflexbe.
-domain:3.myflexbe.
-domain:4.myflexbe.
-domain:5.myflexbe.
-domain:6.myflexbe.
-domain:7.myflexbe.
-domain:8.myflexbe.
-domain:9.myflexbe.
-domain:0.site123.
-domain:1.site123.
-domain:2.site123.
-domain:3.site123.
-domain:4.site123.
-domain:5.site123.
-domain:6.site123.
-domain:7.site123.
-domain:8.site123.
-domain:9.site123.
-domain:a.site123.
-domain:b.site123.
-domain:c.site123.
-domain:d.site123.
-domain:e.site123.
-domain:f.site123.
-domain:sites.google.com
-domain:twitter.com
-domain:-rub.info
 mindspark interactive network
 ваш браузер выбран
 офицыальный
@@ -259,7 +105,6 @@ $ оформи
 ответов. всего за
 ₽ за пару
 денежный приз
-корзина продуктов
 рублей за ваши
 5 минут времени
 пару вопрос
@@ -1123,7 +968,6 @@ kapдолог страны
 раскрыл заговор
 аптечной мафии
 государственного уровня
-это быстро
 палки за ночь
 даже в 75
 это поднимет
@@ -3539,6 +3383,8 @@ zashita-ot-ugon
 просмотр тут
 про ста тит
 хухь
+хугь
+хусь
 лог. 18+
 крыть просмотр
 начать - смотреть
@@ -3756,7 +3602,6 @@ bonus подарок
 открыть. готов
 просмотр включ
 просмотр лучш
-хусь
 !!!хуль?
 !!!хуль
 хухя
@@ -3951,3 +3796,330 @@ lukoiд
 ,5 руб. литр
 от instagram
 ура! инстаграм
+бензин по 24
+компенсация налог
+bluavido
+ходите на видео
+пустить види
+видио
+дите на видео
+начать просматр
+видеовер
+полной виде
+вы - богач
+сохранили сберкнижку
+сберкнижку ссср
+богач и вот
+посмотри сейчас
+наслаждайтесь лучшим контентом
+начать сейчас
+видоз
+видеоткр
+компьютер зеркало и камера
+зеркало и камера заднего вида
+мощность полноценного компьютера
+гос. компенсац
+гос.компенсац
+получали компенсац
+каждому свежее
+свежее распоряжение
+выплаты родившимся до
+специалисты разъяснили
+гражданам, родившимся до
+разъяснили как гражданам,
+года получить выплаты
+выплаты гражданам 16+
+компенсация на сайт
+глава страны
+глава государства
+скрывал глава
+что скрывал
+от всех граждан
+компенсационная выплата
+выплата 202
+компенсацию за 202
+получите компенсац
+выплата в течении дня
+выплата в течение дня
+твой хер
+херъ
+будет снова стоять
+стоять потенци
+потеннц
+потенция возвращается
+неделю 18+
+на крайние меры
+никто не ожидал
+жители в шоке
+пойдем на крайние
+этого никто не
+нельзя есть
+есть помидор
+какие помидор
+чем вреден
+почему помидор
+красный помидор
+чем опасен
+чем его заменять
+не такой полезный
+как все привыкли
+уже доказано
+вреден красный
+опасен красный
+помидор и чем
+помидор не такой
+полезный как все
+муж слаб
+иду на ночь
+ночь к соседу
+слаб в кровати
+но можно это
+это исправить
+поздравляем вас
+ваш приз
+храниться внутри
+заберите одно
+вознаграждение от нас
+приз храниться
+одно вознаграждение
+получите ваши
+р по ссылке
+начать запис
+уникальный регистратор
+регистратор. 18+
+что ждет
+стариков подписан
+указ расширяющий
+льготы старикам
+ждет стариков
+подписан указ
+расширяющий льготы
+видео в новой
+в новой вкладке
+нужно мазать
+пятки йодом
+мазать пятки
+йодом чтобы
+сталина использовал
+врач иосифа  йод
+и считал его лучшим
+лучшим средством
+средством от давления
+важные новости
+можно ли есть
+бал всю ночь
+муженек
+3бал
+а ему уже
+сракулет
+хугем
+ему уже под
+будеть
+предупреждает кому
+минздрав предупреждает
+нельзя прививаться
+кому нельзя
+минздрав рф
+опубликовал список
+противопоказаний к прививк
+жители в шок
+отложить прививк
+лучше отложить
+прививке от коронавир
+противопоказания к прививк
+еще одна доплат
+подписали закон
+законы для себя
+для себя подписали
+за один день подписано
+больше ста законов
+подписано больше ста
+подписали законы
+перепись населения готов
+подготовили вопросы перепес
+перепеси населения в регионах
+проговорился о населен
+был подписан за ден
+в этом году будет
+будет перепись
+во всех регионах
+список законов был
+поднять челн
+вялый челн
+забытый способ
+способ поднять
+челн стабильно
+часто висячий
+челн у мужа
+висячий челн
+стабильно стоять будет
+если вечером
+вечером использовать
+всем желающим
+каждому готово поощрение
+поощрение тема дня
+кладите лук
+лук в носки
+domain:.ao$
+domain:.bf$
+domain:.bi$
+domain:.bj$
+domain:.bw$
+domain:.cf$
+domain:.cg$
+domain:.ci$
+domain:.cm$
+domain:.cv$
+domain:.dj$
+domain:.dz$
+domain:.eg$
+domain:.eh$
+domain:.er$
+domain:.et$
+domain:.ga$
+domain:.gh$
+domain:.gm$
+domain:.gn$
+domain:.gq$
+domain:.gw$
+domain:.ke$
+domain:.km$
+domain:.lr$
+domain:.ls$
+domain:.ly$
+domain:.ma$
+domain:.mg$
+domain:.ml$
+domain:.mr$
+domain:.mu$
+domain:.mw$
+domain:.mz$
+domain:.na$
+domain:.ne$
+domain:.ng$
+domain:.re$
+domain:.rw$
+domain:.sc$
+domain:.sd$
+domain:.sh$
+domain:.sl$
+domain:.sn$
+domain:.so$
+domain:.ss$
+domain:.st$
+domain:.sz$
+domain:.td$
+domain:.tk$
+domain:.tn$
+domain:.tz$
+domain:.ug$
+domain:.zm$
+domain:.zr$
+domain:.zw$
+domain:.company.site$
+domain:.tobiz.net$
+domain:.livejournal.com$
+domain:.tb.ru$
+domain:.netlify.app$
+domain:.bitbucket.io$
+domain:.website$
+domain:.go.id$
+domain:.turbo.
+domain:.8b.
+domain:.udo.
+domain:.waw.
+domain:.voog.
+domain:.ua-shop.
+domain:.ucraft.
+domain:.urest.
+domain:.omnixia.
+domain:.jimdosite.
+domain:.github.
+domain:.beget.
+domain:.webflow.
+domain:.koko.
+domain:.epizy.
+domain:.amazonaws.
+domain:script.google.
+domain:.bitrix24.site
+domain:.bitrix24site.
+domain:.000webhostapp.
+domain:.godaddysites.
+domain:.sejl.site
+domain:.usluga.
+domain:.fanana.
+domain:.ulcraft.
+domain:.n.nu
+domain:.creatium.
+domain:.cloudfront.
+domain:.ukit.
+domain:.na4u.
+domain:.sitelio.
+domain:.mbmproxy.
+domain:.webnode.
+domain:.teletype.
+domain:.multiscreensite.
+domain:.doodlekit.
+domain:.mycindr.
+domain:.bookmark.
+domain:.strikingly.
+domain:.tumblr.
+domain:.moonfruit.
+domain:.yolasite.
+domain:.mozello.
+domain:.emyspot.
+domain:.nethouse.
+domain:.website2.
+domain:.plp7.
+domain:.weblium.
+domain:.wixsite.
+domain:.alltrades.
+domain:.herokuapp.
+domain:.mobirisesite.
+domain:.bravesites.
+domain:.zyrosite.
+domain:.uflorist.
+domain:.ugo.
+domain:.gitlab.
+domain:0.tilda.
+domain:1.tilda.
+domain:2.tilda.
+domain:3.tilda.
+domain:4.tilda.
+domain:5.tilda.
+domain:6.tilda.
+domain:7.tilda.
+domain:8.tilda.
+domain:9.tilda.
+domain:.tilda.
+domain:0.myflexbe.
+domain:1.myflexbe.
+domain:2.myflexbe.
+domain:3.myflexbe.
+domain:4.myflexbe.
+domain:5.myflexbe.
+domain:6.myflexbe.
+domain:7.myflexbe.
+domain:8.myflexbe.
+domain:9.myflexbe.
+domain:0.site123.
+domain:1.site123.
+domain:2.site123.
+domain:3.site123.
+domain:4.site123.
+domain:5.site123.
+domain:6.site123.
+domain:7.site123.
+domain:8.site123.
+domain:9.site123.
+domain:a.site123.
+domain:b.site123.
+domain:c.site123.
+domain:d.site123.
+domain:e.site123.
+domain:f.site123.
+domain:sites.google.com
+domain:twitter.com
+domain:-rub.info
+domain:.wavebrowser.co
+domain:beyouthly.com
