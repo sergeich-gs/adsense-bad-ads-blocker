@@ -3,7 +3,7 @@ ini_set('max_execution_time', 1800); //600 seconds = 10 minutes; 1800 = 30 min.
 ini_set('memory_limit', '450M');
 ini_set('short_open_tag', 1);
 
-$ver = '4.16 26.04.2021';
+$ver = '4.16.1 27.11.2021';
 $v = str_replace(' ', '', $ver);
 
 $GLOBALS['settings_folder'] = __DIR__ . '/settings/';
@@ -2002,7 +2002,7 @@ function list_ad($ad, $ad_index, $found)
     if ($host)
         $whitelist_domain = '<a href="whitelist_ad.php?new_ad=' . rawurlencode($host) . '" onclick="insert_result_frame(this.parentNode);" target="result_frame" rel="noreferrer" class="whitelist whitelist_domain" title="Whitelist domain (' . $host . ')" ><img src="img/whl.png" /></a> ';
 
-    $url = '<p class="displayurl">' . $whitelist_domain . '<a href="https://nullrefer.com/?' . $ad['url'] . '" title="' . $ad['url'] . '" target="_blank" rel="noreferrer" >' . $ad['displayUrl'] . '</a> (' . $ad['type'] . ')' . $link_url_blocker . $report . '</p>' . $nl;
+    $url = '<p class="displayurl">' . $whitelist_domain . '<a href="https://nullreferer.com/?' . $ad['url'] . '" title="' . $ad['url'] . '" target="_blank" rel="noreferrer" >' . $ad['displayUrl'] . '</a> (' . $ad['type'] . ')' . $link_url_blocker . $report . '</p>' . $nl;
 
     $filename = time() . '.' . $ad_index . '.' . rand(0, 99);
 
